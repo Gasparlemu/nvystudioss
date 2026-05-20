@@ -1,0 +1,1714 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Nvy Studios — Diseño Web en Valdivia | Webs para clínicas, restaurantes y pymes</title>
+<meta name="description" content="Estudio de diseño web independiente en Valdivia. Webs sin plantillas para clínicas, restaurantes, tour operadores y pymes. Entrega en 5-14 días. Atención directa con el diseñador." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<style>
+  :root{
+    --bg:#03050E;
+    --bg-2:#070B1B;
+    --bg-3:#0A1024;
+    --glass:rgba(11,17,34,.65);
+    --line:rgba(148,163,184,.10);
+    --line-2:rgba(148,163,184,.18);
+    --blue-1:#1E40AF;
+    --blue-2:#2563EB;
+    --blue-3:#3B82F6;
+    --blue-4:#60A5FA;
+    --fg:#FFFFFF;
+    --mut:#94A3B8;
+    --mut-2:#64748B;
+    --r-xl:28px;
+    --r-lg:24px;
+    --r-md:16px;
+    --max:1200px;
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;min-width:0}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);max-width:100%;overflow-x:hidden}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    font-family:"Inter",-apple-system,system-ui,sans-serif;
+    font-feature-settings:"ss01","cv11","tnum";
+    line-height:1.6;
+    letter-spacing:-0.011em;
+  }
+  ::selection{background:rgba(59,130,246,.35);color:#fff}
+  img,svg{max-width:100%;display:block}
+
+  /* Ambient atmosphere */
+  .atmos{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .atmos::before{
+    content:"";position:absolute;inset:-20%;
+    background:
+      radial-gradient(60% 50% at 18% 12%, rgba(37,99,235,.20), transparent 60%),
+      radial-gradient(45% 38% at 82% 8%, rgba(96,165,250,.10), transparent 65%),
+      radial-gradient(70% 55% at 50% 110%, rgba(37,99,235,.16), transparent 60%);
+    filter:blur(20px);
+  }
+  .atmos::after{
+    content:"";position:absolute;inset:0;
+    background-image:
+      linear-gradient(to right, rgba(148,163,184,.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(148,163,184,.045) 1px, transparent 1px);
+    background-size:120px 120px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, #000 40%, transparent 100%);
+    opacity:.5;
+  }
+  #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxNjAnIGhlaWdodD0nMTYwJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nMC45JyBudW1PY3RhdmVzPScyJyBzdGl0Y2hUaWxlcz0nc3RpdGNoJy8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPScwIDAgMCAwIDEgMCAwIDAgMCAxIDAgMCAwIDAgMSAwIDAgMCAwLjYgMCcvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNuKScvPjwvc3ZnPg==");}
+
+  /* Layout */
+  .wrap{position:relative;z-index:2;max-width:var(--max);margin:0 auto;padding:0 32px;width:100%}
+  section{position:relative;z-index:2;padding:180px 0;}
+  @media (max-width:980px){ section{padding:120px 0} .wrap{padding:0 22px} }
+  @media (max-width:560px){ section{padding:96px 0} .wrap{padding:0 18px} }
+
+  /* Labels */
+  .label{
+    font-size:11.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--mut-2);
+  }
+  .label-blue{color:var(--blue-4)}
+  .kicker{
+    font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--mut-2);display:inline-flex;align-items:center;gap:12px;font-weight:500;
+  }
+  .kicker::before{content:"";width:24px;height:1px;background:var(--line-2)}
+
+  /* Nav */
+  .nav{position:fixed;top:18px;left:0;right:0;z-index:40;padding:0 16px;}
+  .nav-inner{
+    margin:0 auto;max-width:var(--max);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px 10px 18px;
+    border:1px solid var(--line);
+    background:rgba(7,11,27,.55);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border-radius:999px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.02em;font-size:15px;text-decoration:none;color:#fff}
+  .brand-mark{
+    width:22px;height:22px;border-radius:7px;
+    background:conic-gradient(from 210deg, #2563EB, #60A5FA, #1e3a8a, #2563EB);
+    box-shadow:0 0 0 1px rgba(255,255,255,.08), 0 6px 24px -8px rgba(59,130,246,.7);
+    position:relative;flex-shrink:0;
+  }
+  .brand-mark::after{content:"";position:absolute;inset:5px;border-radius:4px;background:#03050E}
+  .brand small{color:var(--mut);font-weight:400;margin-left:4px}
+  .nav-links{display:flex;gap:6px}
+  .nav-links a{
+    color:var(--mut);text-decoration:none;font-size:13.5px;font-weight:500;
+    padding:8px 14px;border-radius:999px;transition:color .25s var(--ease), background .25s var(--ease);
+  }
+  .nav-links a:hover{color:#fff;background:rgba(255,255,255,.04)}
+  @media (max-width:880px){ .nav-links{display:none} .brand small{display:none} }
+
+  /* Buttons */
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 24px;border-radius:999px;
+    font-size:14px;font-weight:500;letter-spacing:-.005em;
+    text-decoration:none;cursor:pointer;border:0;
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease);
+    will-change:transform;white-space:nowrap;
+  }
+  .btn-primary{
+    color:#fff;
+    background:linear-gradient(180deg,#3B82F6 0%, #1E40AF 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.25),
+      inset 0 -1px 0 rgba(0,0,0,.25),
+      0 12px 32px -10px rgba(37,99,235,.6),
+      0 0 0 1px rgba(96,165,250,.35);
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.25),0 18px 40px -10px rgba(37,99,235,.75),0 0 0 1px rgba(96,165,250,.5)}
+  .btn-ghost{
+    color:#fff;background:rgba(255,255,255,.04);
+    border:1px solid var(--line-2);backdrop-filter:blur(8px);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
+  .btn-wa{
+    color:#fff;background:linear-gradient(180deg,#25D366,#117a37);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.25), 0 12px 32px -10px rgba(31,174,84,.5), 0 0 0 1px rgba(31,174,84,.5);
+  }
+  .btn-wa:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.3), 0 18px 40px -10px rgba(31,174,84,.75), 0 0 0 1px rgba(31,174,84,.65)}
+  .btn .arr{transition:transform .35s var(--ease)}
+  .btn:hover .arr{transform:translateX(3px)}
+  .btn-lg{padding:16px 28px;font-size:14.5px}
+
+  /* Eyebrow */
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:7px 14px;border-radius:999px;
+    font-size:12px;font-weight:500;letter-spacing:.04em;
+    color:var(--blue-4);
+    background:rgba(37,99,235,.08);
+    border:1px solid rgba(96,165,250,.22);
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--blue-4);box-shadow:0 0 12px var(--blue-4);animation:pulse 2.4s var(--ease) infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.85)}}
+
+  /* Type */
+  h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.035em;line-height:1.04}
+  h1{font-size:clamp(40px, 7vw, 92px);font-weight:700;letter-spacing:-.045em;line-height:1.05}
+  h2{font-size:clamp(32px, 4.8vw, 60px);letter-spacing:-.035em;line-height:1.05}
+  h3{font-size:22px;letter-spacing:-.02em;font-weight:600}
+  p{color:var(--mut);font-size:16px;line-height:1.7;margin:0}
+  .lede{font-size:clamp(17px,1.5vw,21px);color:#cbd5e1;line-height:1.6;letter-spacing:-.012em;max-width:62ch}
+  .grad-text{
+    background:linear-gradient(100deg,
+      #1d4ed8 0%,
+      #3b82f6 12%,
+      #c8a84b 28%,
+      #ffd700 42%,
+      #fff8c5 50%,
+      #ffd700 58%,
+      #c8a84b 72%,
+      #3b82f6 88%,
+      #1d4ed8 100%);
+    background-size:300% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-fill-color:transparent;
+    animation: gradShift 5s ease-in-out infinite alternate;
+    will-change:background-position;
+    padding-bottom:.14em;
+  }
+  @keyframes gradShift{
+    0%{background-position:0% 50%}
+    100%{background-position:100% 50%}
+  }
+
+  /* Word reveal */
+  .title-anim .w{
+    display:inline-block;opacity:0;transform:translateY(0.5em);filter:blur(14px);
+    transition:opacity .9s var(--ease), transform 1.1s var(--ease), filter .9s var(--ease);
+    line-height:1.18;
+  }
+  .title-anim.in .w{opacity:1;transform:none;filter:blur(0)}
+  .title-anim.in .w:nth-child(1){transition-delay:.02s}
+  .title-anim.in .w:nth-child(2){transition-delay:.10s}
+  .title-anim.in .w:nth-child(3){transition-delay:.18s}
+  .title-anim.in .w:nth-child(4){transition-delay:.26s}
+  .title-anim.in .w:nth-child(5){transition-delay:.34s}
+  .title-anim.in .w:nth-child(6){transition-delay:.42s}
+  .title-anim.in .w:nth-child(7){transition-delay:.50s}
+  .title-anim.in .w:nth-child(8){transition-delay:.58s}
+  .title-anim.in .w:nth-child(9){transition-delay:.66s}
+  .title-anim.in .w:nth-child(10){transition-delay:.74s}
+  .title-anim.in .w:nth-child(11){transition-delay:.82s}
+  .title-anim.in .w:nth-child(12){transition-delay:.90s}
+  .title-anim.in .w:nth-child(13){transition-delay:.98s}
+  .title-anim.in .w:nth-child(14){transition-delay:1.06s}
+
+  /* Hero */
+  .hero{padding-top:200px;padding-bottom:120px;text-align:center}
+  .hero-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;will-change:transform}
+  .hero-orb.a{width:560px;height:560px;background:rgba(37,99,235,.42);left:50%;top:-120px;transform:translateX(-50%)}
+  .hero-orb.b{width:420px;height:420px;background:rgba(96,165,250,.22);left:50%;top:200px;transform:translateX(-50%)}
+  .hero h1{max-width:18ch;margin:28px auto 0}
+  .hero-sub{margin:32px auto 0;max-width:60ch;text-align:center}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:44px;justify-content:center}
+  .hero-meta{
+    display:flex;gap:48px;margin:96px auto 0;padding-top:32px;
+    border-top:1px solid var(--line);flex-wrap:wrap;justify-content:center;max-width:680px;
+  }
+  .hero-meta div{display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
+  .hero-meta .v{font-size:15px;font-weight:500;color:#fff;letter-spacing:-.005em}
+  .hero-meta .l{font-size:11px;color:var(--mut-2);letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+
+  /* Trust marquee */
+  .marquee{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:24px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+    overflow:hidden;
+  }
+  .marquee-track{display:flex;gap:64px;animation:slide 60s linear infinite;width:max-content}
+  .marquee-track span{
+    color:var(--mut);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
+    white-space:nowrap;display:inline-flex;align-items:center;gap:18px;font-weight:500;
+  }
+  .marquee-track span::after{content:"✦";color:var(--blue-3);opacity:.55}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* Section header */
+  .sec-head{text-align:center;margin-bottom:80px;max-width:760px;margin-left:auto;margin-right:auto}
+  .sec-head .kicker{justify-content:center}
+  .sec-head h2{margin-top:24px}
+  .sec-head p{margin-top:24px;max-width:60ch;margin-left:auto;margin-right:auto;font-size:17px}
+
+  /* Diferenciadores */
+  .diff{
+    padding:120px 0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(7,11,27,.4) 0%, rgba(10,18,48,.55) 50%, rgba(7,11,27,.4) 100%);
+  }
+  .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:1040px;margin:0 auto;text-align:center}
+  .diff-col{display:flex;flex-direction:column;align-items:center}
+  .diff-col h3{
+    font-size:clamp(34px,3.6vw,46px);font-weight:600;letter-spacing:-.035em;line-height:1.04;
+    margin-bottom:22px;color:#fff;
+  }
+  .diff-col p{font-size:16.5px;line-height:1.65;color:#cbd5e1;max-width:42ch;letter-spacing:-.008em;margin:0 auto;text-align:center}
+  @media (max-width:880px){ .diff{padding:80px 0} .diff-grid{grid-template-columns:1fr;gap:48px} }
+
+  /* Audience grid */
+  .audience{padding:120px 0 100px}
+  .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .aud{
+    display:flex;align-items:center;gap:16px;
+    padding:22px 24px;border-radius:var(--r-md);
+    border:1px solid var(--line);background:rgba(11,17,34,.45);
+    backdrop-filter:blur(10px);
+    transition:border-color .35s var(--ease), background .35s var(--ease), transform .35s var(--ease);
+  }
+  .aud:hover{border-color:rgba(96,165,250,.3);background:rgba(11,17,34,.75);transform:translateY(-2px)}
+  .aud span{font-size:14.5px;color:#e2e8f0;font-weight:500;letter-spacing:-.01em}
+  .aud-ic{
+    width:38px;height:38px;border-radius:11px;flex-shrink:0;
+    background:linear-gradient(160deg,rgba(59,130,246,.22),rgba(37,99,235,.04));
+    border:1px solid rgba(96,165,250,.25);
+    display:grid;place-items:center;color:#cfe1ff;
+  }
+  @media (max-width:880px){ .aud-grid{grid-template-columns:1fr} .audience{padding:80px 0 60px} }
+
+  /* Pricing */
+  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+  .price{
+    position:relative;overflow:hidden;
+    background:var(--glass);border:1px solid var(--line);
+    border-radius:var(--r-xl);
+    padding:40px 36px;
+    backdrop-filter:blur(14px);
+    display:flex;flex-direction:column;gap:24px;
+    transition:transform .5s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+  }
+  .price::before{
+    content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(420px 220px at var(--mx,50%) var(--my,0%), rgba(96,165,250,.16), transparent 60%);
+    opacity:0;transition:opacity .5s var(--ease);
+  }
+  .price:hover{transform:translateY(-4px);border-color:rgba(96,165,250,.32)}
+  .price:hover::before{opacity:1}
+  .price .ribbon{
+    position:absolute;top:18px;right:18px;
+    font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+    padding:5px 10px;border-radius:999px;
+    background:linear-gradient(180deg,#3B82F6,#1E40AF);
+    color:#fff;border:1px solid rgba(96,165,250,.5);
+  }
+  .price.featured{
+    border-color:rgba(96,165,250,.4);
+    background:linear-gradient(180deg,rgba(37,99,235,.10),rgba(11,17,34,.7));
+    box-shadow:0 0 0 1px rgba(96,165,250,.15), 0 30px 60px -30px rgba(37,99,235,.6);
+  }
+  .price-name{font-size:11.5px;color:var(--mut-2);letter-spacing:.22em;text-transform:uppercase;font-weight:500;display:flex;align-items:center;gap:12px}
+  .price-name::before{content:"";width:18px;height:1px;background:var(--blue-4)}
+  .price h3{font-size:24px;font-weight:600;letter-spacing:-.025em;line-height:1.15}
+  .price .amt{display:flex;align-items:baseline;gap:8px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .price .amt .v{font-size:36px;font-weight:700;letter-spacing:-.035em;color:#fff;line-height:1}
+  .price .amt .c{font-size:13px;color:var(--mut-2);font-weight:500}
+  .price .sub{font-size:14.5px;color:#cbd5e1;line-height:1.5;letter-spacing:-.01em}
+  .price ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  .price ul li{font-size:13.5px;color:var(--mut);line-height:1.5;display:flex;gap:10px;align-items:flex-start}
+  .price ul li::before{
+    content:"";flex-shrink:0;width:14px;height:14px;border-radius:50%;margin-top:3px;
+    background:radial-gradient(circle at 30% 30%, #60A5FA, #1E40AF);
+    box-shadow:0 0 0 1px rgba(96,165,250,.35), 0 0 8px rgba(96,165,250,.3);
+  }
+  .price .plazo{font-size:11.5px;color:var(--mut-2);letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+  .price .btn{margin-top:auto;width:100%;justify-content:center}
+  @media (max-width:980px){ .pricing-grid{grid-template-columns:1fr;gap:14px} }
+
+  .mantencion{
+    margin-top:32px;
+    border:1px solid var(--line-2);border-radius:var(--r-lg);
+    background:linear-gradient(180deg, rgba(37,99,235,.08), rgba(11,17,34,.5));
+    backdrop-filter:blur(12px);
+    padding:28px 36px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .mantencion .m-left{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .mantencion .m-title{font-size:16px;color:#fff;font-weight:600;letter-spacing:-.015em}
+  .mantencion .m-price{font-size:18px;color:var(--blue-4);font-weight:600;letter-spacing:-.02em}
+  .mantencion .m-desc{font-size:13px;color:var(--mut);line-height:1.55}
+  @media (max-width:680px){ .mantencion{padding:22px 24px;flex-direction:column;align-items:flex-start} }
+
+  /* Demo cards row */
+  .demos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+  .demo{
+    position:relative;overflow:hidden;
+    border-radius:var(--r-xl);border:1px solid var(--line);
+    background:linear-gradient(180deg,#070d24 0%, #0a1330 100%);
+    display:flex;flex-direction:column;
+    transition:transform .5s var(--ease), border-color .4s var(--ease);
+  }
+  .demo:hover{transform:translateY(-3px);border-color:rgba(96,165,250,.32)}
+  .demo .demo-info{padding:32px 30px 26px;display:flex;flex-direction:column;gap:18px}
+  .demo .meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .demo .pill{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-4);padding:5px 10px;border-radius:999px;background:rgba(37,99,235,.1);border:1px solid rgba(96,165,250,.25)}
+  .demo .status{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut-2);font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+  .demo .status::before{content:"";width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pulse 2.4s var(--ease) infinite}
+  .demo h3{font-size:24px;font-weight:600;letter-spacing:-.025em;line-height:1.15}
+  .demo .tagline{font-size:14.5px;color:#cbd5e1;line-height:1.45;letter-spacing:-.01em}
+  .demo .desc{font-size:13.5px;color:var(--mut);line-height:1.6}
+  .demo .specs{display:flex;gap:18px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .demo .specs div{display:flex;flex-direction:column;gap:3px}
+  .demo .specs .l{font-size:9.5px;color:var(--mut-2);letter-spacing:.16em;text-transform:uppercase;font-weight:500}
+  .demo .specs .v{font-size:12.5px;color:#fff;font-weight:500}
+
+  /* Demo mockup canvas — source PNGs already include browser + mobile frames */
+  .demo-mock{position:relative;overflow:hidden;border-top:1px solid var(--line);padding:0;background:#03050E;display:block}
+  .demo-mock img{display:block;width:100%;height:auto;transition:transform .6s var(--ease)}
+  .demo:hover .demo-mock img{transform:scale(1.015)}
+
+  /* Posada — hero réplica (estilo OncoSur) */
+  .posada-body{
+    position:relative;padding:42px 28px 36px;background:#0a1410;
+    display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center;
+    overflow:hidden;
+  }
+  .posada-body::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(80% 55% at 50% 0%, rgba(154,183,143,.16), transparent 65%),
+      radial-gradient(60% 50% at 50% 100%, rgba(212,167,106,.10), transparent 60%),
+      linear-gradient(180deg, #0d1a15 0%, #050a08 100%);
+  }
+  .posada-body > *{position:relative;z-index:2}
+  .posada-brand{display:inline-flex;align-items:center;gap:9px;color:#fff;font-size:12.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+  .posada-mark{width:11px;height:11px;transform:rotate(45deg);background:linear-gradient(135deg,#e8c281,#8a6d3e);border-radius:2px;box-shadow:0 0 14px rgba(232,194,129,.45)}
+  .posada-tagline{color:#9ab78f;font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:500}
+  .posada-headline{color:#fff;font-size:18px;font-weight:600;letter-spacing:-.025em;line-height:1.18;max-width:22ch;margin:0}
+  .posada-headline em{font-style:italic;font-weight:500;color:#e8c281;letter-spacing:-.018em}
+  .posada-sub{color:#94A3B8;font-size:11px;line-height:1.55;max-width:34ch;margin:0}
+  .posada-ctas{display:flex;gap:7px;margin-top:3px;align-items:center}
+  .posada-cta{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:999px;background:linear-gradient(180deg,#e8c281,#a07a3e);color:#1a0e02;font-size:10.5px;font-weight:600;letter-spacing:.005em}
+  .posada-cta-ghost{display:inline-flex;align-items:center;padding:8px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;font-size:10.5px;font-weight:500}
+  .posada-stats{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .posada-stat{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#cbd5e1;letter-spacing:.02em}
+  .posada-stat .v{color:#fff;font-weight:600}
+  .posada-stat .stars{color:#e8c281;letter-spacing:.5px}
+  .posada-divider{width:1px;height:11px;background:rgba(148,163,184,.25)}
+  .posada-stripe{width:100%;height:3px;background:linear-gradient(90deg,#e8c281 0%, #e8c281 50%, #9ab78f 50%, #9ab78f 100%);border-radius:2px;margin-top:14px}
+  /* Mobile companion (Posada) */
+  .mobile-body .posada-mark{width:7px;height:7px;border-radius:1.5px}
+  .mobile-body .posada-brand{font-size:8px;gap:5px}
+  .mobile-body .posada-tagline{font-size:6.5px;letter-spacing:.22em}
+  .mobile-body .ph{color:#fff;font-size:10px;font-weight:600;line-height:1.18;letter-spacing:-.015em}
+  .mobile-body .ph em{font-style:italic;font-weight:500;color:#e8c281}
+  .mobile-body .pc{margin-top:2px;padding:5px 10px;border-radius:999px;background:linear-gradient(180deg,#e8c281,#a07a3e);color:#1a0e02;font-size:7px;font-weight:600}
+
+  /* Demo mini-mockups (themed) */
+  .demo-preview{position:relative;background:#0a0a0a;display:flex;flex-direction:column;border-bottom:1px solid var(--line)}
+  .demo-preview .browser-bar{height:26px}
+  .demo-preview .browser-bar .d{width:7px;height:7px}
+  .demo-preview .browser-bar .url{font-size:10px;margin-left:10px}
+  .demo-hero{position:relative;padding:34px 22px 30px;min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;text-align:center;overflow:hidden}
+  .demo-hero::before{content:"";position:absolute;inset:0;z-index:0}
+  .demo-hero-tag{position:relative;z-index:2;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+  .demo-hero-title{position:relative;z-index:2;font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.2;max-width:22ch;margin:0}
+  .demo-hero-cta{position:relative;z-index:2;margin-top:6px;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:.02em}
+  .demo-hero-stripe{position:relative;z-index:2;width:100%;max-width:120px;height:2px;border-radius:2px;margin-top:6px}
+
+  .demo-preview--tours .demo-hero::before{background:linear-gradient(160deg,#0a3a2a 0%, #08120e 100%)}
+  .demo-preview--tours .demo-hero-tag{color:#86efac}
+  .demo-preview--tours .demo-hero-title{color:#fff}
+  .demo-preview--tours .demo-hero-cta{background:linear-gradient(180deg,#34d399,#10b981);color:#052e16}
+  .demo-preview--tours .demo-hero-stripe{background:linear-gradient(90deg,#34d399 0%, #34d399 60%, #86efac 60%, #86efac 100%)}
+  .demo-preview--tours .browser-bar .url{color:#86efac}
+
+  .demo-preview--cafe .demo-hero::before{background:linear-gradient(160deg,#3a2014 0%, #18100a 100%)}
+  .demo-preview--cafe .demo-hero-tag{color:#fcd34d}
+  .demo-preview--cafe .demo-hero-title{color:#fff7ed}
+  .demo-preview--cafe .demo-hero-cta{background:linear-gradient(180deg,#fcd34d,#d97706);color:#451a03}
+  .demo-preview--cafe .demo-hero-stripe{background:linear-gradient(90deg,#fcd34d 0%, #fcd34d 60%, #fb923c 60%, #fb923c 100%)}
+  .demo-preview--cafe .browser-bar .url{color:#fcd34d}
+
+  .demo-preview--gym .demo-hero::before{background:linear-gradient(160deg,#3f0a0a 0%, #160505 100%)}
+  .demo-preview--gym .demo-hero-tag{color:#fca5a5}
+  .demo-preview--gym .demo-hero-title{color:#fff}
+  .demo-preview--gym .demo-hero-cta{background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff}
+  .demo-preview--gym .demo-hero-stripe{background:linear-gradient(90deg,#ef4444 0%, #ef4444 60%, #f87171 60%, #f87171 100%)}
+  .demo-preview--gym .browser-bar .url{color:#fca5a5}
+
+  .demo-preview--dental .demo-hero::before{background:linear-gradient(160deg,#0e3a4a 0%, #06141c 100%)}
+  .demo-preview--dental .demo-hero-tag{color:#67e8f9}
+  .demo-preview--dental .demo-hero-title{color:#fff}
+  .demo-preview--dental .demo-hero-cta{background:linear-gradient(180deg,#22d3ee,#0891b2);color:#083344}
+  .demo-preview--dental .demo-hero-stripe{background:linear-gradient(90deg,#22d3ee 0%, #22d3ee 60%, #67e8f9 60%, #67e8f9 100%)}
+  .demo-preview--dental .browser-bar .url{color:#67e8f9}
+
+  .demo-preview--kine .demo-hero::before{background:linear-gradient(160deg,#2d1b69 0%, #0f0a2e 100%)}
+  .demo-preview--kine .demo-hero-tag{color:#c4b5fd}
+  .demo-preview--kine .demo-hero-title{color:#fff}
+  .demo-preview--kine .demo-hero-cta{background:linear-gradient(180deg,#8b5cf6,#6d28d9);color:#fff}
+  .demo-preview--kine .demo-hero-stripe{background:linear-gradient(90deg,#8b5cf6 0%, #8b5cf6 60%, #c4b5fd 60%, #c4b5fd 100%)}
+  .demo-preview--kine .browser-bar .url{color:#c4b5fd}
+
+  .demo-preview--clinica .demo-hero::before{background:linear-gradient(160deg,#064e3b 0%, #022c22 100%)}
+  .demo-preview--clinica .demo-hero-tag{color:#6ee7b7}
+  .demo-preview--clinica .demo-hero-title{color:#fff}
+  .demo-preview--clinica .demo-hero-cta{background:linear-gradient(180deg,#10b981,#059669);color:#fff}
+  .demo-preview--clinica .demo-hero-stripe{background:linear-gradient(90deg,#10b981 0%, #10b981 60%, #6ee7b7 60%, #6ee7b7 100%)}
+  .demo-preview--clinica .browser-bar .url{color:#6ee7b7}
+
+  /* Demo status variants */
+  .demo .status.status-demo{color:#c4b5fd}
+  .demo .status.status-demo::before{background:#a78bfa;box-shadow:0 0 8px #a78bfa}
+  .demo .status.status-live{color:#86efac}
+  .demo .status.status-live::before{background:#22c55e;box-shadow:0 0 8px #22c55e}
+
+  /* Demo CTA pill */
+  .demo-cta-btn{
+    display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+    padding:10px 16px;border-radius:999px;margin-top:4px;
+    background:rgba(37,99,235,.12);border:1px solid rgba(96,165,250,.3);
+    color:#cfe1ff;font-size:12px;font-weight:500;letter-spacing:.02em;
+    text-decoration:none;transition:all .3s var(--ease);
+  }
+  .demo-cta-btn:hover{background:rgba(37,99,235,.22);border-color:rgba(96,165,250,.55);color:#fff;transform:translateY(-1px)}
+  .demo-cta-btn .arr{transition:transform .3s var(--ease)}
+  .demo-cta-btn:hover .arr{transform:translateX(3px)}
+
+  @media (max-width:880px){
+    .demos{grid-template-columns:repeat(2,1fr);gap:14px}
+  }
+  @media (max-width:520px){
+    .demos{grid-template-columns:1fr;gap:12px}
+    .demo .demo-info{padding:24px 20px 20px;gap:14px}
+    .demo h3{font-size:20px}
+    .demo .tagline{font-size:13.5px}
+    .demo .desc{font-size:13px}
+    .demo-hero{min-height:140px;padding:26px 16px 22px}
+    .demo-hero-title{font-size:14px}
+    .demo-cta-btn{width:100%;justify-content:center}
+    .demo .specs{gap:14px}
+  }
+
+  /* Separadores portafolio */
+  .proj-sep{display:flex;align-items:center;gap:24px;margin:8px 0}
+  .proj-sep::before,.proj-sep::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(96,165,250,.2),transparent)}
+  .proj-sep span{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(148,163,184,.4);font-weight:500;white-space:nowrap}
+
+  /* Mini CTA card */
+  .portfolio-cta{
+    margin-top:28px;
+    border:1px solid var(--line);border-radius:var(--r-lg);
+    background:rgba(11,17,34,.45);backdrop-filter:blur(12px);
+    padding:36px 40px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .portfolio-cta h4{font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.25}
+  .portfolio-cta p{font-size:14px;margin-top:6px}
+  @media (max-width:680px){ .portfolio-cta{padding:28px 26px} }
+
+  /* FAQ */
+  .faq{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+  .faq-item{
+    border:1px solid var(--line);border-radius:var(--r-md);
+    background:rgba(11,17,34,.45);backdrop-filter:blur(12px);
+    overflow:hidden;
+    transition:border-color .35s var(--ease), background .35s var(--ease);
+  }
+  .faq-item[open]{border-color:rgba(96,165,250,.32);background:rgba(11,17,34,.7)}
+  .faq-item summary{
+    list-style:none;cursor:pointer;padding:22px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    font-size:16px;font-weight:500;color:#fff;letter-spacing:-.015em;
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item .ico{
+    width:28px;height:28px;border-radius:50%;flex-shrink:0;
+    border:1px solid var(--line-2);display:grid;place-items:center;color:var(--blue-4);
+    transition:transform .35s var(--ease), background .35s var(--ease);
+  }
+  .faq-item[open] .ico{transform:rotate(45deg);background:rgba(37,99,235,.18)}
+  .faq-item .body{padding:0 28px 22px;font-size:14.5px;color:var(--mut);line-height:1.65}
+  @media (max-width:560px){ .faq-item summary{padding:18px 22px;font-size:15px} .faq-item .body{padding:0 22px 18px} }
+
+  /* Pillars (Strategic Value) */
+  .pillars{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+  }
+  .pillar{
+    position:relative;overflow:hidden;
+    background:var(--glass);border:1px solid var(--line);
+    border-radius:var(--r-xl);
+    padding:48px 40px;min-height:340px;
+    backdrop-filter:blur(14px);
+    display:flex;flex-direction:column;gap:28px;
+    transition:transform .6s var(--ease), border-color .5s var(--ease), background .5s var(--ease);
+  }
+  .pillar::before{
+    content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(420px 220px at var(--mx,50%) var(--my,0%), rgba(96,165,250,.18), transparent 60%);
+    opacity:0;transition:opacity .5s var(--ease);
+  }
+  .pillar:hover{transform:translateY(-4px);border-color:rgba(96,165,250,.35)}
+  .pillar:hover::before{opacity:1}
+  .pillar .num{font-size:11.5px;color:var(--mut-2);letter-spacing:.22em;text-transform:uppercase;font-weight:500;display:flex;align-items:center;gap:12px}
+  .pillar .num::before{content:"";width:18px;height:1px;background:var(--blue-4)}
+  .pillar h3{font-size:26px;font-weight:600;letter-spacing:-.025em;line-height:1.15}
+  .pillar p{font-size:15px;line-height:1.65;color:var(--mut)}
+  .pillar .icon{
+    width:48px;height:48px;border-radius:14px;
+    background:linear-gradient(160deg,rgba(59,130,246,.25),rgba(37,99,235,.04));
+    border:1px solid rgba(96,165,250,.28);
+    display:grid;place-items:center;color:#cfe1ff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  @media (max-width:880px){ .pillars{grid-template-columns:1fr;gap:14px} .pillar{padding:36px 30px;min-height:0} }
+
+  /* Portfolio */
+  .proj-feat{
+    position:relative;overflow:hidden;
+    border-radius:var(--r-xl);border:1px solid var(--line);
+    background:linear-gradient(180deg,#070d24 0%, #0a1330 100%);
+    display:grid;grid-template-columns:1.05fr 1fr;
+    transition:border-color .5s var(--ease), transform .6s var(--ease);
+  }
+  .proj-feat:hover{border-color:rgba(96,165,250,.32);transform:translateY(-3px)}
+  .proj-feat::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(700px 360px at 90% 10%, rgba(37,99,235,.28), transparent 60%);
+  }
+  .proj-info{position:relative;z-index:2;padding:60px 56px;display:flex;flex-direction:column;justify-content:space-between;gap:36px}
+  .proj-info .meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .proj-info .pill{font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--blue-4);padding:6px 12px;border-radius:999px;background:rgba(37,99,235,.1);border:1px solid rgba(96,165,250,.25)}
+  .proj-info .status{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut-2);font-weight:500;display:inline-flex;align-items:center;gap:8px}
+  .proj-info .status::before{content:"";width:6px;height:6px;border-radius:50%;background:#FACC15;box-shadow:0 0 10px #FACC15;animation:pulse 2.4s var(--ease) infinite}
+  .proj-info .status.status-live{color:#86efac}
+  .proj-info .status.status-live::before{background:#22c55e;box-shadow:0 0 10px #22c55e}
+  .proj-info h3{font-size:clamp(36px,4.4vw,56px);font-weight:600;letter-spacing:-.035em;line-height:1.02}
+  .proj-info .tagline{font-size:18px;color:#cbd5e1;line-height:1.5;letter-spacing:-.012em}
+  .proj-info .desc{font-size:15px;color:var(--mut);line-height:1.7;max-width:46ch}
+  .proj-info .specs{display:flex;gap:36px;padding-top:24px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .proj-info .specs div{display:flex;flex-direction:column;gap:4px}
+  .proj-info .specs .l{font-size:11px;color:var(--mut-2);letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+  .proj-info .specs .v{font-size:14px;color:#fff;font-weight:500}
+
+  .mock-link{display:block;text-decoration:none;color:inherit;transition:transform .5s var(--ease);cursor:pointer}
+  .mock-link:hover{transform:scale(1.01)}
+
+  /* Mockup canvas */
+  .proj-mock{position:relative;overflow:hidden;border-left:1px solid var(--line);min-height:560px;display:grid;place-items:center;padding:48px}
+  .proj-mock::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(closest-side at 50% 50%, rgba(10,19,48,1), #03050E 80%);
+  }
+  .mock-stack{position:relative;width:100%;max-width:480px;display:flex;align-items:flex-end;justify-content:center;gap:0}
+  .desktop{
+    position:relative;width:100%;border-radius:14px;overflow:hidden;
+    background:#000;border:1px solid rgba(148,163,184,.18);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04), 0 0 80px -20px rgba(37,99,235,.4);
+    transition:transform .6s var(--ease);
+    z-index:1;
+  }
+  .proj-feat:hover .desktop{transform:translateY(-3px)}
+  .browser-bar{height:30px;background:#0a0a0a;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 12px;gap:6px}
+  .browser-bar .d{width:9px;height:9px;border-radius:50%}
+  .browser-bar .d:nth-child(1){background:#ff5f57}.browser-bar .d:nth-child(2){background:#febc2e}.browser-bar .d:nth-child(3){background:#28c840}
+  .browser-bar .url{margin-left:14px;font-size:11px;color:#666;letter-spacing:.04em}
+  .browser-body{padding:42px 28px 36px;background:#000;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+  .oncosur-logo{width:96px;height:auto;filter:drop-shadow(0 6px 20px rgba(250,204,21,.18))}
+  .oncosur-tagline{color:#FACC15;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+  .oncosur-headline{color:#fff;font-size:18px;font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:22ch;margin:0}
+  .oncosur-sub{color:#94A3B8;font-size:11.5px;line-height:1.55;max-width:34ch;margin:0}
+  .oncosur-cta{margin-top:4px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:linear-gradient(180deg,#5EEAD4,#2DD4BF);color:#042f2e;font-size:11px;font-weight:600}
+  .oncosur-stripe{width:100%;height:3px;background:linear-gradient(90deg,#FACC15 0%, #FACC15 50%, #5EEAD4 50%, #5EEAD4 100%);border-radius:2px;margin-top:4px}
+  .mobile{
+    position:absolute;right:-18%;bottom:-32px;width:34%;
+    border-radius:22px;overflow:hidden;background:#000;
+    border:1px solid rgba(148,163,184,.22);
+    box-shadow:0 24px 50px -16px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.04), 0 0 50px -10px rgba(37,99,235,.35);
+    z-index:2;transition:transform .6s var(--ease);
+  }
+  .proj-feat:hover .mobile{transform:translateY(-6px) rotate(-2deg)}
+  .mobile-notch{height:18px;background:#000;display:flex;justify-content:center;align-items:center}
+  .mobile-notch::before{content:"";width:38%;height:6px;background:#0a0a0a;border-radius:0 0 8px 8px}
+  .mobile-body{padding:18px 12px 16px;background:#000;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+  .mobile-body .oncosur-logo{width:54px}
+  .mobile-body .oncosur-tagline{font-size:7px;letter-spacing:.18em}
+  .mobile-body .mh{color:#fff;font-size:10px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+  .mobile-body .mc{margin-top:2px;padding:5px 10px;border-radius:999px;background:linear-gradient(180deg,#5EEAD4,#2DD4BF);color:#042f2e;font-size:7px;font-weight:600}
+  @media (max-width:980px){
+    .proj-feat{grid-template-columns:1fr}
+    .proj-mock{border-left:0;border-top:1px solid var(--line);min-height:480px;padding:40px 24px 60px}
+    .proj-info{padding:48px 36px}
+  }
+  @media (max-width:560px){
+    .proj-info{padding:36px 24px;gap:28px}
+    .proj-info .specs{gap:20px}
+    .proj-mock{padding:32px 16px 56px;min-height:420px}
+    .mock-stack{max-width:340px}
+    .mobile{right:-12%;width:36%}
+  }
+
+  /* Coming soon categories */
+  .coming{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+  .coming-card{
+    position:relative;overflow:hidden;
+    border:1px solid var(--line);border-radius:var(--r-lg);
+    background:var(--glass);backdrop-filter:blur(14px);
+    padding:28px 26px;min-height:160px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:20px;
+    transition:transform .5s var(--ease), border-color .4s var(--ease);
+  }
+  .coming-card:hover{transform:translateY(-3px);border-color:rgba(96,165,250,.3)}
+  .coming-card .tag{font-size:10.5px;color:var(--mut-2);letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+  .coming-card h4{font-size:20px;font-weight:600;letter-spacing:-.02em}
+  @media (max-width:880px){ .coming{grid-template-columns:1fr} }
+
+  /* Presencia Digital */
+  .pdl{
+    position:relative;overflow:hidden;
+    background:linear-gradient(180deg,#050a1c 0%, #0a1230 50%, #050a1c 100%);
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .pdl::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(800px 400px at 80% 10%, rgba(37,99,235,.26), transparent 60%),
+      radial-gradient(600px 300px at 10% 90%, rgba(96,165,250,.16), transparent 60%);
+  }
+  .pdl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:60px}
+  .pdl-card{
+    background:rgba(11,17,34,.65);border:1px solid var(--line);
+    border-radius:var(--r-lg);padding:32px 28px;backdrop-filter:blur(14px);
+    display:flex;flex-direction:column;gap:20px;min-height:200px;
+    transition:transform .5s var(--ease), border-color .4s var(--ease), background .4s var(--ease);
+  }
+  .pdl-card:hover{transform:translateY(-3px);border-color:rgba(96,165,250,.32);background:rgba(11,17,34,.85)}
+  .pdl-card .ic{
+    width:42px;height:42px;border-radius:12px;
+    background:linear-gradient(160deg,rgba(59,130,246,.3),rgba(37,99,235,.05));
+    border:1px solid rgba(96,165,250,.3);display:grid;place-items:center;color:#cfe1ff;
+  }
+  .pdl-card h4{font-size:17px;font-weight:600;letter-spacing:-.015em}
+  .pdl-card p{font-size:14px;line-height:1.6}
+  .pdl-cta{margin-top:48px;text-align:center}
+  @media (max-width:880px){ .pdl-grid{grid-template-columns:1fr} }
+
+  /* Testimonio */
+  .testimonio{padding:160px 0;position:relative}
+  .testimonio .inner{max-width:720px;margin:0 auto;text-align:center}
+  .testimonio .kicker{justify-content:center}
+  .testimonio blockquote{
+    margin:48px 0 0;padding:0;
+    font-family:"Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
+    font-weight:400;font-style:italic;
+    font-size:clamp(24px,2.4vw,32px);line-height:1.45;letter-spacing:-.012em;
+    color:#e2e8f0;text-wrap:pretty;
+  }
+  .testimonio blockquote::before{
+    content:"“";display:block;
+    font-family:"Cormorant Garamond", Georgia, serif;
+    font-size:120px;line-height:.6;color:var(--blue-4);opacity:.5;
+    margin-bottom:14px;
+  }
+  .testimonio cite{
+    display:block;margin-top:40px;font-style:normal;
+    font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+    color:var(--mut);
+  }
+  .testimonio cite strong{color:#fff;font-weight:600;letter-spacing:.18em}
+  @media (max-width:680px){ .testimonio{padding:100px 0} .testimonio blockquote::before{font-size:90px} }
+
+  /* Process */
+  .timeline{position:relative;padding:32px 0 8px}
+  .timeline::before, .timeline::after{display:none}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;position:relative}
+  .step{position:relative;padding-top:150px}
+  .step:not(:last-child)::before{
+    content:"";position:absolute;top:110px;height:2px;
+    left:calc(50% + 20px);right:calc(-50% - 4px);
+    background:linear-gradient(90deg,
+      rgba(96,165,250,.55) 0%,
+      rgba(59,130,246,1) 50%,
+      rgba(96,165,250,.55) 100%);
+    box-shadow:0 0 14px rgba(59,130,246,.55);
+    border-radius:2px;
+    z-index:0;
+  }
+  .step .ring{
+    position:absolute;top:96px;left:50%;transform:translateX(-50%);
+    width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(180deg,#0a1230,#03050E);
+    border:1.5px solid rgba(96,165,250,.7);
+    display:grid;place-items:center;
+    box-shadow:0 0 0 4px rgba(3,5,14,.95), 0 0 32px rgba(59,130,246,.55);
+    z-index:2;
+  }
+  .step .ring::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue-4);box-shadow:0 0 12px var(--blue-4)}
+  .step .label{font-size:11.5px;color:var(--mut-2);letter-spacing:.18em;text-align:center;display:block;margin-bottom:6px;text-transform:uppercase;font-weight:500}
+  .step h3{text-align:center;font-size:20px;font-weight:600;letter-spacing:-.02em}
+  .step p{text-align:center;font-size:13.5px;line-height:1.6;color:var(--mut);margin-top:14px;max-width:24ch;margin-left:auto;margin-right:auto;letter-spacing:-.005em}
+  @media (max-width:880px){
+    .steps{grid-template-columns:1fr;gap:32px}
+    .step{padding:0 0 0 64px}
+    .step .ring{left:24px;top:6px;transform:translateX(-50%)}
+    .step:not(:last-child)::after{
+      content:"";position:absolute;top:38px;bottom:-32px;
+      left:24px;width:2px;height:auto;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,
+        rgba(96,165,250,.4) 0%,
+        rgba(59,130,246,1) 50%,
+        rgba(96,165,250,.4) 100%);
+      box-shadow:0 0 14px rgba(59,130,246,.55);
+      border-radius:2px;
+    }
+    .step .label,.step h3{text-align:left}
+    .step p{text-align:left;margin-left:0;margin-right:0;max-width:none}
+  }
+
+  /* Final CTA */
+  .final{padding:220px 0 180px;text-align:center;position:relative}
+  .final .glow{
+    position:absolute;left:50%;top:30%;transform:translate(-50%,-30%);
+    width:900px;height:600px;border-radius:50%;
+    background:radial-gradient(closest-side, rgba(37,99,235,.32), transparent 70%);
+    filter:blur(30px);pointer-events:none;
+  }
+  .final h2{font-size:clamp(48px, 8vw, 120px);letter-spacing:-.05em;font-weight:700;line-height:1;max-width:14ch;margin:0 auto}
+  .final p{margin:32px auto 0;max-width:54ch;font-size:17px;color:#cbd5e1}
+  .final-cta{display:flex;justify-content:center;gap:14px;margin-top:48px;flex-wrap:wrap}
+  .final-meta{margin-top:44px;color:var(--mut-2);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+  .final-contact{
+    margin-top:40px;display:flex;justify-content:center;align-items:center;
+    gap:32px;flex-wrap:wrap;
+  }
+  .final-contact a, .final-contact span{
+    display:inline-flex;align-items:center;gap:10px;
+    color:var(--mut);text-decoration:none;font-size:14px;font-weight:500;
+    letter-spacing:-.005em;transition:color .25s var(--ease);
+  }
+  .final-contact a:hover{color:#fff}
+  .final-contact svg{color:var(--blue-4);flex-shrink:0}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);padding:60px 0 50px;position:relative;z-index:2}
+  .foot{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+  .foot .left{max-width:520px}
+  .foot .left .brand{font-size:18px;margin-bottom:14px}
+  .foot .left p{font-size:14px}
+  .foot ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .foot a{color:var(--mut);text-decoration:none;font-size:14px;transition:color .25s var(--ease)}
+  .foot a:hover{color:#fff}
+  .foot .cols{display:flex;gap:60px;flex-wrap:wrap}
+  .foot .colophon{margin-top:50px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut-2);letter-spacing:.14em;text-transform:uppercase;flex-wrap:wrap;gap:12px;font-weight:500}
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(28px) scale(.99);filter:blur(8px);transition:opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 1.1s var(--ease)}
+  .reveal.in{opacity:1;transform:none;filter:blur(0)}
+  .reveal-stagger > *{opacity:0;transform:translateY(20px);filter:blur(6px);transition:opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease)}
+  .reveal-stagger.in > *{opacity:1;transform:none;filter:blur(0)}
+  .reveal-stagger.in > *:nth-child(1){transition-delay:.05s}
+  .reveal-stagger.in > *:nth-child(2){transition-delay:.14s}
+  .reveal-stagger.in > *:nth-child(3){transition-delay:.23s}
+  .reveal-stagger.in > *:nth-child(4){transition-delay:.32s}
+  .reveal-stagger.in > *:nth-child(5){transition-delay:.41s}
+  .reveal-stagger.in > *:nth-child(6){transition-delay:.50s}
+
+  /* Floating WhatsApp */
+  .wa-fab{
+    position:fixed;right:22px;bottom:22px;z-index:50;
+    width:58px;height:58px;border-radius:50%;
+    background:linear-gradient(160deg,#25D366,#117a37);
+    display:grid;place-items:center;color:#fff;text-decoration:none;
+    box-shadow:0 14px 40px -10px rgba(31,174,84,.65), 0 0 0 1px rgba(31,174,84,.5), inset 0 1px 0 rgba(255,255,255,.25);
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .wa-fab:hover{transform:translateY(-2px) scale(1.04)}
+  .wa-fab::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(37,211,102,.4);animation:ping 2.4s var(--ease) infinite}
+  @keyframes ping{0%{transform:scale(.95);opacity:.9}100%{transform:scale(1.4);opacity:0}}
+
+  /* Lenis smooth scroll */
+  html.lenis, html.lenis body{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto !important}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+  .lenis.lenis-smooth iframe{pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="atmos" aria-hidden="true"></div>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Principal">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark"></span>
+      Nvy Studios <small>— Valdivia</small>
+    </a>
+    <div class="nav-links">
+      <a href="#pilares">Pilares</a>
+      <a href="#presencia">Presencia digital</a>
+      <a href="#inversion">Inversión</a>
+      <a href="#proyectos">Portafolio</a>
+      <a href="#proceso">Proceso</a>
+    </div>
+    <a href="https://wa.me/56940976219" class="btn btn-primary" style="padding:9px 16px;font-size:13px">
+      Empezar <span class="arr">→</span>
+    </a>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-orb a"></span>
+  <span class="hero-orb b"></span>
+  <div class="wrap">
+    <div class="reveal-stagger">
+      <div class="eyebrow" style="margin:0 auto"><span class="dot"></span> Estudio digital estratégico · Valdivia, Chile</div>
+      <h1 class="title-anim" data-split>
+        Diseño web de alta gama para negocios que <span class="grad-text">proyectan excelencia.</span>
+      </h1>
+      <p class="lede hero-sub">
+        Diseñamos tu web desde cero en Valdivia. Sin plantillas, sin intermediarios — trabajas directo con el diseñador. Lista en 5 a 14 días.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="https://wa.me/56940976219">Empezar mi proyecto <span class="arr">→</span></a>
+        <a class="btn btn-ghost btn-lg" href="#proyectos">Ver portafolio</a>
+      </div>
+      <div class="hero-meta">
+        <div><span class="v">Valdivia, Chile</span><span class="l">Estudio independiente</span></div>
+        <div><span class="v">5 a 14 días</span><span class="l">Plazo de entrega</span></div>
+        <div><span class="v">Hechas a medida</span><span class="l">Sin plantillas</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span>
+    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span>
+    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span>
+  </div>
+</div>
+
+<!-- DIFERENCIADORES -->
+<section id="diferenciadores" class="diff">
+  <div class="wrap">
+    <div class="diff-grid reveal-stagger">
+      <div class="diff-col">
+        <h3>Sin plantillas.</h3>
+        <p>Cada sitio se diseña y desarrolla desde cero según la estrategia y estética de tu marca. Cero WordPress prefabricado, cero temas reciclados. El resultado: tu web no se parece a ninguna otra y posiciona tu negocio como referente en su rubro.</p>
+      </div>
+      <div class="diff-col">
+        <h3>Atención directa.</h3>
+        <p>Trabajas siempre con el diseñador, no con un equipo de cuentas. Decisiones rápidas, comunicación clara, sin intermediarios. Eso significa menos idas y vueltas y más tiempo enfocado en lo que importa: tu negocio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUIÉN TRABAJAMOS -->
+<section id="para-quien" class="audience">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:56px">
+      <span class="kicker" style="justify-content:center">Especializados en</span>
+      <h2 class="title-anim" data-split style="font-size:clamp(28px,3.6vw,44px);margin-top:20px">Negocios locales que quieren <span class="grad-text">elevar su presencia.</span></h2>
+    </div>
+    <div class="aud-grid reveal-stagger">
+      <div class="aud">
+        <div class="aud-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v6M9 5h6M6 22c0-5 2.5-8 6-8s6 3 6 8"/><circle cx="12" cy="11" r="3"/></svg></div>
+        <span>Clínicas dentales y médicas</span>
+      </div>
+      <div class="aud">
+        <div class="aud-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 7-7 11-7 11z"/></svg></div>
+        <span>Psicólogos y consultas privadas</span>
+      </div>
+      <div class="aud">
+        <div class="aud-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21l9-18 9 18z"/><path d="M8 21l4-8 4 8"/></svg></div>
+        <span>Tour operadores</span>
+      </div>
+      <div class="aud">
+        <div class="aud-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3v6a3 3 0 0 0 6 0V3M9 9v12M16 3c1.5 0 2 1.5 2 3v6h-3V6c0-1.5.5-3 1-3z"/></svg></div>
+        <span>Restaurantes y cervecerías</span>
+      </div>
+      <div class="aud">
+        <div class="aud-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h2m14 0h2M6 8v8M18 8v8M9 6v12M15 6v12"/></svg></div>
+        <span>Gimnasios y centros estéticos</span>
+      </div>
+      <div class="aud">
+        <div class="aud-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg></div>
+        <span>Estudios profesionales</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PILARES ESTRATÉGICOS -->
+<section id="pilares">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">01 — Pilares estratégicos</span>
+      <h2 class="title-anim" data-split>Diseñamos para <span class="grad-text">posicionar tu marca.</span></h2>
+      <p>No vendemos sitios web. Construimos las decisiones visuales que hacen que tu negocio sea percibido como referente.</p>
+    </div>
+
+    <div class="pillars reveal-stagger">
+      <article class="pillar">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.6 6.4L21 9.3l-5 4.5 1.4 6.6L12 17l-5.4 3.4L8 13.8 3 9.3l6.4-.9z"/></svg>
+        </div>
+        <span class="num">— 01</span>
+        <h3>Posicionamiento y prestigio.</h3>
+        <p>No solo creamos sitios web; construimos la percepción de liderazgo de tu marca en el mercado.</p>
+      </article>
+
+      <article class="pillar">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s-8-4-8-12V5l8-3 8 3v5c0 8-8 12-8 12z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <span class="num">— 02</span>
+        <h3>Confianza instantánea.</h3>
+        <p>Diseños limpios y profesionales que eliminan la duda del cliente y validan la calidad de tu servicio.</p>
+      </article>
+
+      <article class="pillar">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h18M12 3v18M5 5l14 14M19 5L5 19"/></svg>
+        </div>
+        <span class="num">— 03</span>
+        <h3>Claridad estratégica.</h3>
+        <p>Arquitectura de información optimizada para reducir la fricción y acelerar la conversión de visitantes en clientes.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PRESENCIA DIGITAL LOCAL -->
+<section id="presencia" class="pdl">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker label-blue">02 — Presencia digital local</span>
+      <h2 class="title-anim" data-split>Visibilidad <span class="grad-text">donde ocurre la búsqueda.</span></h2>
+      <p>Hacemos que tu negocio no solo se vea profesional, sino que sea la primera opción cuando alguien te busque en Google.</p>
+    </div>
+
+    <div class="pdl-grid reveal-stagger">
+      <div class="pdl-card">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <div><h4>Google Business Profile</h4><p>Perfil profesional completo: foto, descripción, categoría y horarios optimizados.</p></div>
+      </div>
+      <div class="pdl-card">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 22s-7-7.5-7-13a7 7 0 0 1 14 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div><h4>Google Maps</h4><p>Tu ubicación correcta, lista para que tus clientes te encuentren al primer intento.</p></div>
+      </div>
+      <div class="pdl-card">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3v18"/></svg></div>
+        <div><h4>Estrategia de visibilidad local</h4><p>Tu sitio, ficha y datos coordinados para aparecer cuando importa.</p></div>
+      </div>
+    </div>
+
+    <div class="pdl-cta reveal">
+      <a class="btn btn-primary btn-lg" href="https://wa.me/56940976219">Quiero esto en mi negocio <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- INVERSIÓN -->
+<section id="inversion">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">03 — Inversión</span>
+      <h2 class="title-anim" data-split>Inversión clara, <span class="grad-text">sin sorpresas.</span></h2>
+      <p>Tres formatos diseñados según el tamaño y la ambición de tu proyecto.</p>
+    </div>
+
+    <div class="pricing-grid reveal-stagger">
+      <article class="price">
+        <span class="price-name">Landing Page</span>
+        <h3>Página única de alta conversión.</h3>
+        <div class="amt"><span class="v">$250.000</span><span class="c">CLP</span></div>
+        <p class="sub">Pensada para un objetivo claro: convertir visitas en clientes.</p>
+        <ul>
+          <li>1 página optimizada para vender</li>
+          <li>Diseño 100% responsive</li>
+          <li>Integración WhatsApp</li>
+          <li>Optimización móvil</li>
+          <li>SEO técnico básico</li>
+          <li>7 días de soporte post-lanzamiento</li>
+        </ul>
+        <span class="plazo">Entrega · 5 días hábiles</span>
+        <a class="btn btn-ghost" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20cotizar%20una%20Landing%20Page.">Cotizar landing <span class="arr">→</span></a>
+      </article>
+
+      <article class="price featured">
+        <span class="ribbon">Más elegido</span>
+        <span class="price-name">Web Profesional</span>
+        <h3>El estándar para negocios profesionales.</h3>
+        <div class="amt"><span class="v">$450.000</span><span class="c">CLP</span></div>
+        <p class="sub">El balance perfecto entre presencia, conversión y posicionamiento.</p>
+        <ul>
+          <li>Hasta 5 secciones o páginas</li>
+          <li>Animaciones premium scroll</li>
+          <li>Google Maps + WhatsApp integrados</li>
+          <li>SEO completo on-page</li>
+          <li>Galería de imágenes optimizada</li>
+          <li>Formulario de contacto</li>
+          <li>21 días de soporte post-lanzamiento</li>
+        </ul>
+        <span class="plazo">Entrega · 7 días hábiles</span>
+        <a class="btn btn-primary" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20cotizar%20la%20Web%20Profesional.">Cotizar web profesional <span class="arr">→</span></a>
+      </article>
+
+      <article class="price">
+        <span class="price-name">Experiencia Premium</span>
+        <h3>Para marcas que quieren posicionarse.</h3>
+        <div class="amt"><span class="v">$750.000</span><span class="c">CLP</span></div>
+        <p class="sub">Una plataforma completa para escalar tu negocio digitalmente.</p>
+        <ul>
+          <li>Hasta 10 páginas o secciones</li>
+          <li>SEO técnico avanzado</li>
+          <li>Animaciones Lottie personalizadas</li>
+          <li>Sistema de reservas o agenda</li>
+          <li>Blog opcional integrado</li>
+          <li>Estrategia de visibilidad local</li>
+          <li>21 días de soporte post-lanzamiento</li>
+        </ul>
+        <span class="plazo">Entrega · 10-14 días hábiles</span>
+        <a class="btn btn-ghost" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20cotizar%20la%20Experiencia%20Premium.">Cotizar experiencia premium <span class="arr">→</span></a>
+      </article>
+    </div>
+
+    <div class="mantencion reveal">
+      <div class="m-left">
+        <span class="m-title">Mantención mensual</span>
+        <span class="m-price">$40.000 CLP/mes</span>
+      </div>
+      <p class="m-desc">Backups · Hasta 3 cambios mensuales · Monitoreo 24/7 · Soporte WhatsApp · Reportes mensuales · Sin amarres.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTAFOLIO -->
+<section id="proyectos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">04 — Portafolio</span>
+      <h2 class="title-anim" data-split>Trabajo seleccionado, <span class="grad-text">pensado al detalle.</span></h2>
+      <p>Caso destacado en producción y maquetas conceptuales por sector. Más proyectos próximamente.</p>
+    </div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill">Fundación · Causa social</span>
+            <span class="status status-live">Lanzado</span>
+          </div>
+          <h3 style="margin-top:24px">Oncosur.</h3>
+          <p class="tagline" style="margin-top:14px">Unidos por el cáncer infantil.</p>
+        </div>
+        <p class="desc">Rediseño de identidad digital enfocado en la confianza del paciente y el prestigio institucional. Una plataforma cálida, clara y humana, diseñada para acompañar a niños y familias del sur de Chile en su momento más difícil.</p>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Fundación</span></div>
+          <div><span class="l">Entrega</span><span class="v">Diseño + desarrollo</span></div>
+          <div><span class="l">Estado</span><span class="v">Lanzado</span></div>
+        </div>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://oncosur.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Oncosur">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">oncosur.cl</span>
+            </div>
+            <div class="browser-body">
+              <img class="oncosur-logo" src="assets/oncosur-logo.jpg" alt="Oncosur" />
+              <span class="oncosur-tagline">Unidos por el cáncer infantil</span>
+              <h4 class="oncosur-headline">Acompañamos a niños del sur de Chile en su momento más difícil.</h4>
+              <p class="oncosur-sub">Apoyo, contención y esperanza para cada familia.</p>
+              <span class="oncosur-cta">Quiero ayudar →</span>
+              <span class="oncosur-stripe"></span>
+            </div>
+          </div>
+          <div class="mobile">
+            <div class="mobile-notch"></div>
+            <div class="mobile-body">
+              <img class="oncosur-logo" src="assets/oncosur-logo.jpg" alt="" />
+              <span class="oncosur-tagline">Unidos por el cáncer infantil</span>
+              <span class="mh">Cada niño<br/>cuenta.</span>
+              <span class="mc">Donar →</span>
+            </div>
+          </div>
+        </div>
+        </a>
+      </div>
+    </article>
+
+    <div class="proj-sep reveal"><span>· · ·</span></div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill">Cabaña · Turismo</span>
+            <span class="status status-live">Lanzado</span>
+          </div>
+          <h3 style="margin-top:24px">Posadas de Coyhaique.</h3>
+          <p class="tagline" style="margin-top:14px">Tu refugio boutique en la Patagonia chilena.</p>
+        </div>
+        <p class="desc">Web premium para cabaña boutique en la Patagonia chilena. Integración con Booking.com y Airbnb, galería, valoraciones y reservas por WhatsApp.</p>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Turismo</span></div>
+          <div><span class="l">Plan</span><span class="v">Web Completa</span></div>
+          <div><span class="l">Estado</span><span class="v">Lanzado</span></div>
+        </div>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://posadacoyhaique.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Posadas de Coyhaique">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">posadacoyhaique.vercel.app</span>
+            </div>
+            <div class="posada-body">
+              <span class="posada-brand"><span class="posada-mark"></span>Posadas de Coyhaique</span>
+              <span class="posada-tagline">Patagonia · Coyhaique · Chile</span>
+              <h4 class="posada-headline">Tu refugio en la <em>Patagonia Chilena.</em></h4>
+              <p class="posada-sub">Cabaña privada entre bosques nativos. A solo 6 km de Coyhaique.</p>
+              <div class="posada-ctas">
+                <span class="posada-cta">Reservar ahora</span>
+                <span class="posada-cta-ghost">Ver galería</span>
+              </div>
+              <div class="posada-stats">
+                <span class="posada-stat"><span class="stars">★★★★☆</span><span class="v">4.29</span> Airbnb</span>
+                <span class="posada-divider"></span>
+                <span class="posada-stat">Desde <span class="v">$80.000</span> CLP / noche</span>
+              </div>
+              <span class="posada-stripe"></span>
+            </div>
+          </div>
+          <div class="mobile">
+            <div class="mobile-notch"></div>
+            <div class="mobile-body">
+              <span class="posada-brand"><span class="posada-mark"></span>Posadas</span>
+              <span class="posada-tagline">Patagonia · Coyhaique</span>
+              <span class="ph">Tu refugio<br/>en la <em>Patagonia.</em></span>
+              <span class="pc">Reservar →</span>
+            </div>
+          </div>
+        </div>
+        </a>
+      </div>
+    </article>
+
+    <div class="proj-sep reveal" style="margin:48px 0 32px"><span>Maquetas conceptuales</span></div>
+
+    <div class="demos reveal-stagger">
+      <article class="demo">
+        <div class="demo-mock">
+          <a class="mock-link" href="https://demotour.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Rutas del Sur">
+            <div class="demo-preview demo-preview--tours">
+              <div class="browser-bar">
+                <span class="d"></span><span class="d"></span><span class="d"></span>
+                <span class="url">demotour.vercel.app</span>
+              </div>
+              <div class="demo-hero">
+                <span class="demo-hero-tag">Rutas del Sur</span>
+                <h4 class="demo-hero-title">Aventuras inolvidables en el sur de Chile.</h4>
+                <span class="demo-hero-cta">Reservar tour →</span>
+                <span class="demo-hero-stripe"></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="demo-info">
+          <div class="meta">
+            <span class="pill">Tour · Turismo</span>
+            <span class="status status-demo">🎨 Demo</span>
+          </div>
+          <h3>Rutas del Sur.</h3>
+          <p class="tagline">Tour operador con reservas integradas.</p>
+          <p class="desc">Demo de web para tour operador. 9 tours, reservas por WhatsApp, galería y mapa.</p>
+          <div class="specs">
+            <div><span class="l">Sector</span><span class="v">Turismo</span></div>
+            <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
+          </div>
+          <a class="demo-cta-btn" href="https://demotour.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+        </div>
+      </article>
+
+      <article class="demo">
+        <div class="demo-mock">
+          <a class="mock-link" href="https://democafe-lime.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Niebla Cafetería">
+            <div class="demo-preview demo-preview--cafe">
+              <div class="browser-bar">
+                <span class="d"></span><span class="d"></span><span class="d"></span>
+                <span class="url">democafe-lime.vercel.app</span>
+              </div>
+              <div class="demo-hero">
+                <span class="demo-hero-tag">Niebla Cafetería</span>
+                <h4 class="demo-hero-title">Café de especialidad, hecho con calma.</h4>
+                <span class="demo-hero-cta">Ver menú →</span>
+                <span class="demo-hero-stripe"></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="demo-info">
+          <div class="meta">
+            <span class="pill">Cafetería · Gastronomía</span>
+            <span class="status status-demo">🎨 Demo</span>
+          </div>
+          <h3>Niebla Cafetería.</h3>
+          <p class="tagline">Café de especialidad con menú interactivo.</p>
+          <p class="desc">Demo de web para cafetería de especialidad. Menú interactivo, galería, historia y reservas por WhatsApp.</p>
+          <div class="specs">
+            <div><span class="l">Sector</span><span class="v">Gastronomía</span></div>
+            <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
+          </div>
+          <a class="demo-cta-btn" href="https://democafe-lime.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+        </div>
+      </article>
+
+      <article class="demo">
+        <div class="demo-mock">
+          <a class="mock-link" href="https://demogym-two.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Elite Fitness">
+            <div class="demo-preview demo-preview--gym">
+              <div class="browser-bar">
+                <span class="d"></span><span class="d"></span><span class="d"></span>
+                <span class="url">demogym-two.vercel.app</span>
+              </div>
+              <div class="demo-hero">
+                <span class="demo-hero-tag">Elite Fitness</span>
+                <h4 class="demo-hero-title">Entrenamiento que transforma.</h4>
+                <span class="demo-hero-cta">Empezar ahora →</span>
+                <span class="demo-hero-stripe"></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="demo-info">
+          <div class="meta">
+            <span class="pill">Gimnasio · Fitness</span>
+            <span class="status status-demo">🎨 Demo</span>
+          </div>
+          <h3>Elite Fitness.</h3>
+          <p class="tagline">Centro de entrenamiento de alto rendimiento.</p>
+          <p class="desc">Demo de web para centro de entrenamiento. Planes, misión y visión, comparativa y contacto por WhatsApp.</p>
+          <div class="specs">
+            <div><span class="l">Sector</span><span class="v">Fitness</span></div>
+            <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
+          </div>
+          <a class="demo-cta-btn" href="https://demogym-two.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+        </div>
+      </article>
+
+      <article class="demo">
+        <div class="demo-mock">
+          <a class="mock-link" href="https://democlinicadental-six.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Sonrisa Dental">
+            <div class="demo-preview demo-preview--dental">
+              <div class="browser-bar">
+                <span class="d"></span><span class="d"></span><span class="d"></span>
+                <span class="url">democlinicadental-six.vercel.app</span>
+              </div>
+              <div class="demo-hero">
+                <span class="demo-hero-tag">Sonrisa Dental</span>
+                <h4 class="demo-hero-title">Tu sonrisa, en las mejores manos.</h4>
+                <span class="demo-hero-cta">Agendar hora →</span>
+                <span class="demo-hero-stripe"></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="demo-info">
+          <div class="meta">
+            <span class="pill">Clínica · Salud</span>
+            <span class="status status-demo">🎨 Demo</span>
+          </div>
+          <h3>Sonrisa Dental.</h3>
+          <p class="tagline">Centro de diagnóstico dental moderno.</p>
+          <p class="desc">Demo de web para centro de diagnóstico dental. Servicios, equipo profesional, galería y contacto por WhatsApp.</p>
+          <div class="specs">
+            <div><span class="l">Sector</span><span class="v">Salud</span></div>
+            <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
+          </div>
+          <a class="demo-cta-btn" href="https://democlinicadental-six.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+        </div>
+      </article>
+
+      <article class="demo">
+        <div class="demo-mock">
+          <a class="mock-link" href="https://demokine.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Kinesiólogo">
+            <div class="demo-preview demo-preview--kine">
+              <div class="browser-bar">
+                <span class="d"></span><span class="d"></span><span class="d"></span>
+                <span class="url">demokine.vercel.app</span>
+              </div>
+              <div class="demo-hero">
+                <span class="demo-hero-tag">Klgo. Nombre Apellido</span>
+                <h4 class="demo-hero-title">Kinesiología deportiva y rehabilitación personalizada.</h4>
+                <span class="demo-hero-cta">Agenda tu hora →</span>
+                <span class="demo-hero-stripe"></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="demo-info">
+          <div class="meta">
+            <span class="pill">Kinesiólogo · Salud</span>
+            <span class="status status-demo">🎨 Demo</span>
+          </div>
+          <h3>Klgo. Demo.</h3>
+          <p class="tagline">Kinesiólogo con marca personal.</p>
+          <p class="desc">Demo de web para kinesiólogo independiente. Especialización en rehabilitación deportiva, servicios, galería, testimonios y contacto por WhatsApp.</p>
+          <div class="specs">
+            <div><span class="l">Sector</span><span class="v">Salud</span></div>
+            <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
+          </div>
+          <a class="demo-cta-btn" href="https://demokine.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+        </div>
+      </article>
+
+      <article class="demo">
+        <div class="demo-mock">
+          <a class="mock-link" href="https://democlinicagen.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Clínica Salud">
+            <div class="demo-preview demo-preview--clinica">
+              <div class="browser-bar">
+                <span class="d"></span><span class="d"></span><span class="d"></span>
+                <span class="url">democlinicagen.vercel.app</span>
+              </div>
+              <div class="demo-hero">
+                <span class="demo-hero-tag">Clínica Salud</span>
+                <h4 class="demo-hero-title">Tu salud, nuestra prioridad.</h4>
+                <span class="demo-hero-cta">Agendar hora →</span>
+                <span class="demo-hero-stripe"></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="demo-info">
+          <div class="meta">
+            <span class="pill">Clínica · Salud</span>
+            <span class="status status-demo">🎨 Demo</span>
+          </div>
+          <h3>Clínica Salud.</h3>
+          <p class="tagline">Centro médico multidisciplinario.</p>
+          <p class="desc">Demo de web para clínica de salud general. Medicina general, kinesiología, salud mental, FAQ, testimonios y agenda online.</p>
+          <div class="specs">
+            <div><span class="l">Sector</span><span class="v">Salud</span></div>
+            <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
+          </div>
+          <a class="demo-cta-btn" href="https://democlinicagen.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+        </div>
+      </article>
+    </div>
+
+    <div class="portfolio-cta reveal">
+      <div>
+        <h4>¿Tu negocio podría ser nuestro próximo caso?</h4>
+        <p>Conversemos sobre tu proyecto. Te respondemos personalmente por WhatsApp.</p>
+      </div>
+      <a class="btn btn-primary btn-lg" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20conversar%20sobre%20mi%20proyecto.">Conversemos <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+</section>
+
+<!-- TESTIMONIO -->
+<section id="testimonio" class="testimonio">
+  <div class="wrap">
+    <div class="inner reveal">
+      <span class="kicker">Lo que dicen de nosotros</span>
+      <blockquote>
+        Trabajar con Gaspar fue una experiencia muy cercana desde el primer momento. Logró entender perfectamente lo que queríamos transmitir como fundación y transformarlo en una página web moderna, clara y muy humana. Durante todo el proceso destacó por proponer ideas que realmente mejoraron nuestra presencia digital. El resultado final superó nuestras expectativas y hoy sentimos que nuestra fundación transmite mucha más confianza y profesionalismo.
+      </blockquote>
+      <cite><strong>Patricia</strong> · Presidenta, Fundación Oncosur</cite>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="proceso">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">05 — Proceso</span>
+      <h2 class="title-anim" data-split>Cinco etapas, <span class="grad-text">cero improvisación.</span></h2>
+      <p>Un sistema riguroso para entregar en tiempo, con calidad consistente.</p>
+    </div>
+
+    <div class="timeline reveal-stagger">
+      <div class="steps">
+        <div class="step"><span class="ring"></span><span class="label">Fase 01</span><h3>Estrategia</h3><p>Briefing inicial de 15 minutos por WhatsApp. Definimos objetivo, audiencia y referencias visuales.</p></div>
+        <div class="step"><span class="ring"></span><span class="label">Fase 02</span><h3>Diseño</h3><p>Maqueta visual de tu sitio. Revisamos juntos y ajustamos hasta que refleje exactamente tu marca.</p></div>
+        <div class="step"><span class="ring"></span><span class="label">Fase 03</span><h3>Desarrollo</h3><p>Construcción técnica con código limpio, animaciones y optimización móvil. Sin plantillas.</p></div>
+        <div class="step"><span class="ring"></span><span class="label">Fase 04</span><h3>Ajustes</h3><p>Hasta dos rondas de cambios incluidas. Refinamos detalles finos antes del lanzamiento.</p></div>
+        <div class="step"><span class="ring"></span><span class="label">Fase 05</span><h3>Lanzamiento</h3><p>Publicamos tu sitio, conectamos tu dominio y te entregamos todo funcionando. Cambios futuros se gestionan por WhatsApp.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">06 — Preguntas frecuentes</span>
+      <h2 class="title-anim" data-split>Resolvemos tus dudas <span class="grad-text">antes de empezar.</span></h2>
+    </div>
+
+    <div class="faq reveal-stagger">
+      <details class="faq-item">
+        <summary>¿Cuánto se demora hacer mi web?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">Entre 5 y 14 días hábiles según el plan. Empezamos cuando recibimos el 50% inicial y la información del briefing.</div>
+      </details>
+      <details class="faq-item">
+        <summary>¿Cómo funcionan los pagos?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">50% al inicio del proyecto y 50% al entregar la web publicada. Aceptamos transferencia bancaria.</div>
+      </details>
+      <details class="faq-item">
+        <summary>¿Qué necesito para empezar?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">Tu logo (si lo tienes), información de tus servicios, fotos de tu negocio y datos de contacto. Todo lo demás lo trabajamos juntos en el briefing inicial de 15 minutos.</div>
+      </details>
+      <details class="faq-item">
+        <summary>¿La mantención es obligatoria?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">No. Si decides no contratarla, cualquier cambio futuro se cobra por modificación individual. La mantención conviene si planeas actualizar tu web seguido.</div>
+      </details>
+      <details class="faq-item">
+        <summary>¿Puedo editar mi web después?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">Los cambios futuros se gestionan por WhatsApp. Con la mantención mensual incluyes hasta 3 cambios al mes. Sin mantención, cada modificación se cobra individualmente.</div>
+      </details>
+      <details class="faq-item">
+        <summary>¿Trabajan fuera de Valdivia?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">Sí. Estamos en Valdivia y conocemos el mercado local, pero trabajamos con clientes en toda la Región de Los Ríos y Chile. Todo se gestiona por WhatsApp y videollamada.</div>
+      </details>
+      <details class="faq-item">
+        <summary>¿Cuántos proyectos llevan?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+        <div class="body">Somos un estudio boutique: trabajamos con pocos clientes a la vez para mantener la calidad al máximo. Caso lanzado: Fundación Oncosur. Maquetas sectoriales disponibles para que veas el nivel del trabajo antes de decidir.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="reveal">
+      <span class="kicker label-blue" style="justify-content:center">— Trabajemos juntos</span>
+      <h2 class="title-anim" style="margin-top:24px" data-split>Tu negocio merece <span class="grad-text">ser el primero en Valdivia.</span></h2>
+      <p>Cuéntanos sobre tu proyecto. Te respondemos personalmente por WhatsApp.</p>
+      <div class="final-cta">
+        <a class="btn btn-wa btn-lg" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20hablar%20sobre%20mi%20proyecto.">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A10 10 0 0 0 4.13 18.34L3 22l3.74-1.1A10 10 0 1 0 19.05 4.91zM12 20a8 8 0 0 1-4.08-1.12l-.29-.17-2.22.65.66-2.16-.19-.31A8 8 0 1 1 12 20zm4.39-5.74c-.24-.12-1.41-.7-1.63-.78s-.38-.12-.54.12-.62.78-.76.94-.28.18-.52.06a6.5 6.5 0 0 1-1.92-1.18 7.16 7.16 0 0 1-1.33-1.65c-.14-.24 0-.37.1-.49s.24-.28.36-.42a1.65 1.65 0 0 0 .24-.4.44.44 0 0 0 0-.42c-.06-.12-.54-1.3-.74-1.78s-.39-.4-.54-.41h-.46a.89.89 0 0 0-.64.3 2.69 2.69 0 0 0-.84 2c0 1.18.86 2.32 1 2.48a9.66 9.66 0 0 0 3.74 3.3 12.78 12.78 0 0 0 1.25.46 3 3 0 0 0 1.38.09 2.27 2.27 0 0 0 1.49-1.05 1.84 1.84 0 0 0 .13-1.05c-.06-.1-.21-.16-.45-.28z"/></svg>
+          Hablemos de tu proyecto
+        </a>
+      </div>
+      <div class="final-contact">
+        <a href="https://wa.me/56940976219">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A10 10 0 0 0 4.13 18.34L3 22l3.74-1.1A10 10 0 1 0 19.05 4.91zM12 20a8 8 0 0 1-4.08-1.12l-.29-.17-2.22.65.66-2.16-.19-.31A8 8 0 1 1 12 20z"/></svg>
+          +56 9 4097 6219
+        </a>
+        <a href="mailto:nvyestudios@gmail.com">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></svg>
+          nvyestudios@gmail.com
+        </a>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s-7-7.5-7-13a7 7 0 0 1 14 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          Valdivia, Chile
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="left">
+        <div class="brand"><span class="brand-mark"></span> Nvy Studios</div>
+        <p>Estudio digital estratégico. Diseño web premium.</p>
+      </div>
+      <div class="cols">
+        <ul>
+          <li class="label">Estudio</li>
+          <li><a href="#pilares">Pilares</a></li>
+          <li><a href="#presencia">Presencia digital</a></li>
+          <li><a href="#inversion">Inversión</a></li>
+          <li><a href="#proyectos">Portafolio</a></li>
+          <li><a href="#proceso">Proceso</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <ul>
+          <li class="label">Contacto</li>
+          <li><a href="https://wa.me/56940976219">+56 9 4097 6219</a></li>
+          <li><a href="mailto:nvyestudios@gmail.com">nvyestudios@gmail.com</a></li>
+          <li><span style="color:var(--mut)">Valdivia, Chile</span></li>
+        </ul>
+        <ul>
+          <li class="label">Legal</li>
+          <li><a href="#privacidad">Política de Privacidad</a></li>
+          <li><a href="#terminos">Términos y Condiciones</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="colophon">
+      <span>© 2026 Nvy Studios </span>
+      <span></span>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-fab" href="https://wa.me/56940976219" aria-label="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A10 10 0 0 0 4.13 18.34L3 22l3.74-1.1A10 10 0 1 0 19.05 4.91zM12 20a8 8 0 0 1-4.08-1.12l-.29-.17-2.22.65.66-2.16-.19-.31A8 8 0 1 1 12 20zm4.39-5.74c-.24-.12-1.41-.7-1.63-.78s-.38-.12-.54.12-.62.78-.76.94-.28.18-.52.06a6.5 6.5 0 0 1-1.92-1.18 7.16 7.16 0 0 1-1.33-1.65c-.14-.24 0-.37.1-.49s.24-.28.36-.42a1.65 1.65 0 0 0 .24-.4.44.44 0 0 0 0-.42c-.06-.12-.54-1.3-.74-1.78s-.39-.4-.54-.41h-.46a.89.89 0 0 0-.64.3 2.69 2.69 0 0 0-.84 2c0 1.18.86 2.32 1 2.48a9.66 9.66 0 0 0 3.74 3.3 12.78 12.78 0 0 0 1.25.46 3 3 0 0 0 1.38.09 2.27 2.27 0 0 0 1.49-1.05 1.84 1.84 0 0 0 .13-1.05c-.06-.1-.21-.16-.45-.28z"/></svg>
+</a>
+
+<script>
+  // Split titles into per-word spans
+  document.querySelectorAll('[data-split]').forEach(el=>{
+    const out = document.createDocumentFragment();
+    el.childNodes.forEach(child=>{
+      if(child.nodeType===3){
+        child.textContent.split(/(\s+)/).forEach(t=>{
+          if(/^\s+$/.test(t)){ out.appendChild(document.createTextNode(t)); }
+          else if(t.length){
+            const s = document.createElement('span'); s.className='w'; s.textContent=t;
+            out.appendChild(s);
+          }
+        });
+      } else if(child.nodeType===1){
+        const clone = child.cloneNode(false);
+        clone.classList.add('w'); clone.textContent = child.textContent;
+        out.appendChild(clone);
+      }
+    });
+    el.innerHTML=''; el.appendChild(out);
+  });
+
+  // Reveal observer
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal, .reveal-stagger, .title-anim').forEach(el=>io.observe(el));
+
+  // Hover spotlight
+  document.querySelectorAll('.pillar, .pdl-card, .coming-card').forEach(card=>{
+    card.addEventListener('pointermove', e=>{
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100)+'%');
+      card.style.setProperty('--my', ((e.clientY - r.top)/r.height*100)+'%');
+    });
+  });
+
+  // Parallax
+  const orbA = document.querySelector('.hero-orb.a');
+  const orbB = document.querySelector('.hero-orb.b');
+  window.addEventListener('scroll', ()=>{
+    const y = window.scrollY;
+    if(orbA) orbA.style.transform = `translateX(-50%) translateY(${y*0.12}px)`;
+    if(orbB) orbB.style.transform = `translateX(-50%) translateY(${y*-0.08}px)`;
+  }, {passive:true});
+
+  // Particles
+  (function(){
+    const c = document.getElementById('stars'); if(!c) return;
+    const ctx = c.getContext('2d');
+    let w,h,dpr,particles;
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio||1, 2);
+      w = c.width = innerWidth * dpr; h = c.height = innerHeight * dpr;
+      c.style.width = innerWidth+'px'; c.style.height = innerHeight+'px';
+      const N = Math.min(80, Math.floor((innerWidth*innerHeight)/22000));
+      particles = Array.from({length:N}, ()=>({
+        x: Math.random()*w, y: Math.random()*h,
+        r: (Math.random()*1.4 + 0.3)*dpr,
+        vx: (Math.random()-0.5)*0.07*dpr, vy: (Math.random()-0.5)*0.07*dpr,
+        a: Math.random()*0.5 + 0.2, tw: Math.random()*Math.PI*2
+      }));
+    }
+    resize(); addEventListener('resize', resize);
+    let t=0;
+    function tick(){
+      t+=0.005;
+      ctx.clearRect(0,0,w,h);
+      for(const p of particles){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0) p.x=w; else if(p.x>w) p.x=0;
+        if(p.y<0) p.y=h; else if(p.y>h) p.y=0;
+        const a = p.a * (0.65 + 0.35*Math.sin(t*2 + p.tw));
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(180, 210, 255, ${a})`;
+        ctx.shadowBlur = 8*dpr; ctx.shadowColor = 'rgba(96,165,250,0.6)';
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  /* ============================================================
+     Lenis — smooth scroll premium
+     - Solo en desktop / wheel (touch usa scroll nativo)
+     - Respeta prefers-reduced-motion
+     - Intercepta anchor links para un "go-to" suave
+     - No rompe scroll events nativos (parallax, IntersectionObserver, etc.)
+     ============================================================ */
+  (function(){
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced || typeof Lenis === 'undefined') return;
+
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      smoothTouch: false,        // nativo en touch — mejor UX móvil
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+      lerp: 0.1,
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      infinite: false,
+      autoResize: true,
+    });
+
+    function raf(time){
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Anchor links → scroll suave con offset para el nav fijo
+    const NAV_OFFSET = -88;
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        if (!href || href === '#' || href.length < 2) return;
+        const target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(target, { offset: NAV_OFFSET, duration: 1.3 });
+      });
+    });
+
+    // Disponible para debug / extensiones futuras
+    window.__lenis = lenis;
+  })();
+</script>
+</body>
+</html>
