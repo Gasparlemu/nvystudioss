@@ -405,6 +405,29 @@
   .mobile-body .posada-mark{width:7px;height:7px;border-radius:1.5px}
   .mobile-body .posada-brand{font-size:8px;gap:5px}
   .mobile-body .posada-tagline{font-size:6.5px;letter-spacing:.22em}
+
+  /* Gestión Sur mock */
+  .gestionsur-body{
+    position:relative;padding:40px 28px 36px;
+    background:#06090f;
+    display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;overflow:hidden;
+  }
+  .gestionsur-body::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(70% 55% at 50% 0%, rgba(249,115,22,.18), transparent 60%),
+      radial-gradient(60% 45% at 50% 100%, rgba(37,99,235,.12), transparent 60%),
+      linear-gradient(180deg, #0d1320 0%, #06090f 100%);
+  }
+  .gestionsur-body > *{position:relative;z-index:2}
+  .gestionsur-logo{width:80px;height:auto;filter:drop-shadow(0 4px 16px rgba(249,115,22,.25))}
+  .gestionsur-tagline{color:#fb923c;font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:500}
+  .gestionsur-headline{color:#fff;font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:22ch;margin:0}
+  .gestionsur-sub{color:#94A3B8;font-size:11px;line-height:1.55;max-width:34ch;margin:0}
+  .gestionsur-cta{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;background:linear-gradient(180deg,#f97316,#c2410c);color:#fff;font-size:10.5px;font-weight:600}
+  .gestionsur-stripe{width:100%;height:3px;background:linear-gradient(90deg,#f97316 0%,#f97316 50%,#3b82f6 50%,#3b82f6 100%);border-radius:2px;margin-top:10px}
+  .mobile-body .gestionsur-logo{width:40px}
+  .mobile-body .gestionsur-tagline{font-size:6.5px;letter-spacing:.22em}
   .mobile-body .ph{color:#fff;font-size:10px;font-weight:600;line-height:1.18;letter-spacing:-.015em}
   .mobile-body .ph em{font-style:italic;font-weight:500;color:#e8c281}
   .mobile-body .pc{margin-top:2px;padding:5px 10px;border-radius:999px;background:linear-gradient(180deg,#e8c281,#a07a3e);color:#1a0e02;font-size:7px;font-weight:600}
@@ -702,28 +725,36 @@
 
   /* Testimonio */
   .testimonio{padding:160px 0;position:relative}
-  .testimonio .inner{max-width:720px;margin:0 auto;text-align:center}
   .testimonio .kicker{justify-content:center}
-  .testimonio blockquote{
-    margin:48px 0 0;padding:0;
-    font-family:"Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
-    font-weight:400;font-style:italic;
-    font-size:clamp(24px,2.4vw,32px);line-height:1.45;letter-spacing:-.012em;
-    color:#e2e8f0;text-wrap:pretty;
+  .test-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px}
+  .test-card{
+    background:rgba(11,17,34,.45);border:1px solid var(--line);
+    border-radius:var(--r-xl);padding:40px 36px;
+    display:flex;flex-direction:column;
+    transition:border-color .4s var(--ease);
   }
-  .testimonio blockquote::before{
-    content:"“";display:block;
-    font-family:"Cormorant Garamond", Georgia, serif;
-    font-size:120px;line-height:.6;color:var(--blue-4);opacity:.5;
+  .test-card:hover{border-color:rgba(96,165,250,.28)}
+  .test-card blockquote{
+    margin:32px 0 0;padding:0;
+    font-family:”Cormorant Garamond”,”Cormorant”,Georgia,”Times New Roman”,serif;
+    font-weight:400;font-style:italic;
+    font-size:clamp(17px,1.7vw,22px);line-height:1.5;letter-spacing:-.012em;
+    color:#e2e8f0;text-wrap:pretty;flex:1;
+  }
+  .test-card blockquote::before{
+    content:”””;display:block;
+    font-family:”Cormorant Garamond”,Georgia,serif;
+    font-size:90px;line-height:.6;color:var(--blue-4);opacity:.5;
     margin-bottom:14px;
   }
-  .testimonio cite{
-    display:block;margin-top:40px;font-style:normal;
-    font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+  .test-card cite{
+    display:block;margin-top:28px;font-style:normal;
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
     color:var(--mut);
   }
-  .testimonio cite strong{color:#fff;font-weight:600;letter-spacing:.18em}
-  @media (max-width:680px){ .testimonio{padding:100px 0} .testimonio blockquote::before{font-size:90px} }
+  .test-card cite strong{color:#fff;font-weight:600;letter-spacing:.18em}
+  @media (max-width:768px){.test-grid{grid-template-columns:1fr}}
+  @media (max-width:680px){ .testimonio{padding:100px 0} }
 
   /* Process */
   .timeline{position:relative;padding:32px 0 8px}
@@ -1152,6 +1183,57 @@
       </div>
     </article>
 
+    <div class="proj-sep reveal"><span>· · ·</span></div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill">Consultoría · Prevención de Riesgos</span>
+            <span class="status status-live">Lanzado</span>
+          </div>
+          <h3 style="margin-top:24px">Gestión Sur.</h3>
+          <p class="tagline" style="margin-top:14px">Prevención de riesgos, calidad y ambiente en Valdivia.</p>
+        </div>
+        <p class="desc">Web profesional para consultoría de prevención de riesgos laborales con más de 5 años de experiencia y 27 empresas asesoradas. Cobertura en las regiones de Los Ríos, Los Lagos y La Araucanía.</p>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Consultoría</span></div>
+          <div><span class="l">Plan</span><span class="v">Web Profesional</span></div>
+          <div><span class="l">Estado</span><span class="v">Lanzado</span></div>
+        </div>
+        <a class="btn btn-ghost" href="https://gestionsur.vercel.app" target="_blank" rel="noopener noreferrer">Ver sitio <span class="arr">→</span></a>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://gestionsur.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Gestión Sur">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">gestionsur.vercel.app</span>
+            </div>
+            <div class="gestionsur-body">
+              <img class="gestionsur-logo" src="assets/logojaime.png" alt="Gestión Sur" />
+              <span class="gestionsur-tagline">Prevención · Calidad · Ambiente</span>
+              <h4 class="gestionsur-headline">Seguridad laboral que protege a tu empresa.</h4>
+              <p class="gestionsur-sub">Más de 5 años de experiencia · 27 empresas asesoradas · Valdivia.</p>
+              <span class="gestionsur-cta">Solicitar asesoría →</span>
+              <span class="gestionsur-stripe"></span>
+            </div>
+          </div>
+          <div class="mobile">
+            <div class="mobile-notch"></div>
+            <div class="mobile-body">
+              <img class="gestionsur-logo" src="assets/logojaime.png" alt="Gestión Sur" />
+              <span class="gestionsur-tagline">Prevención · Valdivia</span>
+              <span class="ph" style="color:#fff;font-size:9px;font-weight:600;line-height:1.2;letter-spacing:-.01em">Seguridad<br/>que protege.</span>
+              <span class="gestionsur-cta" style="font-size:7px;padding:5px 10px">Asesoría →</span>
+            </div>
+          </div>
+        </div>
+        </a>
+      </div>
+    </article>
+
     <div class="proj-sep reveal" style="margin:48px 0 32px"><span>Maquetas conceptuales</span></div>
 
     <div class="demos reveal-stagger">
@@ -1369,12 +1451,22 @@
 <!-- TESTIMONIO -->
 <section id="testimonio" class="testimonio">
   <div class="wrap">
-    <div class="inner reveal">
-      <span class="kicker">Lo que dicen de nosotros</span>
-      <blockquote>
-        Trabajar con Gaspar fue una experiencia muy cercana desde el primer momento. Logró entender perfectamente lo que queríamos transmitir como fundación y transformarlo en una página web moderna, clara y muy humana. Durante todo el proceso destacó por proponer ideas que realmente mejoraron nuestra presencia digital. El resultado final superó nuestras expectativas y hoy sentimos que nuestra fundación transmite mucha más confianza y profesionalismo.
-      </blockquote>
-      <cite><strong>Patricia</strong> · Presidenta, Fundación Oncosur</cite>
+    <div class="reveal">
+      <span class="kicker" style="justify-content:center">Lo que dicen de nosotros</span>
+      <div class="test-grid">
+        <div class="test-card">
+          <blockquote>
+            Trabajar con Gaspar fue una experiencia muy cercana desde el primer momento. Logró entender perfectamente lo que queríamos transmitir como fundación y transformarlo en una página web moderna, clara y muy humana. Durante todo el proceso destacó por proponer ideas que realmente mejoraron nuestra presencia digital. El resultado final superó nuestras expectativas y hoy sentimos que nuestra fundación transmite mucha más confianza y profesionalismo.
+          </blockquote>
+          <cite><strong>Patricia Elorz</strong> · Presidenta, Fundación Oncosur</cite>
+        </div>
+        <div class="test-card">
+          <blockquote>
+            Gaspar entendió desde el principio lo que necesitaba: una web seria, profesional y que transmitiera confianza a mis clientes. El proceso fue rápido y sin complicaciones. Hoy varios clientes me dicen que la página les da mucha más credibilidad antes de contratar. Para un prevencionista independiente, eso lo es todo.
+          </blockquote>
+          <cite><strong>Jaime González</strong> · Prevencionista de Riesgos, Gestión Sur</cite>
+        </div>
+      </div>
     </div>
   </div>
 </section>
