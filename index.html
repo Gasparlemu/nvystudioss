@@ -527,7 +527,9 @@
     transition:transform .5s var(--ease), border-color .4s var(--ease);
   }
   .demo:hover{transform:translateY(-3px);border-color:rgba(10,37,128,.25)}
-  .demo .demo-info{padding:32px 30px 26px;display:flex;flex-direction:column;gap:18px}
+  .demo .demo-info{padding:32px 30px 26px;display:flex;flex-direction:column;gap:18px;flex:1}
+  /* empuja specs + botón al pie para que todas las cards alineen igual */
+  .demo .specs{margin-top:auto}
   .demo .meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
   .demo .pill{font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-4);padding:5px 10px;border-radius:999px;background:rgba(37,99,235,.1);border:1px solid rgba(96,165,250,.25)}
   .demo .status{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut-2);font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -545,125 +547,47 @@
   .demo-mock img{display:block;width:100%;height:auto;transition:transform .6s var(--ease)}
   .demo:hover .demo-mock img{transform:scale(1.015)}
 
-  /* Posada — hero réplica (estilo OncoSur) */
-  .posada-body{
-    position:relative;padding:42px 28px 36px;background:#0a1410;
-    display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center;
-    overflow:hidden;
-  }
-  .posada-body::before{
-    content:"";position:absolute;inset:0;
-    background:
-      radial-gradient(80% 55% at 50% 0%, rgba(154,183,143,.16), transparent 65%),
-      radial-gradient(60% 50% at 50% 100%, rgba(212,167,106,.10), transparent 60%),
-      linear-gradient(180deg, #0d1a15 0%, #050a08 100%);
-  }
-  .posada-body > *{position:relative;z-index:2}
-  .posada-brand{display:inline-flex;align-items:center;gap:9px;color:#fff;font-size:12.5px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
-  .posada-mark{width:11px;height:11px;transform:rotate(45deg);background:linear-gradient(135deg,#e8c281,#8a6d3e);border-radius:2px;box-shadow:0 0 14px rgba(232,194,129,.45)}
-  .posada-tagline{color:#9ab78f;font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:500}
-  .posada-headline{color:#fff;font-size:18px;font-weight:600;letter-spacing:-.025em;line-height:1.18;max-width:22ch;margin:0}
-  .posada-headline em{font-style:italic;font-weight:500;color:#e8c281;letter-spacing:-.018em}
-  .posada-sub{color:#94A3B8;font-size:11px;line-height:1.55;max-width:34ch;margin:0}
-  .posada-ctas{display:flex;gap:7px;margin-top:3px;align-items:center}
-  .posada-cta{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:999px;background:linear-gradient(180deg,#e8c281,#a07a3e);color:#1a0e02;font-size:10.5px;font-weight:600;letter-spacing:.005em}
-  .posada-cta-ghost{display:inline-flex;align-items:center;padding:8px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.04);color:#fff;font-size:10.5px;font-weight:500}
-  .posada-stats{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-top:8px}
-  .posada-stat{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#cbd5e1;letter-spacing:.02em}
-  .posada-stat .v{color:#fff;font-weight:600}
-  .posada-stat .stars{color:#e8c281;letter-spacing:.5px}
-  .posada-divider{width:1px;height:11px;background:rgba(148,163,184,.25)}
-  .posada-stripe{width:100%;height:3px;background:linear-gradient(90deg,#e8c281 0%, #e8c281 50%, #9ab78f 50%, #9ab78f 100%);border-radius:2px;margin-top:14px}
-  /* Mobile companion (Posada) */
-  .mobile-body .posada-mark{width:7px;height:7px;border-radius:1.5px}
-  .mobile-body .posada-brand{font-size:8px;gap:5px}
-  .mobile-body .posada-tagline{font-size:6.5px;letter-spacing:.22em}
+  /* height:auto es obligatorio: los atributos width/height del <img> entran
+     como hint de presentación (height:625px) y anularían el aspect-ratio,
+     dejando la captura estirada en una tira vertical. */
+  .shot{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top center;background:#0b0d12}
+  .shot-m{display:block;width:100%;height:100%;object-fit:cover;object-position:top center;background:#0b0d12}
 
-  /* Gestión Sur mock */
-  .gestionsur-body{
-    position:relative;padding:40px 28px 36px;
-    background:#06090f;
-    display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;overflow:hidden;
-  }
-  .gestionsur-body::before{
-    content:"";position:absolute;inset:0;
-    background:
-      radial-gradient(70% 55% at 50% 0%, rgba(34,197,94,.16), transparent 60%),
-      radial-gradient(60% 45% at 50% 100%, rgba(37,99,235,.14), transparent 60%),
-      linear-gradient(180deg, #071510 0%, #06090f 100%);
-  }
-  .gestionsur-body > *{position:relative;z-index:2}
-  .gestionsur-logo{width:80px;height:auto;filter:drop-shadow(0 4px 16px rgba(34,197,94,.22))}
-  .gestionsur-tagline{color:#4ade80;font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;font-weight:500}
-  .gestionsur-headline{color:#fff;font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:22ch;margin:0}
-  .gestionsur-sub{color:#94A3B8;font-size:11px;line-height:1.55;max-width:34ch;margin:0}
-  .gestionsur-cta{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:999px;background:linear-gradient(180deg,#22c55e,#15803d);color:#052e16;font-size:10.5px;font-weight:600}
-  .gestionsur-stripe{width:100%;height:3px;background:linear-gradient(90deg,#22c55e 0%,#22c55e 50%,#2563eb 50%,#2563eb 100%);border-radius:2px;margin-top:10px}
-  .mobile-body .gestionsur-logo{width:40px}
-  .mobile-body .gestionsur-tagline{font-size:6.5px;letter-spacing:.22em}
-  .mobile-body .ph{color:#fff;font-size:10px;font-weight:600;line-height:1.18;letter-spacing:-.015em}
-  .mobile-body .ph em{font-style:italic;font-weight:500;color:#e8c281}
-  .mobile-body .pc{margin-top:2px;padding:5px 10px;border-radius:999px;background:linear-gradient(180deg,#e8c281,#a07a3e);color:#1a0e02;font-size:7px;font-weight:600}
-
-  /* Demo mini-mockups (themed) */
-  .demo-preview{position:relative;background:#0a0a0a;display:flex;flex-direction:column;border-bottom:1px solid var(--line)}
-  .demo-preview .browser-bar{height:26px}
+  .demo-preview{position:relative;background:#0a0a0a;display:flex;flex-direction:column;border-bottom:1px solid var(--line);overflow:hidden}
+  .demo-preview .browser-bar{height:26px;flex-shrink:0}
   .demo-preview .browser-bar .d{width:7px;height:7px}
-  .demo-preview .browser-bar .url{font-size:10px;margin-left:10px}
-  .demo-hero{position:relative;padding:34px 22px 30px;min-height:180px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;text-align:center;overflow:hidden}
-  .demo-hero::before{content:"";position:absolute;inset:0;z-index:0}
-  .demo-hero-tag{position:relative;z-index:2;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
-  .demo-hero-title{position:relative;z-index:2;font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.2;max-width:22ch;margin:0}
-  .demo-hero-cta{position:relative;z-index:2;margin-top:6px;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:.02em}
-  .demo-hero-stripe{position:relative;z-index:2;width:100%;max-width:120px;height:2px;border-radius:2px;margin-top:6px}
-
-  .demo-preview--tours .demo-hero::before{background:linear-gradient(160deg,#0a3a2a 0%, #08120e 100%)}
-  .demo-preview--tours .demo-hero-tag{color:#86efac}
-  .demo-preview--tours .demo-hero-title{color:#fff}
-  .demo-preview--tours .demo-hero-cta{background:linear-gradient(180deg,#34d399,#10b981);color:#052e16}
-  .demo-preview--tours .demo-hero-stripe{background:linear-gradient(90deg,#34d399 0%, #34d399 60%, #86efac 60%, #86efac 100%)}
-  .demo-preview--tours .browser-bar .url{color:#86efac}
-
-  .demo-preview--cafe .demo-hero::before{background:linear-gradient(160deg,#3a2014 0%, #18100a 100%)}
-  .demo-preview--cafe .demo-hero-tag{color:#fcd34d}
-  .demo-preview--cafe .demo-hero-title{color:#fff7ed}
-  .demo-preview--cafe .demo-hero-cta{background:linear-gradient(180deg,#fcd34d,#d97706);color:#451a03}
-  .demo-preview--cafe .demo-hero-stripe{background:linear-gradient(90deg,#fcd34d 0%, #fcd34d 60%, #fb923c 60%, #fb923c 100%)}
-  .demo-preview--cafe .browser-bar .url{color:#fcd34d}
-
-  .demo-preview--gym .demo-hero::before{background:linear-gradient(160deg,#3f0a0a 0%, #160505 100%)}
-  .demo-preview--gym .demo-hero-tag{color:#fca5a5}
-  .demo-preview--gym .demo-hero-title{color:#fff}
-  .demo-preview--gym .demo-hero-cta{background:linear-gradient(180deg,#ef4444,#b91c1c);color:#fff}
-  .demo-preview--gym .demo-hero-stripe{background:linear-gradient(90deg,#ef4444 0%, #ef4444 60%, #f87171 60%, #f87171 100%)}
-  .demo-preview--gym .browser-bar .url{color:#fca5a5}
-
-  .demo-preview--dental .demo-hero::before{background:linear-gradient(160deg,#0e3a4a 0%, #06141c 100%)}
-  .demo-preview--dental .demo-hero-tag{color:#67e8f9}
-  .demo-preview--dental .demo-hero-title{color:#fff}
-  .demo-preview--dental .demo-hero-cta{background:linear-gradient(180deg,#22d3ee,#0891b2);color:#083344}
-  .demo-preview--dental .demo-hero-stripe{background:linear-gradient(90deg,#22d3ee 0%, #22d3ee 60%, #67e8f9 60%, #67e8f9 100%)}
-  .demo-preview--dental .browser-bar .url{color:#67e8f9}
-
-  .demo-preview--kine .demo-hero::before{background:linear-gradient(160deg,#2d1b69 0%, #0f0a2e 100%)}
-  .demo-preview--kine .demo-hero-tag{color:#c4b5fd}
-  .demo-preview--kine .demo-hero-title{color:#fff}
-  .demo-preview--kine .demo-hero-cta{background:linear-gradient(180deg,#8b5cf6,#6d28d9);color:#fff}
-  .demo-preview--kine .demo-hero-stripe{background:linear-gradient(90deg,#8b5cf6 0%, #8b5cf6 60%, #c4b5fd 60%, #c4b5fd 100%)}
-  .demo-preview--kine .browser-bar .url{color:#c4b5fd}
-
-  .demo-preview--clinica .demo-hero::before{background:linear-gradient(160deg,#064e3b 0%, #022c22 100%)}
-  .demo-preview--clinica .demo-hero-tag{color:#6ee7b7}
-  .demo-preview--clinica .demo-hero-title{color:#fff}
-  .demo-preview--clinica .demo-hero-cta{background:linear-gradient(180deg,#10b981,#059669);color:#fff}
-  .demo-preview--clinica .demo-hero-stripe{background:linear-gradient(90deg,#10b981 0%, #10b981 60%, #6ee7b7 60%, #6ee7b7 100%)}
-  .demo-preview--clinica .browser-bar .url{color:#6ee7b7}
+  .demo-preview .browser-bar .url{font-size:10px;margin-left:10px;color:#7a7a80}
+  .demo-shot{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top center;background:#0b0d12;transition:transform 1s var(--ease);will-change:transform}
+  .demo:hover .demo-shot{transform:scale(1.045)}
 
   /* Demo status variants */
   .demo .status.status-demo{color:#c4b5fd}
   .demo .status.status-demo::before{background:#a78bfa;box-shadow:0 0 8px #a78bfa}
   .demo .status.status-live{color:#86efac}
   .demo .status.status-live::before{background:#22c55e;box-shadow:0 0 8px #22c55e}
+
+  /* Estado "en desarrollo" — dorado de marca, no amarillo */
+  .proj-info .status.status-wip{color:#A8873A}
+  .proj-info .status.status-wip::before{background:#C9A84C;box-shadow:0 0 10px rgba(201,168,76,.85)}
+  .proj-info .pill.pill-wip{color:#8A6F2C;background:rgba(201,168,76,.14);border-color:rgba(201,168,76,.38)}
+
+  /* Barra de avance — el degradado lo define cada proyecto con --pp-grad */
+  .proj-progress{display:flex;flex-direction:column;gap:9px;margin-top:2px}
+  .proj-progress .pp-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .proj-progress .pp-fase{font-size:11px;color:var(--mut-2);letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+  .proj-progress .pp-pct{font-size:13px;color:var(--pp-accent,#A8873A);font-weight:600;letter-spacing:-.01em}
+  .proj-progress .pp-bar{
+    position:relative;height:5px;border-radius:999px;overflow:hidden;
+    background:rgba(10,37,128,.08);box-shadow:inset 0 1px 2px rgba(0,0,0,.06);
+  }
+  .proj-progress .pp-fill{
+    position:absolute;inset:0 auto 0 0;border-radius:999px;
+    background:var(--pp-grad, linear-gradient(90deg,#D9BC6A,#C9A84C));
+    box-shadow:0 0 12px var(--pp-glow, rgba(201,168,76,.5));
+    width:0;transition:width 1.6s var(--ease) .25s;
+  }
+  .reveal.in .proj-progress .pp-fill{width:var(--pct,50%)}
+  @media (prefers-reduced-motion:reduce){ .proj-progress .pp-fill{transition:none} }
 
   /* Demo CTA pill */
   .demo-cta-btn{
@@ -686,8 +610,6 @@
     .demo h3{font-size:20px}
     .demo .tagline{font-size:13.5px}
     .demo .desc{font-size:13px}
-    .demo-hero{min-height:140px;padding:26px 16px 22px}
-    .demo-hero-title{font-size:14px}
     .demo-cta-btn{width:100%;justify-content:center}
     .demo .specs{gap:14px}
   }
@@ -812,7 +734,7 @@
   .mock-link:hover{transform:scale(1.01)}
 
   /* Mockup canvas */
-  .proj-mock{position:relative;overflow:hidden;border-left:1px solid var(--line);min-height:560px;display:grid;place-items:center;padding:48px}
+  .proj-mock{position:relative;overflow:hidden;border-left:1px solid var(--line);min-height:490px;display:grid;place-items:center;padding:48px}
   .proj-mock::before{
     content:"";position:absolute;inset:0;
     background:radial-gradient(closest-side at 50% 50%, #FFFFFF, #ECECEF 85%);
@@ -830,39 +752,67 @@
   .browser-bar .d{width:9px;height:9px;border-radius:50%}
   .browser-bar .d:nth-child(1){background:#ff5f57}.browser-bar .d:nth-child(2){background:#febc2e}.browser-bar .d:nth-child(3){background:#28c840}
   .browser-bar .url{margin-left:14px;font-size:11px;color:#666;letter-spacing:.04em}
-  .browser-body{padding:42px 28px 36px;background:#000;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-  .oncosur-logo{width:96px;height:auto;filter:drop-shadow(0 6px 20px rgba(250,204,21,.18))}
-  .oncosur-tagline{color:#FACC15;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
-  .oncosur-headline{color:#fff;font-size:18px;font-weight:600;letter-spacing:-.02em;line-height:1.25;max-width:22ch;margin:0}
-  .oncosur-sub{color:#94A3B8;font-size:11.5px;line-height:1.55;max-width:34ch;margin:0}
-  .oncosur-cta{margin-top:4px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;background:linear-gradient(180deg,#5EEAD4,#2DD4BF);color:#042f2e;font-size:11px;font-weight:600}
-  .oncosur-stripe{width:100%;height:3px;background:linear-gradient(90deg,#FACC15 0%, #FACC15 50%, #5EEAD4 50%, #5EEAD4 100%);border-radius:2px;margin-top:4px}
+  /* ===== iPhone 16 — proporciones reales =====
+     Pantalla 393x852 pt, marco de titanio de ~3% del ancho, esquinas de radio
+     ~55pt. Todas las medidas van en % para que escale con la card.
+     right/bottom no pueden superar el padding de .proj-mock (48px) o el
+     teléfono queda cortado por su overflow:hidden. */
   .mobile{
-    position:absolute;right:-18%;bottom:-32px;width:34%;
-    border-radius:22px;overflow:hidden;background:#000;
-    border:1px solid rgba(148,163,184,.22);
-    box-shadow:0 24px 50px -16px rgba(0,0,0,.75), 0 0 0 1px rgba(255,255,255,.04), 0 0 50px -10px rgba(37,99,235,.35);
+    position:absolute;right:-9%;bottom:-40px;width:27%;
+    aspect-ratio:417/876;                 /* deja la pantalla en 393:852 exacto */
+    border-radius:16%/7.6%;               /* ~= radio circular real */
+    background:
+      linear-gradient(145deg,#8e8e97 0%, #3a3a40 14%, #6d6d76 30%, #2b2b30 52%,
+                      #63636c 70%, #34343a 86%, #7e7e88 100%);
+    box-shadow:
+      0 26px 54px -16px rgba(0,0,0,.78),
+      0 0 0 .5px rgba(255,255,255,.22),
+      inset 0 0 0 .5px rgba(255,255,255,.28);
     z-index:2;transition:transform .6s var(--ease);
   }
   .proj-feat:hover .mobile{transform:translateY(-6px) rotate(-2deg)}
-  .mobile-notch{height:18px;background:#000;display:flex;justify-content:center;align-items:center}
-  .mobile-notch::before{content:"";width:38%;height:6px;background:#0a0a0a;border-radius:0 0 8px 8px}
-  .mobile-body{padding:18px 12px 16px;background:#000;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
-  .mobile-body .oncosur-logo{width:54px}
-  .mobile-body .oncosur-tagline{font-size:7px;letter-spacing:.18em}
-  .mobile-body .mh{color:#fff;font-size:10px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
-  .mobile-body .mc{margin-top:2px;padding:5px 10px;border-radius:999px;background:linear-gradient(180deg,#5EEAD4,#2DD4BF);color:#042f2e;font-size:7px;font-weight:600}
+  /* Pantalla. Va con inset y NO con padding en el marco: los % de padding se
+     resuelven contra el ancho del contenedor (la card, ~459px), no contra el
+     ancho del teléfono, y el bisel salía 4x más grueso en los lados. Con inset,
+     left/right miden contra el ancho del teléfono y top/bottom contra su alto. */
+  .ip-screen{
+    position:absolute;left:2.9%;right:2.9%;top:1.4%;bottom:1.4%;
+    overflow:hidden;
+    border-radius:14%/6.5%;background:#000;   /* radio real 55pt */
+    box-shadow:inset 0 0 0 .5px rgba(0,0,0,.9);
+  }
+  /* Dynamic Island — 125x36pt, a 11pt del borde superior */
+  .ip-island{
+    position:absolute;top:1.35%;left:50%;transform:translateX(-50%);
+    width:31.8%;height:4.25%;border-radius:999px;
+    background:#000;z-index:3;
+    box-shadow:0 0 0 .5px rgba(255,255,255,.06);
+  }
+  /* Barra de inicio — 139x5pt */
+  .ip-home{
+    position:absolute;bottom:.95%;left:50%;transform:translateX(-50%);
+    width:35.4%;height:.62%;border-radius:999px;
+    background:rgba(255,255,255,.85);z-index:3;
+    mix-blend-mode:overlay;
+  }
+  /* Botones laterales: Acción y volumen a la izquierda, encendido a la derecha */
+  .ip-btn{position:absolute;background:linear-gradient(180deg,#9a9aa4,#4a4a52);border-radius:1px}
+  .ip-action{left:-1.1%;top:15.8%;width:1.2%;height:3.4%;border-radius:2px 0 0 2px}
+  .ip-volup{left:-1.1%;top:22.4%;width:1.2%;height:5.8%;border-radius:2px 0 0 2px}
+  .ip-voldn{left:-1.1%;top:29.6%;width:1.2%;height:5.8%;border-radius:2px 0 0 2px}
+  .ip-power{right:-1.1%;top:24.2%;width:1.2%;height:8.4%;border-radius:0 2px 2px 0}
   @media (max-width:980px){
     .proj-feat{grid-template-columns:1fr}
-    .proj-mock{border-left:0;border-top:1px solid var(--line);min-height:480px;padding:40px 24px 60px}
+    .proj-mock{border-left:0;border-top:1px solid var(--line);min-height:430px;padding:40px 24px 60px}
     .proj-info{padding:48px 36px}
+    .mobile{right:-4%}
   }
   @media (max-width:560px){
     .proj-info{padding:36px 24px;gap:28px}
     .proj-info .specs{gap:20px}
-    .proj-mock{padding:32px 16px 56px;min-height:420px}
+    .proj-mock{padding:32px 16px 56px;min-height:340px}
     .mock-stack{max-width:340px}
-    .mobile{right:-12%;width:36%}
+    .mobile{right:-3%;width:35%;bottom:-20px}
   }
 
   /* Coming soon categories */
@@ -1170,8 +1120,8 @@
 <!-- TRUST -->
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span>
-    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span>
+    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span><span>Salones de belleza</span><span>Joyerías</span><span>Productoras audiovisuales</span><span>Fundaciones</span>
+    <span>Clínicas dentales</span><span>Psicólogos</span><span>Tour operadores</span><span>Restaurantes</span><span>Gimnasios</span><span>Estudios profesionales</span><span>Centros estéticos</span><span>Salones de belleza</span><span>Joyerías</span><span>Productoras audiovisuales</span><span>Fundaciones</span>
   </div>
 </div>
 
@@ -1314,7 +1264,7 @@
     <div class="sec-head reveal">
       <span class="kicker">03 — Portafolio</span>
       <h2 class="title-anim" data-split>Trabajo seleccionado, <span class="grad-text">pensado al detalle.</span></h2>
-      <p>Caso destacado en producción y maquetas conceptuales por sector. Más proyectos próximamente.</p>
+      <p>Cuatro sitios lanzados, dos en desarrollo y maquetas conceptuales por sector. Cada proyecto diseñado desde cero.</p>
     </div>
 
     <article class="proj-feat reveal">
@@ -1333,32 +1283,27 @@
           <div><span class="l">Plan</span><span class="v">Web Profesional</span></div>
           <div><span class="l">Estado</span><span class="v">Lanzado</span></div>
         </div>
-        <a class="btn btn-ghost" href="https://www.fundaciónoncosur.cl" target="_blank" rel="noopener noreferrer">Ver sitio <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="https://www.fundaciononcosur.cl" target="_blank" rel="noopener noreferrer">Ver sitio <span class="arr">→</span></a>
       </div>
       <div class="proj-mock">
-        <a class="mock-link" href="https://www.fundaciónoncosur.cl" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Oncosur">
+        <a class="mock-link" href="https://www.fundaciononcosur.cl" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Oncosur">
         <div class="mock-stack">
           <div class="desktop">
             <div class="browser-bar">
               <span class="d"></span><span class="d"></span><span class="d"></span>
-              <span class="url">oncosur.cl</span>
+              <span class="url">fundaciononcosur.cl</span>
             </div>
-            <div class="browser-body">
-              <img class="oncosur-logo" src="assets/oncosur-logo.jpg" alt="Oncosur" />
-              <span class="oncosur-tagline">Unidos por el cáncer infantil</span>
-              <h4 class="oncosur-headline">Acompañamos a niños del sur de Chile en su momento más difícil.</h4>
-              <p class="oncosur-sub">Apoyo, contención y esperanza para cada familia.</p>
-              <span class="oncosur-cta">Quiero ayudar →</span>
-              <span class="oncosur-stripe"></span>
-            </div>
+            <img class="shot" src="assets/shots/oncosur.jpg" alt="Portada del sitio de Fundación Oncosur" loading="lazy" decoding="async" width="1000" height="625" />
           </div>
-          <div class="mobile">
-            <div class="mobile-notch"></div>
-            <div class="mobile-body">
-              <img class="oncosur-logo" src="assets/oncosur-logo.jpg" alt="" />
-              <span class="oncosur-tagline">Unidos por el cáncer infantil</span>
-              <span class="mh">Cada niño<br/>cuenta.</span>
-              <span class="mc">Donar →</span>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/oncosur-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
             </div>
           </div>
         </div>
@@ -1372,52 +1317,85 @@
       <div class="proj-info">
         <div>
           <div class="meta">
-            <span class="pill">Cabaña · Turismo</span>
+            <span class="pill">Salón de belleza · Estética</span>
             <span class="status status-live">Lanzado</span>
           </div>
-          <h3 style="margin-top:24px">Posadas de Coyhaique.</h3>
-          <p class="tagline" style="margin-top:14px">Tu refugio boutique en la Patagonia chilena.</p>
+          <h3 style="margin-top:24px">Zona Estética.</h3>
+          <p class="tagline" style="margin-top:14px">Belleza, color y cuidado en el corazón de Valdivia.</p>
         </div>
-        <p class="desc">Web premium para cabaña boutique en la Patagonia chilena. Integración con Booking.com y Airbnb, galería, valoraciones y reservas por WhatsApp.</p>
+        <p class="desc">Web con dominio propio para salón de belleza integral con 8 profesionales. Catálogo de servicios por especialidad, galería de trabajos reales, perfiles del equipo y reservas directas por WhatsApp.</p>
         <div class="specs">
-          <div><span class="l">Sector</span><span class="v">Turismo</span></div>
-          <div><span class="l">Plan</span><span class="v">Experiencia Premium</span></div>
+          <div><span class="l">Sector</span><span class="v">Estética</span></div>
+          <div><span class="l">Plan</span><span class="v">Web Profesional</span></div>
           <div><span class="l">Estado</span><span class="v">Lanzado</span></div>
         </div>
-        <a class="btn btn-ghost" href="https://posadacoyhaique.vercel.app" target="_blank" rel="noopener noreferrer">Ver sitio <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="https://www.zonaesteticavaldivia.cl" target="_blank" rel="noopener noreferrer">Ver sitio <span class="arr">→</span></a>
       </div>
       <div class="proj-mock">
-        <a class="mock-link" href="https://posadacoyhaique.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Posadas de Coyhaique">
+        <a class="mock-link" href="https://www.zonaesteticavaldivia.cl" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Zona Estética Valdivia">
         <div class="mock-stack">
           <div class="desktop">
             <div class="browser-bar">
               <span class="d"></span><span class="d"></span><span class="d"></span>
-              <span class="url">posadacoyhaique.vercel.app</span>
+              <span class="url">zonaesteticavaldivia.cl</span>
             </div>
-            <div class="posada-body">
-              <span class="posada-brand"><span class="posada-mark"></span>Posadas de Coyhaique</span>
-              <span class="posada-tagline">Patagonia · Coyhaique · Chile</span>
-              <h4 class="posada-headline">Tu refugio en la <em>Patagonia Chilena.</em></h4>
-              <p class="posada-sub">Cabaña privada entre bosques nativos. A solo 6 km de Coyhaique.</p>
-              <div class="posada-ctas">
-                <span class="posada-cta">Reservar ahora</span>
-                <span class="posada-cta-ghost">Ver galería</span>
-              </div>
-              <div class="posada-stats">
-                <span class="posada-stat"><span class="stars">★★★★☆</span><span class="v">4.29</span> Airbnb</span>
-                <span class="posada-divider"></span>
-                <span class="posada-stat">Desde <span class="v">$80.000</span> CLP / noche</span>
-              </div>
-              <span class="posada-stripe"></span>
+            <img class="shot" src="assets/shots/zona.jpg" alt="Portada del sitio de Zona Estética Valdivia" loading="lazy" decoding="async" width="1000" height="625" />
+          </div>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/zona-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
             </div>
           </div>
-          <div class="mobile">
-            <div class="mobile-notch"></div>
-            <div class="mobile-body">
-              <span class="posada-brand"><span class="posada-mark"></span>Posadas</span>
-              <span class="posada-tagline">Patagonia · Coyhaique</span>
-              <span class="ph">Tu refugio<br/>en la <em>Patagonia.</em></span>
-              <span class="pc">Reservar →</span>
+        </div>
+        </a>
+      </div>
+    </article>
+
+    <div class="proj-sep reveal"><span>· · ·</span></div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill">Joyería · Artesanía</span>
+            <span class="status status-live">Lanzado</span>
+          </div>
+          <h3 style="margin-top:24px">Metales Nobles.</h3>
+          <p class="tagline" style="margin-top:14px">Joyería artesanal en plata y metales nobles.</p>
+        </div>
+        <p class="desc">Vitrina digital para taller de joyería artesanal. Catálogo de piezas únicas, proceso de creación a la vista del cliente y pedidos a medida gestionados por WhatsApp.</p>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Joyería</span></div>
+          <div><span class="l">Plan</span><span class="v">Landing Page</span></div>
+          <div><span class="l">Estado</span><span class="v">Lanzado</span></div>
+        </div>
+        <a class="btn btn-ghost" href="https://metales-nobles.vercel.app" target="_blank" rel="noopener noreferrer">Ver sitio <span class="arr">→</span></a>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://metales-nobles.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver sitio Metales Nobles">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">metales-nobles.vercel.app</span>
+            </div>
+            <img class="shot" src="assets/shots/metales.jpg" alt="Portada del sitio de Metales Nobles" loading="lazy" decoding="async" width="1000" height="625" />
+          </div>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/metales-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
             </div>
           </div>
         </div>
@@ -1453,22 +1431,123 @@
               <span class="d"></span><span class="d"></span><span class="d"></span>
               <span class="url">gestionsur.vercel.app</span>
             </div>
-            <div class="gestionsur-body">
-              <img class="gestionsur-logo" src="assets/logojaime.png" alt="Gestión Sur" />
-              <span class="gestionsur-tagline">Prevención · Calidad · Ambiente</span>
-              <h4 class="gestionsur-headline">Seguridad laboral que protege a tu empresa.</h4>
-              <p class="gestionsur-sub">Más de 5 años de experiencia · 27 empresas asesoradas · Valdivia.</p>
-              <span class="gestionsur-cta">Solicitar asesoría →</span>
-              <span class="gestionsur-stripe"></span>
+            <img class="shot" src="assets/shots/gestionsur.jpg" alt="Portada del sitio de Gestión Sur" loading="lazy" decoding="async" width="1000" height="625" />
+          </div>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/gestionsur-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
             </div>
           </div>
-          <div class="mobile">
-            <div class="mobile-notch"></div>
-            <div class="mobile-body">
-              <img class="gestionsur-logo" src="assets/logojaime.png" alt="Gestión Sur" />
-              <span class="gestionsur-tagline">Prevención · Valdivia</span>
-              <span class="ph" style="color:#fff;font-size:9px;font-weight:600;line-height:1.2;letter-spacing:-.01em">Seguridad<br/>que protege.</span>
-              <span class="gestionsur-cta" style="font-size:7px;padding:5px 10px">Asesoría →</span>
+        </div>
+        </a>
+      </div>
+    </article>
+
+    <div class="proj-sep reveal" style="margin:48px 0 32px"><span>En desarrollo</span></div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill pill-wip">Terapia asistida · Salud</span>
+            <span class="status status-wip">En desarrollo</span>
+          </div>
+          <h3 style="margin-top:24px">Inka Trewa.</h3>
+          <p class="tagline" style="margin-top:14px">Bienestar y salud a través del vínculo humano-animal.</p>
+        </div>
+        <p class="desc">Web para programa de intervención asistida con perros en Valdivia. Cuatro áreas de servicio, fichas del equipo canino y solicitud de programas a medida por WhatsApp.</p>
+        <div class="proj-progress" style="--pp-accent:#6D28D9;--pp-grad:linear-gradient(90deg,#7C3AED,#8B5CF6 45%,#34D399);--pp-glow:rgba(124,58,237,.45)">
+          <div class="pp-top">
+            <span class="pp-fase">Fase 04 · Ajustes finales</span>
+            <span class="pp-pct">85%</span>
+          </div>
+          <div class="pp-bar"><span class="pp-fill" style="--pct:85%"></span></div>
+        </div>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Salud</span></div>
+          <div><span class="l">Plan</span><span class="v">Web Profesional</span></div>
+          <div><span class="l">Estado</span><span class="v">En desarrollo</span></div>
+        </div>
+        <a class="btn btn-ghost" href="https://inka-trewa-web.vercel.app" target="_blank" rel="noopener noreferrer">Ver avance <span class="arr">→</span></a>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://inka-trewa-web.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver avance de Inka Trewa">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">inka-trewa-web.vercel.app</span>
+            </div>
+            <img class="shot" src="assets/shots/inka.jpg" alt="Portada del sitio de Inka Trewa" loading="lazy" decoding="async" width="1000" height="625" />
+          </div>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/inka-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
+            </div>
+          </div>
+        </div>
+        </a>
+      </div>
+    </article>
+
+    <div class="proj-sep reveal"><span>· · ·</span></div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill pill-wip">Productora · Audiovisual</span>
+            <span class="status status-wip">En desarrollo</span>
+          </div>
+          <h3 style="margin-top:24px">Ainilebu Films.</h3>
+          <p class="tagline" style="margin-top:14px">Rescate cultural y patrimonial del sur de Chile.</p>
+        </div>
+        <p class="desc">Sitio para productora audiovisual fundada en 2019. Portafolio de documentales y ficción, fichas de producción, equipo y contacto para proyectos de rescate patrimonial.</p>
+        <div class="proj-progress" style="--pp-accent:#8A7250;--pp-grad:linear-gradient(90deg,#4A4A52,#8A7250 55%,#D9CDB6);--pp-glow:rgba(138,114,80,.4)">
+          <div class="pp-top">
+            <span class="pp-fase">Fase 03 · Desarrollo</span>
+            <span class="pp-pct">60%</span>
+          </div>
+          <div class="pp-bar"><span class="pp-fill" style="--pct:60%"></span></div>
+        </div>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Audiovisual</span></div>
+          <div><span class="l">Plan</span><span class="v">Experiencia Premium</span></div>
+          <div><span class="l">Estado</span><span class="v">En desarrollo</span></div>
+        </div>
+        <a class="btn btn-ghost" href="https://ainilebu-films.vercel.app" target="_blank" rel="noopener noreferrer">Ver avance <span class="arr">→</span></a>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://ainilebu-films.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver avance de Ainilebu Films">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">ainilebu-films.vercel.app</span>
+            </div>
+            <img class="shot" src="assets/shots/ainilebu.jpg" alt="Portada del sitio de Ainilebu Films" loading="lazy" decoding="async" width="1000" height="625" />
+          </div>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/ainilebu-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
             </div>
           </div>
         </div>
@@ -1482,17 +1561,12 @@
       <article class="demo">
         <div class="demo-mock">
           <a class="mock-link" href="https://demotour.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Rutas del Sur">
-            <div class="demo-preview demo-preview--tours">
+            <div class="demo-preview">
               <div class="browser-bar">
                 <span class="d"></span><span class="d"></span><span class="d"></span>
                 <span class="url">demotour.vercel.app</span>
               </div>
-              <div class="demo-hero">
-                <span class="demo-hero-tag">Rutas del Sur</span>
-                <h4 class="demo-hero-title">Aventuras inolvidables en el sur de Chile.</h4>
-                <span class="demo-hero-cta">Reservar tour →</span>
-                <span class="demo-hero-stripe"></span>
-              </div>
+              <img class="demo-shot" src="assets/shots/tours.jpg" alt="Portada de la demo Rutas del Sur" loading="lazy" decoding="async" width="1000" height="625" />
             </div>
           </a>
         </div>
@@ -1515,17 +1589,12 @@
       <article class="demo">
         <div class="demo-mock">
           <a class="mock-link" href="https://democafe-lime.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Niebla Cafetería">
-            <div class="demo-preview demo-preview--cafe">
+            <div class="demo-preview">
               <div class="browser-bar">
                 <span class="d"></span><span class="d"></span><span class="d"></span>
                 <span class="url">democafe-lime.vercel.app</span>
               </div>
-              <div class="demo-hero">
-                <span class="demo-hero-tag">Niebla Cafetería</span>
-                <h4 class="demo-hero-title">Café de especialidad, hecho con calma.</h4>
-                <span class="demo-hero-cta">Ver menú →</span>
-                <span class="demo-hero-stripe"></span>
-              </div>
+              <img class="demo-shot" src="assets/shots/cafe.jpg" alt="Portada de la demo Niebla Cafetería" loading="lazy" decoding="async" width="1000" height="625" />
             </div>
           </a>
         </div>
@@ -1548,17 +1617,12 @@
       <article class="demo">
         <div class="demo-mock">
           <a class="mock-link" href="https://demogym-two.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Elite Fitness">
-            <div class="demo-preview demo-preview--gym">
+            <div class="demo-preview">
               <div class="browser-bar">
                 <span class="d"></span><span class="d"></span><span class="d"></span>
                 <span class="url">demogym-two.vercel.app</span>
               </div>
-              <div class="demo-hero">
-                <span class="demo-hero-tag">Elite Fitness</span>
-                <h4 class="demo-hero-title">Entrenamiento que transforma.</h4>
-                <span class="demo-hero-cta">Empezar ahora →</span>
-                <span class="demo-hero-stripe"></span>
-              </div>
+              <img class="demo-shot" src="assets/shots/gym.jpg" alt="Portada de la demo Elite Fitness" loading="lazy" decoding="async" width="1000" height="625" />
             </div>
           </a>
         </div>
@@ -1581,17 +1645,12 @@
       <article class="demo">
         <div class="demo-mock">
           <a class="mock-link" href="https://democlinicadental-six.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Sonrisa Dental">
-            <div class="demo-preview demo-preview--dental">
+            <div class="demo-preview">
               <div class="browser-bar">
                 <span class="d"></span><span class="d"></span><span class="d"></span>
                 <span class="url">democlinicadental-six.vercel.app</span>
               </div>
-              <div class="demo-hero">
-                <span class="demo-hero-tag">Sonrisa Dental</span>
-                <h4 class="demo-hero-title">Tu sonrisa, en las mejores manos.</h4>
-                <span class="demo-hero-cta">Agendar hora →</span>
-                <span class="demo-hero-stripe"></span>
-              </div>
+              <img class="demo-shot" src="assets/shots/dental.jpg" alt="Portada de la demo Sonrisa Dental" loading="lazy" decoding="async" width="1000" height="625" />
             </div>
           </a>
         </div>
@@ -1613,51 +1672,41 @@
 
       <article class="demo">
         <div class="demo-mock">
-          <a class="mock-link" href="https://demokine.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Kinesiólogo">
-            <div class="demo-preview demo-preview--kine">
+          <a class="mock-link" href="https://tomas-carcamo.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Tomás Cárcamo">
+            <div class="demo-preview">
               <div class="browser-bar">
                 <span class="d"></span><span class="d"></span><span class="d"></span>
-                <span class="url">demokine.vercel.app</span>
+                <span class="url">tomas-carcamo.vercel.app</span>
               </div>
-              <div class="demo-hero">
-                <span class="demo-hero-tag">Klgo. Nombre Apellido</span>
-                <h4 class="demo-hero-title">Kinesiología deportiva y rehabilitación personalizada.</h4>
-                <span class="demo-hero-cta">Agenda tu hora →</span>
-                <span class="demo-hero-stripe"></span>
-              </div>
+              <img class="demo-shot" src="assets/shots/tomas.jpg" alt="Portada de la demo de Tomás Cárcamo" loading="lazy" decoding="async" width="1000" height="625" />
             </div>
           </a>
         </div>
         <div class="demo-info">
           <div class="meta">
-            <span class="pill">Kinesiólogo · Salud</span>
+            <span class="pill">Cine · Marca personal</span>
             <span class="status status-demo">🎨 Demo</span>
           </div>
-          <h3>Klgo. Demo.</h3>
-          <p class="tagline">Kinesiólogo con marca personal.</p>
-          <p class="desc">Demo de web para kinesiólogo independiente. Especialización en rehabilitación deportiva, servicios, galería, testimonios y contacto por WhatsApp.</p>
+          <h3>Tomás Cárcamo.</h3>
+          <p class="tagline">Director de cine con portafolio cinematográfico.</p>
+          <p class="desc">Demo de web para director y guionista. Obra seleccionada, reel, fichas de cortometraje, documental y publicidad, y solicitud de copia por contacto directo.</p>
           <div class="specs">
-            <div><span class="l">Sector</span><span class="v">Salud</span></div>
+            <div><span class="l">Sector</span><span class="v">Audiovisual</span></div>
             <div><span class="l">Estado</span><span class="v">Demo conceptual</span></div>
           </div>
-          <a class="demo-cta-btn" href="https://demokine.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
+          <a class="demo-cta-btn" href="https://tomas-carcamo.vercel.app" target="_blank" rel="noopener noreferrer">Ver demo <span class="arr">→</span></a>
         </div>
       </article>
 
       <article class="demo">
         <div class="demo-mock">
           <a class="mock-link" href="https://democlinicagen.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver demo Clínica Salud">
-            <div class="demo-preview demo-preview--clinica">
+            <div class="demo-preview">
               <div class="browser-bar">
                 <span class="d"></span><span class="d"></span><span class="d"></span>
                 <span class="url">democlinicagen.vercel.app</span>
               </div>
-              <div class="demo-hero">
-                <span class="demo-hero-tag">Clínica Salud</span>
-                <h4 class="demo-hero-title">Tu salud, nuestra prioridad.</h4>
-                <span class="demo-hero-cta">Agendar hora →</span>
-                <span class="demo-hero-stripe"></span>
-              </div>
+              <img class="demo-shot" src="assets/shots/clinica.jpg" alt="Portada de la demo Clínica Salud" loading="lazy" decoding="async" width="1000" height="625" />
             </div>
           </a>
         </div>
@@ -1705,6 +1754,18 @@
             Gaspar entendió desde el principio lo que necesitaba: una web seria, profesional y que transmitiera confianza a mis clientes. El proceso fue rápido y sin complicaciones. Hoy varios clientes me dicen que la página les da mucha más credibilidad antes de contratar. Para un prevencionista independiente, eso lo es todo.
           </blockquote>
           <cite><strong>Jaime González</strong> · Prevencionista de Riesgos, Gestión Sur</cite>
+        </div>
+        <div class="test-card">
+          <blockquote>
+            Llevo años haciendo joyería a mano y nunca había tenido dónde mostrarla más allá del mesón del taller. Gaspar supo capturar el trabajo artesanal tal cual es: sin adornos de más, con las piezas al centro. Lo que más valoro es que se tomó el tiempo de entender el oficio antes de diseñar nada. Hoy puedo mandar el link y la pieza se explica sola.
+          </blockquote>
+          <cite><strong>Luis Quijada</strong> · Joyero artesanal, Metales Nobles</cite>
+        </div>
+        <div class="test-card">
+          <blockquote>
+            Necesitábamos algo que reflejara el nivel del salón y no una página genérica más. El resultado fue exactamente eso: se ve moderna, ordenada y muestra el trabajo real del equipo. Las clientas ahora llegan sabiendo qué servicio quieren y reservan directo por WhatsApp, así que nos ahorramos mucho tiempo explicando lo mismo por mensaje.
+          </blockquote>
+          <cite><strong>Zona Estética Valdivia</strong> · Salón de belleza integral</cite>
         </div>
       </div>
     </div>
@@ -1767,7 +1828,7 @@
       </details>
       <details class="faq-item">
         <summary>¿Cuántos proyectos llevan?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-        <div class="body">Somos un estudio boutique: trabajamos con pocos clientes a la vez para mantener la calidad al máximo. Caso lanzado: Fundación Oncosur. Maquetas sectoriales disponibles para que veas el nivel del trabajo antes de decidir.</div>
+        <div class="body">Somos un estudio boutique: trabajamos con pocos clientes a la vez para mantener la calidad al máximo. Sitios lanzados: Fundación Oncosur, Zona Estética Valdivia, Metales Nobles y Gestión Sur. Además tenemos dos proyectos en desarrollo (Inka Trewa y Ainilebu Films) y maquetas sectoriales para que veas el nivel del trabajo antes de decidir.</div>
       </details>
     </div>
   </div>
