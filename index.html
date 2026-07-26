@@ -614,6 +614,14 @@
     .demo .specs{gap:14px}
   }
 
+  /* Nota aclaratoria bajo un separador de sección */
+  .sec-note{
+    max-width:64ch;margin:0 auto 46px;text-align:center;
+    font-size:15.5px;line-height:1.7;color:var(--mut);letter-spacing:-.008em;
+  }
+  .sec-note strong{color:#0A2580;font-weight:600}
+  @media (max-width:560px){ .sec-note{font-size:14.5px;margin-bottom:34px} }
+
   /* Separadores portafolio */
   .proj-sep{display:flex;align-items:center;gap:24px;margin:8px 0}
   .proj-sep::before,.proj-sep::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(96,165,250,.2),transparent)}
@@ -1264,7 +1272,7 @@
     <div class="sec-head reveal">
       <span class="kicker">03 — Portafolio</span>
       <h2 class="title-anim" data-split>Trabajo seleccionado, <span class="grad-text">pensado al detalle.</span></h2>
-      <p>Cuatro sitios lanzados, dos en desarrollo y maquetas conceptuales por sector. Cada proyecto diseñado desde cero.</p>
+      <p>Cuatro sitios lanzados, tres en desarrollo y maquetas conceptuales por sector. Cada proyecto diseñado desde cero.</p>
     </div>
 
     <article class="proj-feat reveal">
@@ -1451,6 +1459,10 @@
 
     <div class="proj-sep reveal" style="margin:48px 0 32px"><span>En desarrollo</span></div>
 
+    <p class="sec-note reveal">
+      Todas nuestras webs se diseñan y desarrollan <strong>desde cero, a medida y al gusto de cada cliente</strong>. Sin plantillas ni temas reciclados, con acompañamiento profesional en cada etapa del proceso.
+    </p>
+
     <article class="proj-feat reveal">
       <div class="proj-info">
         <div>
@@ -1546,6 +1558,59 @@
             <span class="ip-btn ip-power"></span>
             <div class="ip-screen">
               <img class="shot-m" src="assets/shots/ainilebu-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
+              <span class="ip-island"></span>
+              <span class="ip-home"></span>
+            </div>
+          </div>
+        </div>
+        </a>
+      </div>
+    </article>
+
+    <div class="proj-sep reveal"><span>· · ·</span></div>
+
+    <article class="proj-feat reveal">
+      <div class="proj-info">
+        <div>
+          <div class="meta">
+            <span class="pill pill-wip">Productora · Contenido de marca</span>
+            <span class="status status-wip">En desarrollo</span>
+          </div>
+          <h3 style="margin-top:24px">Andrade Visions.</h3>
+          <p class="tagline" style="margin-top:14px">La imagen no es decoración: es el producto.</p>
+        </div>
+        <p class="desc">Sitio para productora audiovisual de Valdivia enfocada en contenido para marcas. Portafolio organizado en tres divisiones —comercial, música y cultura, personal—, fichas de proyecto y contacto directo.</p>
+        <div class="proj-progress" style="--pp-accent:#B3181E;--pp-grad:linear-gradient(90deg,#7E1015,#D91F26 55%,#E8E0D0);--pp-glow:rgba(217,31,38,.42)">
+          <div class="pp-top">
+            <span class="pp-fase">Fase 03 · Desarrollo</span>
+            <span class="pp-pct">70%</span>
+          </div>
+          <div class="pp-bar"><span class="pp-fill" style="--pct:70%"></span></div>
+        </div>
+        <div class="specs">
+          <div><span class="l">Sector</span><span class="v">Audiovisual</span></div>
+          <div><span class="l">Plan</span><span class="v">Web Profesional</span></div>
+          <div><span class="l">Estado</span><span class="v">En desarrollo</span></div>
+        </div>
+        <a class="btn btn-ghost" href="https://andrade-visions.vercel.app" target="_blank" rel="noopener noreferrer">Ver avance <span class="arr">→</span></a>
+      </div>
+      <div class="proj-mock">
+        <a class="mock-link" href="https://andrade-visions.vercel.app" target="_blank" rel="noopener noreferrer" aria-label="Ver avance de Andrade Visions">
+        <div class="mock-stack">
+          <div class="desktop">
+            <div class="browser-bar">
+              <span class="d"></span><span class="d"></span><span class="d"></span>
+              <span class="url">andrade-visions.vercel.app</span>
+            </div>
+            <img class="shot" src="assets/shots/andrade.jpg" alt="Portada del sitio de Andrade Visions" loading="lazy" decoding="async" width="1000" height="625" />
+          </div>
+          <div class="mobile" aria-hidden="true">
+            <span class="ip-btn ip-action"></span>
+            <span class="ip-btn ip-volup"></span>
+            <span class="ip-btn ip-voldn"></span>
+            <span class="ip-btn ip-power"></span>
+            <div class="ip-screen">
+              <img class="shot-m" src="assets/shots/andrade-m.jpg" alt="" loading="lazy" decoding="async" width="420" height="910" />
               <span class="ip-island"></span>
               <span class="ip-home"></span>
             </div>
@@ -1828,7 +1893,7 @@
       </details>
       <details class="faq-item">
         <summary>¿Cuántos proyectos llevan?<span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg></span></summary>
-        <div class="body">Somos un estudio boutique: trabajamos con pocos clientes a la vez para mantener la calidad al máximo. Sitios lanzados: Fundación Oncosur, Zona Estética Valdivia, Metales Nobles y Gestión Sur. Además tenemos dos proyectos en desarrollo (Inka Trewa y Ainilebu Films) y maquetas sectoriales para que veas el nivel del trabajo antes de decidir.</div>
+        <div class="body">Somos un estudio boutique: trabajamos con pocos clientes a la vez para mantener la calidad al máximo. Sitios lanzados: Fundación Oncosur, Zona Estética Valdivia, Metales Nobles y Gestión Sur. Además tenemos tres proyectos en desarrollo (Inka Trewa, Ainilebu Films y Andrade Visions) y maquetas sectoriales para que veas el nivel del trabajo antes de decidir.</div>
       </details>
     </div>
   </div>
