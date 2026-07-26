@@ -113,7 +113,9 @@
   @media (prefers-reduced-motion:reduce){ .lg-halos,.orb{animation:none} }
   @media (max-width:768px){
     .orb{filter:blur(46px)}
-    .ribbon{display:none}
+    /* Solo las cintas decorativas del fondo. Sin acotar a .lg-plates esto
+       tambien ocultaba los badges "Mas elegido" y "Todo incluido" en movil. */
+    .lg-plates .ribbon{display:none}
     .lg-veil{background:rgba(249,250,253,.6)}
   }
   #stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
@@ -514,6 +516,76 @@
   .mantencion .m-price{font-size:18px;color:#0A2580;font-weight:600;letter-spacing:-.02em}
   .mantencion .m-desc{font-size:13px;color:#6E6E73;line-height:1.55}
   @media (max-width:680px){ .mantencion{padding:22px 24px;flex-direction:column;align-items:flex-start} }
+
+  /* ===== Servicios recurrentes — SEO local y sistema de clientes =====
+     A diferencia de los planes web, estos llevan dos cifras: instalación
+     una vez y mensualidad después. */
+  .svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch;margin-top:20px}
+  .svc{
+    position:relative;overflow:hidden;
+    background:#FFFFFF;border:1px solid rgba(0,0,0,.08);
+    border-radius:var(--r-xl);padding:40px 36px;
+    box-shadow:0 1px 0 rgba(255,255,255,1) inset, 0 8px 32px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+    display:flex;flex-direction:column;gap:22px;
+    transition:transform .5s var(--ease), border-color .4s var(--ease);
+  }
+  .svc::before{
+    content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(420px 220px at var(--mx,50%) var(--my,0%), rgba(96,165,250,.16), transparent 60%);
+    opacity:0;transition:opacity .5s var(--ease);
+  }
+  .svc:hover{transform:translateY(-4px);border-color:rgba(10,37,128,.25)}
+  .svc:hover::before{opacity:1}
+  .svc h3{font-size:24px;font-weight:600;letter-spacing:-.025em;line-height:1.15}
+  .svc .sub{font-size:14.5px;color:#3A3A3C;line-height:1.5;letter-spacing:-.01em}
+  .svc-amt{
+    display:flex;gap:32px;flex-wrap:wrap;padding:16px 0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .svc-amt > div{display:flex;flex-direction:column;gap:4px}
+  .svc-amt .from{font-size:10.5px;font-weight:500;color:var(--mut-2);letter-spacing:.16em;text-transform:uppercase}
+  .svc-amt .v{font-size:clamp(22px,2.4vw,30px);font-weight:700;letter-spacing:-.035em;color:#1D1D1F;line-height:1}
+  .svc-amt .c{font-size:12px;color:var(--mut-2);font-weight:500}
+  .svc ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  .svc ul li{font-size:13.5px;color:var(--mut);line-height:1.5;display:flex;gap:10px;align-items:flex-start}
+  .svc ul li::before{
+    content:"";flex-shrink:0;width:14px;height:14px;border-radius:50%;margin-top:3px;
+    background:radial-gradient(circle at 30% 30%, #60A5FA, #1E40AF);
+    box-shadow:0 0 0 1px rgba(96,165,250,.35), 0 0 8px rgba(96,165,250,.3);
+  }
+  .svc .ribbon{
+    position:absolute;top:18px;right:18px;
+    font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+    padding:5px 10px;border-radius:999px;
+    background:linear-gradient(180deg,#D9BC6A,#C9A84C);
+    color:#1D1D1F;border:1px solid rgba(201,168,76,.6);
+  }
+  .svc .btn{margin-top:auto;width:100%;justify-content:center}
+  /* reserva el ancho del badge para que no pise el nombre del producto */
+  .svc .ribbon ~ .price-name{padding-right:104px}
+  /* El sistema completo va destacado: es el bundle */
+  .svc.featured{
+    background:linear-gradient(160deg,#1639A8,#0A2580);
+    border-color:rgba(255,255,255,.14);
+    box-shadow:0 20px 50px -20px rgba(10,37,128,.55), 0 0 0 1px rgba(10,37,128,.2);
+  }
+  .svc.featured .price-name{color:rgba(255,255,255,.7)}
+  .svc.featured .price-name::before{background:#C9A84C}
+  .svc.featured h3{color:#fff}
+  .svc.featured .sub{color:rgba(255,255,255,.82)}
+  .svc.featured .svc-amt{border-color:rgba(255,255,255,.18)}
+  .svc.featured .svc-amt .v{color:#fff}
+  .svc.featured .svc-amt .from,.svc.featured .svc-amt .c{color:rgba(255,255,255,.6)}
+  .svc.featured ul li{color:rgba(255,255,255,.78)}
+  .svc.featured .btn{background:#fff;color:#0A2580;box-shadow:0 8px 20px -8px rgba(0,0,0,.3)}
+  @media (max-width:980px){ .svc-grid{grid-template-columns:1fr;gap:14px} }
+  @media (max-width:560px){
+    .svc{padding:32px 26px}
+    .svc-amt{gap:22px}
+    /* en pantallas chicas el badge pasa al flujo: no hay ancho para dejarlo flotando */
+    .svc .ribbon{position:static;align-self:flex-start}
+    .svc .ribbon ~ .price-name{padding-right:0}
+  }
 
   /* Demo cards row */
   .demos{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
@@ -1197,14 +1269,14 @@
     <div class="sec-head reveal">
       <span class="kicker">02 — Inversión</span>
       <h2 class="title-anim" data-split>Inversión clara, <span class="grad-text">sin sorpresas.</span></h2>
-      <p>Tres formatos diseñados según el tamaño y la ambición de tu proyecto.</p>
+      <p>Tres formatos de sitio web según el tamaño de tu proyecto, más los servicios que lo mantienen creciendo.</p>
     </div>
 
     <div class="pricing-grid reveal-stagger">
       <article class="price">
         <span class="price-name">Landing Page</span>
         <h3>Página única de alta conversión.</h3>
-        <div class="amt"><span class="from">A partir de</span><span class="v">$180.000</span><span class="c">CLP</span></div>
+        <div class="amt"><span class="from">A partir de</span><span class="v">$220.000</span><span class="c">CLP</span></div>
         <p class="sub">Pensada para un objetivo claro: convertir visitas en clientes.</p>
         <ul>
           <li>1 página optimizada para vender</li>
@@ -1222,7 +1294,7 @@
         <span class="ribbon">Más elegido</span>
         <span class="price-name">Web Profesional</span>
         <h3>El estándar para negocios profesionales.</h3>
-        <div class="amt"><span class="from">A partir de</span><span class="v">$350.000</span><span class="c">CLP</span></div>
+        <div class="amt"><span class="from">A partir de</span><span class="v">$420.000</span><span class="c">CLP</span></div>
         <p class="sub">El balance perfecto entre presencia, conversión y posicionamiento.</p>
         <ul>
           <li>Hasta 5 secciones o páginas</li>
@@ -1240,7 +1312,7 @@
       <article class="price">
         <span class="price-name">Experiencia Premium</span>
         <h3>Para marcas que quieren posicionarse.</h3>
-        <div class="amt"><span class="from">A partir de</span><span class="v">$650.000</span><span class="c">CLP</span></div>
+        <div class="amt"><span class="from">A partir de</span><span class="v">$690.000</span><span class="c">CLP</span></div>
         <p class="sub">Una plataforma completa para escalar tu negocio digitalmente.</p>
         <ul>
           <li>Hasta 10 páginas o secciones</li>
@@ -1259,10 +1331,58 @@
     <div class="mantencion reveal">
       <div class="m-left">
         <span class="m-title">Mantención mensual</span>
-        <span class="m-price">$40.000 CLP/mes</span>
+        <span class="m-price">$50.000 CLP/mes</span>
       </div>
       <p class="m-desc">Backups · Hasta 3 cambios mensuales · Monitoreo 24/7 · Soporte WhatsApp · Reportes mensuales · Sin amarres.</p>
     </div>
+
+    <div class="proj-sep reveal" style="margin:64px 0 8px"><span>Crecimiento y recurrencia</span></div>
+
+    <div class="svc-grid reveal-stagger">
+      <article class="svc">
+        <span class="price-name">SEO Local</span>
+        <h3>Que te encuentren cuando buscan en tu ciudad.</h3>
+        <div class="svc-amt">
+          <div><span class="from">Implementación</span><span class="v">$250.000</span><span class="c">CLP, una vez</span></div>
+          <div><span class="from">Después</span><span class="v">$140.000</span><span class="c">CLP/mes</span></div>
+        </div>
+        <p class="sub">El trabajo técnico pesado se paga una sola vez. La mensualidad solo mantiene y mejora la posición.</p>
+        <ul>
+          <li>Ficha de Google Business optimizada</li>
+          <li>Investigación de palabras clave locales</li>
+          <li>SEO técnico on-page en todo el sitio</li>
+          <li>Datos estructurados y geolocalización</li>
+          <li>Reporte mensual de posiciones</li>
+          <li>Ajustes continuos según resultados</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20cotizar%20SEO%20Local.">Cotizar SEO local <span class="arr">→</span></a>
+      </article>
+
+      <article class="svc featured">
+        <span class="ribbon">Todo incluido</span>
+        <span class="price-name">Sistema de Clientes Recurrentes</span>
+        <h3>Tu web, tu SEO y la máquina que hace volver a tus clientes.</h3>
+        <div class="svc-amt">
+          <div><span class="from">Instalación</span><span class="v">$850.000</span><span class="c">CLP, una vez</span></div>
+          <div><span class="from">Después</span><span class="v">$160.000</span><span class="c">CLP/mes</span></div>
+        </div>
+        <p class="sub">Todo lo anterior, más la automatización que convierte una visita suelta en un cliente que vuelve.</p>
+        <ul>
+          <li>Web Profesional completa incluida</li>
+          <li>SEO local implementado</li>
+          <li>Base de datos de clientes a tu nombre</li>
+          <li>Correos automáticos post-visita</li>
+          <li>QR en local y página de captación</li>
+          <li>Panel para ver clientes y métricas</li>
+          <li>Sin licencias de terceros que pagar</li>
+        </ul>
+        <a class="btn btn-primary" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20el%20Sistema%20de%20Clientes%20Recurrentes.">Quiero el sistema <span class="arr">→</span></a>
+      </article>
+    </div>
+
+    <p class="sec-note reveal" style="margin:34px auto 0">
+      Por separado, Web Profesional y SEO Local suman <strong>$670.000 de instalación y $190.000 al mes</strong>. El sistema completo cuesta $180.000 más de instalación y te deja la mensualidad $30.000 más barata, con toda la automatización incluida.
+    </p>
   </div>
 </section>
 
@@ -2007,7 +2127,7 @@
   });
 
   // Hover spotlight
-  document.querySelectorAll('.pillar, .pdl-card, .coming-card, .price').forEach(card=>{
+  document.querySelectorAll('.pillar, .pdl-card, .coming-card, .price, .svc').forEach(card=>{
     card.addEventListener('pointermove', e=>{
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100)+'%');
