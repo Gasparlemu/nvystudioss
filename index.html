@@ -39,8 +39,32 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<script defer src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<!-- La hoja de Inter ya no bloquea el primer render: entra como media="print"
+     (que el navegador no considera critica) y se activa al cargar. El h1 es el
+     LCP de esta pagina, asi que bloquear el render por la fuente costaba caro. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all';this.onload=null" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
+
+<!-- Lenis servido desde el propio dominio: sin DNS/TLS extra hacia unpkg y sin
+     depender de que un CDN de terceros este arriba. -->
+<script defer src="/assets/vendor/lenis.min.js"></script>
+
+<!-- Modo ligero. Corre antes del CSS para que la clase ya este puesta en el
+     primer pintado y no haya parpadeo. En equipos modestos el sistema de
+     "liquid glass" (backdrop-filter, blur de 56-80px, blend modes) es lo que
+     hunde los FPS al hacer scroll, asi que ahi se sirve una version simplificada. -->
+<script>
+(function(){
+  var n = navigator, c = n.connection;
+  var lite =
+    (n.hardwareConcurrency > 0 && n.hardwareConcurrency <= 4) ||
+    (n.deviceMemory > 0 && n.deviceMemory <= 4) ||
+    (c && (c.saveData === true || /^(slow-)?2g$/.test(c.effectiveType || ''))) ||
+    matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (lite) document.documentElement.classList.add('perf-lite');
+})();
+</script>
 <style>
   :root{
     --bg:#F5F5F7;
@@ -69,6 +93,9 @@
   *{box-sizing:border-box;min-width:0}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);max-width:100%;overflow-x:hidden}
   html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  /* Cuando el salto a un ancla lo hace el navegador (modo ligero, sin Lenis)
+     hay que descontar el alto del nav fijo o el titulo destino queda tapado. */
+  html{scroll-padding-top:104px}
   body{
     font-family:"Inter",-apple-system,system-ui,sans-serif;
     font-feature-settings:"ss01","cv11","tnum";
@@ -104,7 +131,6 @@
       radial-gradient(30% 22% at 95% 95%, rgba(35,71,212,.24), transparent 60%);
     filter:blur(10px);
     animation:lgHalo 54s ease-in-out infinite alternate;
-    will-change:transform;
   }
   @keyframes lgHalo{
     0%{transform:translate3d(0,0,0) scale(1)}
@@ -121,7 +147,7 @@
   }
   /* Orbes glossy — composición continua de toda la página (identidad del hero) */
   .lg-plates{position:absolute;inset:0}
-  .orb{position:absolute;border-radius:50%;filter:blur(60px);will-change:transform}
+  .orb{position:absolute;border-radius:50%;filter:blur(60px)}
   .orb.blue{background:radial-gradient(circle at 40% 35%, #4a6cf0 0%, #2347d4 42%, #15309c 80%, #0d2178 100%)}
   .orb.gold{background:radial-gradient(circle at 40% 36%, #f6d27e 0%, #e9b44e 48%, #cf9a36 100%)}
   /* Cintas de vidrio refractado, distribuidas a lo largo de la página */
@@ -237,7 +263,7 @@
     font-size:14px;font-weight:500;letter-spacing:-.005em;
     text-decoration:none;cursor:pointer;border:0;
     transition:transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease);
-    will-change:transform;white-space:nowrap;
+    white-space:nowrap;
   }
   .btn-primary{
     color:#fff;
@@ -298,7 +324,8 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
     -webkit-text-fill-color:transparent;
     animation: gradShift 5s ease-in-out infinite alternate;
-    will-change:background-position;
+    /* Sin will-change: background-position no se compone en GPU, asi que
+       declararlo solo forzaba una capa que se repintaba en cada frame. */
     padding-bottom:.14em;
   }
   @keyframes gradShift{
@@ -346,7 +373,7 @@
 
   /* Hero */
   .hero{padding-top:200px;padding-bottom:120px;text-align:center}
-  .hero-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;will-change:transform}
+  .hero-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
   .hero-orb.a{width:560px;height:560px;background:radial-gradient(circle, rgba(10,37,128,.14), transparent 70%);left:50%;top:-120px;transform:translateX(-50%)}
   .hero-orb.b{width:420px;height:420px;background:radial-gradient(circle, rgba(201,168,76,.12), transparent 70%);left:50%;top:200px;transform:translateX(-50%)}
   .hero h1{max-width:18ch;margin:28px auto 0}
@@ -363,7 +390,7 @@
   /* ===== Hero art — composición Liquid Glass (referencia) ===== */
   .hero{overflow:hidden}
   .hero-art{position:absolute;inset:0;z-index:0;pointer-events:none}
-  .ha-blob{position:absolute;border-radius:50%;filter:blur(56px);will-change:transform}
+  .ha-blob{position:absolute;border-radius:50%;filter:blur(56px)}
   /* Esferas azul marino glossy */
   .hb1{width:560px;height:560px;left:-150px;top:-130px;
     background:radial-gradient(circle at 40% 34%, #4a6cf0 0%, #2347d4 40%, #15309c 78%, #0d2178 100%);
@@ -688,8 +715,10 @@
   .demo-preview .browser-bar{height:26px;flex-shrink:0}
   .demo-preview .browser-bar .d{width:7px;height:7px}
   .demo-preview .browser-bar .url{font-size:10px;margin-left:10px;color:#7a7a80}
-  .demo-shot{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top center;background:#0b0d12;transition:transform 1s var(--ease);will-change:transform}
-  .demo:hover .demo-shot{transform:scale(1.045)}
+  .demo-shot{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top center;background:#0b0d12;transition:transform 1s var(--ease)}
+  /* will-change solo mientras el puntero esta encima: declararlo fijo mantenia
+     una capa GPU por cada demo (14) con la imagen completa en memoria de video. */
+  .demo:hover .demo-shot{transform:scale(1.045);will-change:transform}
 
   /* Demo status variants */
   .demo .status.status-demo{color:#c4b5fd}
@@ -1171,6 +1200,84 @@
   footer a:hover{color:#0A2580}
   footer .label{color:var(--mut-2)}
   footer .colophon{color:var(--mut-2);border-top-color:var(--line)}
+
+  /* Nota: se probo content-visibility:auto en las secciones para diferir su
+     maquetado. Se descarto: las secciones de esta pagina van de 1.000 a 7.100px
+     y cualquier contain-intrinsic-size fijo hace que el alto del documento
+     crezca de golpe al recorrerlo (medido: 10.850px -> 18.655px), con la barra
+     de scroll saltando durante toda la primera visita. */
+
+  /* ============================================================
+     Modo ligero (.perf-lite)
+     ============================================================
+     Se activa en equipos de gama baja o con reduced-motion. Mantiene la
+     identidad visual (los mismos degradados y colores) pero apaga lo que
+     obliga a recomponer la pantalla en cada frame de scroll:
+     backdrop-filter, blur de radio grande, blend modes y bucles infinitos. */
+
+  /* backdrop-filter es lo mas caro del sistema: cada elemento que lo declara
+     obliga a releer y desenfocar el fondo debajo suyo en cada frame. Se
+     sustituye por un fondo solido equivalente. */
+  .perf-lite .nav-inner,
+  .perf-lite .nav-panel,
+  .perf-lite .btn-ghost,
+  .perf-lite .ribbon,
+  .perf-lite .hg-r1,
+  .perf-lite .hg-r2,
+  .perf-lite .marquee,
+  .perf-lite .aud,
+  .perf-lite .mantencion,
+  .perf-lite .demo,
+  .perf-lite .portfolio-cta,
+  .perf-lite .faq-item,
+  .perf-lite .proj-feat,
+  .perf-lite .coming-card,
+  .perf-lite .pdl-card,
+  .perf-lite .test-card{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+  }
+  .perf-lite .nav-inner,
+  .perf-lite .nav-panel{ background:rgba(255,255,255,.94) }
+
+  /* Los blur de 56-80px sobre esferas de 500px son capas enormes en memoria
+     de video. Se reducen a un radio que la GPU integrada mueve sin ahogarse. */
+  .perf-lite .ha-blob{ filter:blur(34px) }
+  .perf-lite .orb{ filter:blur(34px) }
+  .perf-lite .lg-halos{ filter:none }
+
+  /* Bucles infinitos: dejan de repintar y se congelan en su estado final. */
+  .perf-lite .ha-blob,
+  .perf-lite .orb,
+  .perf-lite .lg-halos,
+  .perf-lite .grad-text,
+  .perf-lite .marquee-track{ animation:none !important }
+  /* El marquee congelado tiene que seguir mostrando contenido, no la mitad
+     duplicada colgando fuera de la caja. */
+  .perf-lite .marquee-track{ transform:none }
+
+  /* mix-blend-mode en un elemento fijo del tamano del viewport obliga a
+     rehacer la mezcla de toda la pantalla en cada scroll. */
+  .perf-lite .grain{ display:none }
+
+  /* Las placas de vidrio son puramente decorativas y de las mas caras. */
+  .perf-lite .hg-left,
+  .perf-lite .ribbon{ display:none }
+
+  /* Sombras muy difusas obligan a repintar areas grandes. */
+  .perf-lite .proj-feat,
+  .perf-lite .demo,
+  .perf-lite .coming-card,
+  .perf-lite .pdl-card{ box-shadow:0 2px 12px rgba(10,37,128,.08) }
+
+  @media (prefers-reduced-motion:reduce){
+    /* Sin movimiento no hay transiciones de entrada que esperar: el contenido
+       tiene que estar visible igual. */
+    .reveal,.reveal-stagger,.title-anim,
+    .reveal .w,.reveal-stagger .w,.title-anim .w{
+      opacity:1 !important;transform:none !important;transition:none !important;
+    }
+  }
 </style>
 
 <script type="application/ld+json">
@@ -2283,14 +2390,43 @@
     });
   });
 
-  // Parallax
-  const orbA = document.querySelector('.hero-orb.a');
-  const orbB = document.querySelector('.hero-orb.b');
-  window.addEventListener('scroll', ()=>{
-    const y = window.scrollY;
-    if(orbA) orbA.style.transform = `translateX(-50%) translateY(${y*0.12}px)`;
-    if(orbB) orbB.style.transform = `translateX(-50%) translateY(${y*-0.08}px)`;
-  }, {passive:true});
+  // Parallax del hero.
+  //
+  // Antes esto escribia style.transform en cada evento de scroll. Lenis emite
+  // scroll una vez por frame (y en pantallas de 120Hz, 120 veces por segundo),
+  // y cada escritura invalidaba dos capas con filter:blur(80px), que es de lo
+  // mas caro que puede recomponer una GPU integrada. Ahora se acumula la
+  // posicion y se escribe una sola vez por frame, y solo si cambio.
+  //
+  // Ademas deja de calcularse cuando el hero sale de pantalla: mover orbes que
+  // nadie ve costaba lo mismo que moverlos a la vista.
+  (function(){
+    const orbA = document.querySelector('.hero-orb.a');
+    const orbB = document.querySelector('.hero-orb.b');
+    if(!orbA && !orbB) return;
+    if(document.documentElement.classList.contains('perf-lite')) return;
+
+    const hero = document.querySelector('.hero');
+    let heroVisible = true;
+    if(hero && 'IntersectionObserver' in window){
+      new IntersectionObserver(([e])=>{ heroVisible = e.isIntersecting; }, {rootMargin:'100px'}).observe(hero);
+    }
+
+    let lastY = -1, ticking = false;
+    function paint(){
+      ticking = false;
+      const y = window.scrollY;
+      if(y === lastY) return;
+      lastY = y;
+      if(orbA) orbA.style.transform = `translateX(-50%) translateY(${(y*0.12).toFixed(1)}px)`;
+      if(orbB) orbB.style.transform = `translateX(-50%) translateY(${(y*-0.08).toFixed(1)}px)`;
+    }
+    window.addEventListener('scroll', ()=>{
+      if(ticking || !heroVisible) return;
+      ticking = true;
+      requestAnimationFrame(paint);
+    }, {passive:true});
+  })();
 
   // Menu movil accesible: aria-expanded, cierre con Esc, foco atrapado
   // mientras esta abierto y foco devuelto al boton al cerrar.
@@ -2338,10 +2474,12 @@
   (function(){
     const c = document.getElementById('stars'); if(!c) return;
 
-    // No arranca donde no aporta y si cuesta: en movil consume bateria, y con
-    // reduced-motion el resto del sitio ya se detiene, el canvas tambien debe.
+    // No arranca donde no aporta y si cuesta: en movil consume bateria, con
+    // reduced-motion el resto del sitio ya se detiene, y en equipos de gama
+    // baja un bucle de dibujo permanente compite con el scroll.
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (innerWidth < 768 || reduced.matches) { c.remove(); return; }
+    if (innerWidth < 768 || reduced.matches ||
+        document.documentElement.classList.contains('perf-lite')) { c.remove(); return; }
 
     const ctx = c.getContext('2d');
     let w,h,dpr,particles;
@@ -2357,7 +2495,15 @@
         a: Math.random()*0.5 + 0.2, tw: Math.random()*Math.PI*2
       }));
     }
-    resize(); addEventListener('resize', resize);
+    // resize se dispara decenas de veces mientras se arrastra el borde de la
+    // ventana, y cada llamada reasigna el buffer del canvas y regenera todas
+    // las particulas. Con debounce se hace una sola vez al terminar.
+    let resizeTimer;
+    resize();
+    addEventListener('resize', ()=>{
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
+    }, {passive:true});
     let t=0, rafId=null;
     function tick(){
       t+=0.005;
@@ -2394,6 +2540,12 @@
   // siempre undefined y el smooth scroll no arrancaria nunca.
   document.addEventListener('DOMContentLoaded', function(){
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // En modo ligero se usa el scroll nativo: el bucle de Lenis corre en cada
+    // frame y en equipos justos es un competidor mas por el hilo principal.
+    if (document.documentElement.classList.contains('perf-lite')){
+      document.documentElement.style.scrollBehavior = 'smooth';
+      return;
+    }
     if (prefersReduced || typeof Lenis === 'undefined') return;
 
     const lenis = new Lenis({
@@ -2430,6 +2582,65 @@
 
     window.__lenis = lenis;
   });
+
+  /* ============================================================
+     Red de seguridad: degradar si el equipo no da abasto
+     ============================================================
+     La deteccion del <head> mira nucleos y memoria, pero eso no ve la GPU.
+     Una maquina con 8 nucleos y graficos integrados debiles pasa ese filtro y
+     igual se arrastra. Aca se miden los FPS reales durante el primer scroll:
+     si no alcanzan, se activa el modo ligero en caliente.
+
+     Solo mide mientras hay scroll (que es cuando duele) y se desconecta sola
+     en cuanto tiene veredicto, para no dejar un bucle vivo de por vida. */
+  (function(){
+    const root = document.documentElement;
+    if (root.classList.contains('perf-lite')) return;
+    if (!window.requestAnimationFrame) return;
+
+    const NEEDED = 45;      // frames a observar antes de decidir
+    const MIN_FPS = 38;     // por debajo de esto el scroll ya se siente a tirones
+    let frames = 0, slow = 0, last = 0, running = false, done = false;
+
+    function degrade(){
+      done = true;
+      root.classList.add('perf-lite');
+      // El canvas de particulas y Lenis ya estan corriendo: hay que pararlos,
+      // el CSS solo no los detiene.
+      const stars = document.getElementById('stars');
+      if (stars) stars.remove();
+      if (window.__lenis){
+        try { window.__lenis.destroy(); } catch(e){}
+        window.__lenis = null;
+        root.style.scrollBehavior = 'smooth';
+      }
+    }
+
+    function sample(now){
+      if (done) return;
+      if (last){
+        const dt = now - last;
+        frames++;
+        // >26ms entre frames es menos de 38fps
+        if (dt > 26) slow++;
+        if (frames >= NEEDED){
+          if (slow / frames > 0.5) degrade();
+          else done = true;   // el equipo rinde: dejar de medir para siempre
+          running = false;
+          return;
+        }
+      }
+      last = now;
+      requestAnimationFrame(sample);
+    }
+
+    window.addEventListener('scroll', function onScroll(){
+      if (done){ window.removeEventListener('scroll', onScroll); return; }
+      if (running) return;
+      running = true; last = 0;
+      requestAnimationFrame(sample);
+    }, {passive:true});
+  })();
 </script>
 </body>
 </html>
