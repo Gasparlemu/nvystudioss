@@ -12,6 +12,10 @@
 <meta name="theme-color" content="#0A2580" />
 <meta name="author" content="Gaspar Quijada" />
 
+<!-- Verificacion de propiedad en Google Search Console.
+     No quitar: si desaparece, Google revoca la verificacion del dominio. -->
+<meta name="google-site-verification" content="qMeHLmhfhbZDGK7SI2YYOOThsJwS5k1eij4IBdaVsSo" />
+
 <!-- Favicon e iconos -->
 <link rel="icon" href="/assets/brand/favicon.ico" sizes="any" />
 <link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png" />
@@ -1305,8 +1309,106 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://www.nvystudios.cl/#business",
+  "name": "NVY Studios",
+  "description": "Estudio de diseño y desarrollo web en Valdivia. Sitios a medida sin plantillas, SEO local y sistemas de fidelización para pymes del sur de Chile.",
+  "url": "https://www.nvystudios.cl/",
+  "logo": "https://www.nvystudios.cl/assets/brand/logo-mark.png",
+  "image": "https://www.nvystudios.cl/assets/brand/og.png",
+  "telephone": "+56940976219",
+  "email": "contacto@nvystudios.cl",
+  "priceRange": "$220.000 - $850.000 CLP",
+  "currenciesAccepted": "CLP",
+  "paymentAccepted": "Transferencia bancaria",
+  "knowsLanguage": "es-CL",
+  "founder": {
+    "@type": "Person",
+    "name": "Gaspar Quijada"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Valdivia",
+    "addressRegion": "Región de Los Ríos",
+    "addressCountry": "CL"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Valdivia" },
+    { "@type": "AdministrativeArea", "name": "Región de Los Ríos" },
+    { "@type": "Country", "name": "Chile" }
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "telephone": "+56940976219",
+    "email": "contacto@nvystudios.cl",
+    "availableLanguage": "Spanish"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Servicios de NVY Studios",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "priceCurrency": "CLP",
+        "price": "220000",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Landing Page",
+          "description": "Página única de alta conversión, diseñada y programada desde cero, con integración de WhatsApp y SEO técnico básico. Entrega en 5 días hábiles."
+        }
+      },
+      {
+        "@type": "Offer",
+        "priceCurrency": "CLP",
+        "price": "420000",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Web Profesional",
+          "description": "Sitio de hasta 5 secciones con animaciones, formulario de contacto, integración de WhatsApp y SEO on-page completo. Entrega en 7 días hábiles."
+        }
+      },
+      {
+        "@type": "Offer",
+        "priceCurrency": "CLP",
+        "price": "690000",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Experiencia Premium",
+          "description": "Plataforma de hasta 10 páginas con SEO técnico avanzado, sistema de reservas, blog opcional y estrategia de visibilidad local. Entrega en 10 a 14 días hábiles."
+        }
+      },
+      {
+        "@type": "Offer",
+        "priceCurrency": "CLP",
+        "price": "250000",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "SEO Local",
+          "description": "Optimización de Perfil de Empresa de Google, investigación de palabras clave locales, SEO técnico on-page, datos estructurados y reporte mensual de posiciones."
+        }
+      },
+      {
+        "@type": "Offer",
+        "priceCurrency": "CLP",
+        "price": "850000",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Sistema de Clientes Recurrentes",
+          "description": "Web profesional, SEO local, base de datos de clientes propia, correos automáticos post-visita, QR en local y panel de métricas."
+        }
+      }
+    ]
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "FAQPage",
   "@id": "https://www.nvystudios.cl/#faq",
+  "about": { "@id": "https://www.nvystudios.cl/#business" },
   "mainEntity": [
     {
       "@type": "Question",
@@ -2313,9 +2415,9 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.05 4.91A10 10 0 0 0 4.13 18.34L3 22l3.74-1.1A10 10 0 1 0 19.05 4.91zM12 20a8 8 0 0 1-4.08-1.12l-.29-.17-2.22.65.66-2.16-.19-.31A8 8 0 1 1 12 20z"/></svg>
           +56 9 4097 6219
         </a>
-        <a href="mailto:nvyestudios@gmail.com">
+        <a href="mailto:contacto@nvystudios.cl">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 7 9-7"/></svg>
-          nvyestudios@gmail.com
+          contacto@nvystudios.cl
         </a>
         <span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s-7-7.5-7-13a7 7 0 0 1 14 0c0 5.5-7 13-7 13z"/><circle cx="12" cy="9" r="2.5"/></svg>
@@ -2348,7 +2450,7 @@
         <ul>
           <li class="label">Contacto</li>
           <li><a href="https://wa.me/56940976219">+56 9 4097 6219</a></li>
-          <li><a href="mailto:nvyestudios@gmail.com">nvyestudios@gmail.com</a></li>
+          <li><a href="mailto:contacto@nvystudios.cl">contacto@nvystudios.cl</a></li>
           <li><span style="color:#6E6E73">Valdivia, Chile</span></li>
         </ul>
         <ul>
