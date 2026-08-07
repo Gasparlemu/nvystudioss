@@ -616,6 +616,13 @@
   .price .btn{margin-top:auto;width:100%;justify-content:center}
   @media (max-width:980px){ .pricing-grid{grid-template-columns:1fr;gap:14px} }
 
+  /* Card suelta de crecimiento. Reusa .price tal cual, pero centrada y con
+     ancho acotado: dentro de la grilla de tres columnas una sola card quedaria
+     a un tercio del ancho y desalineada a la izquierda. */
+  .pricing-solo{margin-top:20px;display:flex;justify-content:center}
+  .pricing-solo .price{width:100%;max-width:560px}
+  @media (max-width:980px){ .pricing-solo .price{max-width:none} }
+
   .mantencion{
     margin-top:32px;
     border:1px solid rgba(255,255,255,.8);border-radius:var(--r-lg);
@@ -2284,53 +2291,15 @@
       <p class="m-desc">Backups · Hasta 3 cambios mensuales · Monitoreo 24/7 · Soporte WhatsApp · Reportes mensuales · Sin amarres.</p>
     </div>
 
-    <div class="proj-sep reveal" style="margin:64px 0 8px"><span>Crecimiento y recurrencia</span></div>
-
-    <div class="svc-grid reveal-stagger">
-      <article class="svc">
-        <span class="price-name">SEO Local</span>
-        <h3>Que te encuentren cuando buscan en tu ciudad.</h3>
-        <div class="svc-amt">
-          <div><span class="from">Implementación</span><span class="v">$250.000</span><span class="c">CLP, una vez</span></div>
-          <div><span class="from">Después</span><span class="v">$140.000</span><span class="c">CLP/mes</span></div>
-        </div>
-        <p class="sub">El trabajo técnico pesado se paga una sola vez. La mensualidad solo mantiene y mejora la posición.</p>
-        <ul>
-          <li>Ficha de Google Business optimizada</li>
-          <li>Investigación de palabras clave locales</li>
-          <li>SEO técnico on-page en todo el sitio</li>
-          <li>Datos estructurados y geolocalización</li>
-          <li>Reporte mensual de posiciones</li>
-          <li>Ajustes continuos según resultados</li>
-        </ul>
-        <a class="btn btn-ghost" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20cotizar%20SEO%20Local.">Cotizar SEO local <span class="arr">→</span></a>
-      </article>
-
-      <article class="svc featured">
-        <span class="badge">Todo incluido</span>
-        <span class="price-name">Sistema de Clientes Recurrentes</span>
-        <h3>Tu web, tu SEO y la máquina que hace volver a tus clientes.</h3>
-        <div class="svc-amt">
-          <div><span class="from">Instalación</span><span class="v">$850.000</span><span class="c">CLP, una vez</span></div>
-          <div><span class="from">Después</span><span class="v">$160.000</span><span class="c">CLP/mes</span></div>
-        </div>
-        <p class="sub">Todo lo anterior, más la automatización que convierte una visita suelta en un cliente que vuelve.</p>
-        <ul>
-          <li>Web Profesional completa incluida</li>
-          <li>SEO local implementado</li>
-          <li>Base de datos de clientes a tu nombre</li>
-          <li>Correos automáticos post-visita</li>
-          <li>QR en local y página de captación</li>
-          <li>Panel para ver clientes y métricas</li>
-          <li>Sin licencias de terceros que pagar</li>
-        </ul>
-        <a class="btn btn-primary" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20el%20Sistema%20de%20Clientes%20Recurrentes.">Quiero el sistema <span class="arr">→</span></a>
+    <div class="pricing-solo reveal-stagger">
+      <article class="price">
+        <span class="price-name">Crecimiento y recurrencia</span>
+        <h3>Que te encuentren y que vuelvan.</h3>
+        <div class="amt"><span class="from">Desde</span><span class="v">$250.000</span><span class="c">CLP</span></div>
+        <p class="sub">SEO local, base de datos de clientes y automatización de fidelización, para negocios que ya tienen su web lista.</p>
+        <a class="btn btn-ghost" href="https://wa.me/56940976219?text=Hola%2C%20quiero%20cotizar%20crecimiento%20y%20recurrencia.">Cotizar crecimiento <span class="arr">→</span></a>
       </article>
     </div>
-
-    <p class="sec-note reveal" style="margin:34px auto 0">
-      Por separado, Web Profesional y SEO Local suman <strong>$670.000 de instalación y $190.000 al mes</strong>. El sistema completo cuesta $180.000 más de instalación y te deja la mensualidad $30.000 más barata, con toda la automatización incluida.
-    </p>
   </div>
 </section>
 
