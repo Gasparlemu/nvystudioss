@@ -23,23 +23,6 @@
     else window.scrollTo({ top: typeof destino === 'number' ? destino : destino.getBoundingClientRect().top + scrollY, behavior: reducido ? 'auto' : 'smooth' });
   };
 
-  /* ---------- reloj de Valdivia ---------- */
-  const reloj = $('[data-reloj]');
-  if (reloj && window.Intl) {
-    const hora = new Intl.DateTimeFormat('es-CL', { timeZone: 'America/Santiago', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
-    let zona = null;
-    try { zona = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Santiago', timeZoneName: 'shortOffset' }); } catch (e) { /* navegador viejo: solo la hora */ }
-    reloj.title = 'Hora en Valdivia';
-    const pintar = () => {
-      const ahora = new Date();
-      const gmt = zona ? (zona.formatToParts(ahora).find((p) => p.type === 'timeZoneName') || {}).value : '';
-      reloj.textContent = gmt ? `${hora.format(ahora)} (${gmt})` : hora.format(ahora);
-      reloj.dateTime = ahora.toISOString();
-      setTimeout(pintar, 60000 - (Date.now() % 60000) + 30);
-    };
-    pintar();
-  }
-
   /* ---------- header: se esconde al bajar y vuelve al subir ---------- */
   const cab = $('[data-cab]');
   let ultimoY = scrollY;
@@ -57,7 +40,7 @@
   addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }, { passive: true });
   alScroll();
 
-  /* ---------- menu a pantalla completa ---------- */
+  /* ---------- menu: panel lateral derecho ---------- */
   const menu = $('[data-menu]');
   const boton = $('[data-menu-boton]');
   const botonTxt = $('[data-menu-txt]');
@@ -84,6 +67,7 @@
     if (devolverFoco) boton.focus({ preventScroll: true });
   };
   boton.addEventListener('click', () => (abierto() ? cerrar() : abrir()));
+  $('[data-menu-cerrar]', menu).addEventListener('click', () => cerrar());
   d.addEventListener('keydown', (e) => {
     if (!abierto()) return;
     if (e.key === 'Escape') { e.preventDefault(); cerrar(); return; }

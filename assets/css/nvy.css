@@ -30,6 +30,10 @@
   --linea: rgba(11, 11, 12, .12);
   --azul: #0a1f5c;
   --azul-2: #071640;
+  --celeste: #a9c3f8;
+  /* Degradados del texto: de arriba hacia abajo, sin animacion */
+  --grad-azul: linear-gradient(176deg, #0a1f5c 22%, #2a55cc 64%, #a9c3f8 100%);
+  --grad-claro: linear-gradient(176deg, #ffffff 30%, #d6e3ff 62%, #8fb0f6 100%);
 
   --pad: clamp(16px, 2.2vw, 32px);
   --gap: clamp(12px, 1.5vw, 24px);
@@ -124,62 +128,79 @@ html.lenis, html.lenis body { height: auto; }
 .cab.is-solida { background: var(--bg); box-shadow: 0 1px 0 var(--linea); }
 .cab.is-oculta { transform: translateY(-101%); }
 .cab__logo { font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -.03em; }
-.cab__der { display: flex; align-items: center; gap: clamp(16px, 3vw, 40px); }
-.cab__reloj { color: var(--gris-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.cab__reloj:empty { visibility: hidden; }
-.cab__menu { font-weight: 500; padding: 8px 0; min-width: 3.4em; text-align: right; }
-html.menu-abierto .cab { color: #fff; background: transparent; box-shadow: none; transform: none; }
-html.menu-abierto .cab__reloj { color: rgba(255, 255, 255, .55); }
+.cab__menu { font-weight: 500; padding: 8px 0; min-width: 3.4em; text-align: right; transition: color .4s; }
+/* Con el menu abierto el header queda sobre el velo: solo "cerrar" pasa a blanco,
+   porque es lo unico que cae encima del panel azul. */
+html.menu-abierto .cab { background: transparent; box-shadow: none; transform: none; }
+html.menu-abierto .cab__menu { color: #fff; }
 
-/* ---------- menu a pantalla completa ---------- */
-.menu {
-  position: fixed; inset: 0; z-index: 55;
+/* ---------- menu: panel lateral derecho en azul ---------- */
+.menu { position: fixed; inset: 0; z-index: 55; visibility: hidden; transition: visibility 0s linear .7s; }
+.menu.is-abierto { visibility: visible; transition: visibility 0s; }
+.menu__velo {
+  position: absolute; inset: 0; width: 100%; border: 0; padding: 0; cursor: pointer;
+  background: rgba(11, 11, 12, .42);
+  opacity: 0; transition: opacity .6s var(--sale);
+}
+.menu.is-abierto .menu__velo { opacity: 1; }
+.menu__panel {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: min(460px, 88vw);
   display: grid; grid-template-rows: 1fr auto;
-  padding: 96px var(--pad) calc(var(--pad) + env(safe-area-inset-bottom));
-  background: var(--tinta); color: #fff;
-  clip-path: inset(0 0 100% 0);
-  visibility: hidden;
-  transition: clip-path .8s var(--cambia), visibility 0s linear .8s;
+  padding: 96px clamp(28px, 3vw, 48px) calc(clamp(28px, 3vw, 40px) + env(safe-area-inset-bottom));
+  background: var(--azul); color: #fff;
+  transform: translateX(100%);
+  transition: transform .7s cubic-bezier(.32, .72, 0, 1);
+  overflow-y: auto; overscroll-behavior: contain;
 }
-.menu.is-abierto {
-  clip-path: inset(0);
-  visibility: visible;
-  transition: clip-path .8s var(--cambia), visibility 0s;
-}
+.menu.is-abierto .menu__panel { transform: none; }
 .menu__nav { align-self: center; }
 .menu__lista { list-style: none; margin: 0; padding: 0; }
 .menu__link {
-  display: flex; align-items: flex-start; gap: clamp(12px, 2vw, 28px);
-  font-family: var(--display); font-weight: 500; letter-spacing: -.05em;
-  font-size: clamp(56px, 11vw, 168px); line-height: .98;
+  display: flex; align-items: flex-start; gap: 16px;
+  font-family: var(--display); font-weight: 500; letter-spacing: -.045em;
+  font-size: clamp(44px, 4.6vw, 68px); line-height: 1.02;
   transition: opacity .4s, transform .6s var(--sale);
 }
 .menu__num {
-  font-family: var(--texto); font-size: 13px; font-weight: 500; letter-spacing: 0;
-  color: rgba(255, 255, 255, .55); padding-top: 1.2em; font-variant-numeric: tabular-nums;
+  font-family: var(--texto); font-size: 12px; font-weight: 500; letter-spacing: 0;
+  color: rgba(255, 255, 255, .6); padding-top: .9em; font-variant-numeric: tabular-nums;
 }
-.menu__txt { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
 .menu__txt > span {
-  display: block; transform: translateY(110%);
-  transition: transform .9s var(--sale) calc(.28s + var(--i) * .07s);
+  display: inline-block; opacity: 0; transform: translateX(32px);
+  transition: opacity .5s, transform .8s var(--sale);
+  transition-delay: calc(.18s + var(--i) * .06s);
 }
-.menu.is-abierto .menu__txt > span { transform: none; }
-.menu:not(.is-abierto) .menu__txt > span { transition-delay: 0s; transition-duration: .4s; }
+.menu.is-abierto .menu__txt > span { opacity: 1; transform: none; }
+.menu:not(.is-abierto) .menu__txt > span { transition-delay: 0s; transition-duration: .25s; }
 .menu__pie {
-  display: flex; flex-wrap: wrap; gap: 24px clamp(32px, 6vw, 96px);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;
   font-size: 14px;
   opacity: 0; transform: translateY(12px);
   transition: opacity .5s, transform .8s var(--sale);
 }
-.menu.is-abierto .menu__pie { opacity: 1; transform: none; transition-delay: .45s; }
+.menu.is-abierto .menu__pie { opacity: 1; transform: none; transition-delay: .4s; }
 .menu__col { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.menu__lbl { color: rgba(255, 255, 255, .55); }
+.menu__lbl { color: rgba(255, 255, 255, .6); }
 .menu__col a { display: inline-flex; align-items: center; gap: 6px; }
 .menu__col a:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (hover: hover) {
-  .menu__lista:hover .menu__link { opacity: .35; }
-  .menu__lista .menu__link:hover { opacity: 1; transform: translateX(16px); }
+  .menu__lista:hover .menu__link { opacity: .45; }
+  .menu__lista .menu__link:hover { opacity: 1; transform: translateX(-10px); }
 }
+
+/* ---------- texto en degradado (solo letras, sin animacion) ----------
+   Azul marino arriba que se aclara a celeste abajo, como un reflejo de vidrio.
+   Version oscura para fondo blanco y version clara para el panel azul.
+   El relleno extra evita que se corten la cola de la "y", la "j" o la "¿",
+   que con interlineado bajo quedan fuera de la caja del texto. */
+.degradado, .menu__txt > span {
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  padding: .06em .1em .22em 0; margin: -.06em -.1em -.22em 0;
+}
+.degradado { background-image: var(--grad-azul); }
+.menu__txt > span { background-image: var(--grad-claro); }
 
 /* ---------- mascaras de entrada (solo con JS) ---------- */
 /* Titulos de una linea: el texto sube desde abajo de su propia caja. */
@@ -224,6 +245,7 @@ html.menu-abierto .cab__reloj { color: rgba(255, 255, 255, .55); }
   /* --em: ancho del texto en em (calculado en el build) => llena el ancho exacto */
   font-size: calc(var(--ancho) / var(--em) * .995);
   margin-left: -.035em;
+  margin-bottom: .22em; /* aire para que la cola de la "y" no cruce la linea de abajo */
 }
 /* La mascara deja aire para la cola de la "y" y para el ultimo caracter, que con
    tracking negativo sobresale de su propia caja. */
@@ -555,7 +577,9 @@ a.contacto__dato:hover { color: var(--azul); }
 }
 
 @media (max-width: 720px) {
-  .cab__reloj { font-size: 13px; }
+  .menu__panel { width: 100%; }
+  html.menu-abierto .cab__logo { color: #fff; }
+  .menu__pie { grid-template-columns: 1fr; }
   .portada { min-height: 82vh; min-height: 82svh; }
   .portada__marca { white-space: normal; font-size: calc(var(--ancho) / var(--em-max) * .99); line-height: .9; }
   .portada__l { display: block; }

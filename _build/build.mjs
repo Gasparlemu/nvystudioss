@@ -110,10 +110,7 @@ const JS_V = version('assets/js/nvy.js');
 function cabecera() {
   return `<header class="cab" data-cab>
   <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio">Nvy Studios</a>
-  <div class="cab__der">
-    <time class="cab__reloj" data-reloj></time>
-    <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menu</span></button>
-  </div>
+  <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menu</span></button>
 </header>`;
 }
 
@@ -121,6 +118,8 @@ function menu() {
   const links = [['/#trabajos', 'trabajos'], ['/#sobre-mi', 'sobre mí'], ['/#contacto', 'contacto']];
   const redes = [['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u);
   return `<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" data-menu inert>
+  <button class="menu__velo" type="button" tabindex="-1" aria-label="Cerrar menú" data-menu-cerrar></button>
+  <div class="menu__panel">
   <nav class="menu__nav" aria-label="Principal">
     <ol class="menu__lista">
 ${links.map(([href, txt], i) => `      <li class="menu__item" style="--i:${i}"><a class="menu__link" href="${href}" data-menu-link><span class="menu__num">${num(i)}</span><span class="menu__txt"><span>${txt}</span></span></a></li>`).join('\n')}
@@ -129,6 +128,7 @@ ${links.map(([href, txt], i) => `      <li class="menu__item" style="--i:${i}"><
   <div class="menu__pie">
 ${redes.length ? `    <div class="menu__col"><span class="menu__lbl">redes</span>${redes.map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</div>\n` : ''}    <div class="menu__col"><span class="menu__lbl">escribir</span><a href="mailto:${sitio.correo}">${sitio.correo}</a><a href="${wa()}" ${externo}>whatsapp ${icono('diagonal')}</a></div>
     <div class="menu__col"><span class="menu__lbl">estudio</span><span>${esc(sitio.ciudad)}</span></div>
+  </div>
   </div>
 </div>`;
 }
@@ -272,7 +272,7 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
     <h1 class="portada__h1" id="portada-titulo">
-      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}"><span class="portada__l"><span>Nvy</span></span> <span class="portada__l"><span>Studios</span></span></span>
+      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}"><span class="portada__l"><span class="degradado">Nvy</span></span> <span class="portada__l"><span class="degradado">Studios</span></span></span>
       <span class="portada__bajada"><span>${esc(sitio.bajada)}</span></span>
     </h1>
     <a class="portada__bajar" href="#trabajos" data-ancla><span>trabajos</span> ${icono('abajo')}</a>
@@ -313,7 +313,7 @@ ${citas}
 
   <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
     <div class="rotulo"><span>contacto</span><span>(04)</span></div>
-    <h2 class="contacto__titulo" id="contacto-titulo" data-reveal="mascara" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}"><span>¿Conversamos?</span></h2>
+    <h2 class="contacto__titulo" id="contacto-titulo" data-reveal="mascara" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}"><span class="degradado">¿Conversamos?</span></h2>
     <div class="contacto__fila">
       <a class="boton" href="${wa()}" ${externo}>escribir por whatsapp ${icono('diagonal')}</a>
       <a class="contacto__dato" href="mailto:${sitio.correo}">${sitio.correo}</a>
