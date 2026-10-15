@@ -65,6 +65,9 @@ const TRAZOS = {
   arriba: '<path d="M12 20.5v-16m-6.5 6.5L12 4.5l6.5 6.5"/>',
   abajo: '<path d="M12 3.5v16m6.5-6.5L12 19.5 5.5 13"/>',
   izquierda: '<path d="M20.5 12h-16m6.5 6.5L4.5 12 11 5.5"/>',
+  instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.2" cy="6.8" r=".5" fill="currentColor"/>',
+  linkedin: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5V16m0-8.2v.1m3.6 8.1v-5.5m0 2.6c0-1.6 1-2.7 2.3-2.7s2.2 1 2.2 2.7V16"/>',
+  whatsapp: '<path d="M4.6 19.4l1.1-3.5a8 8 0 1 1 3 2.9z"/><path d="M9.3 8.9c.1 2.4 2.3 4.7 4.9 5l.9-1.2-1.6-.9-.8.6c-.8-.4-1.5-1.1-1.9-1.9l.6-.8-.9-1.6z"/>',
 };
 const icono = (nombre) => `<svg class="ico ico--${nombre}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">${TRAZOS[nombre]}</svg>`;
 
@@ -107,8 +110,8 @@ const sinCaptura = (p) => `<div class="sin-captura" aria-hidden="true"><span>${e
 // mascara y lleva su ancho (--w); cada letra lleva su posicion dentro de la palabra
 // (--x, en em). Con eso el degradado se ve continuo en toda la palabra aunque cada
 // letra sea su propia caja. El titulo que lo usa lleva aria-label con el texto entero.
-function letras(texto, { degradado = false } = {}) {
-  let n = 0;
+function letras(texto, { degradado = false, claro = false, desde = 0 } = {}) {
+  let n = desde;
   return texto.split(' ').map((palabra) => {
     let x = 0;
     const ls = [...palabra].map((ch) => {
@@ -116,7 +119,8 @@ function letras(texto, { degradado = false } = {}) {
       x += anchoEm(ch);
       return s;
     }).join('');
-    return `<span class="palabra${degradado ? ' palabra--degradado' : ''}" style="--w:${anchoEm(palabra).toFixed(3)}" aria-hidden="true">${ls}</span>`;
+    const clase = degradado ? ' palabra--degradado' : claro ? ' palabra--degradado palabra--claro' : '';
+    return `<span class="palabra${clase}" style="--w:${anchoEm(palabra).toFixed(3)}" aria-hidden="true">${ls}</span>`;
   }).join(' ');
 }
 
@@ -124,9 +128,13 @@ function letras(texto, { degradado = false } = {}) {
 const CSS_V = version('assets/css/nvy.css');
 const JS_V = version('assets/js/nvy.js');
 
-function cabecera() {
-  return `<header class="cab" data-cab>
+function cabecera(clase = '') {
+  return `<header class="cab${clase ? ` ${clase}` : ''}" data-cab>
   <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio">Nvy Studios</a>
+  <nav class="cab__nav" aria-label="Secciones">
+    <a href="/#trabajos">Trabajos</a><a href="/#sobre-mi">Sobre mí</a><a href="/#contacto">Contacto</a>
+    <a class="cab__cta" href="${wa()}" ${externo}>Conversemos</a>
+  </nav>
   <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menú</span></button>
 </header>`;
 }
@@ -158,7 +166,7 @@ function pie() {
 </footer>`;
 }
 
-function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '' }) {
+function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '', claseCab = '', scripts = [] }) {
   const canonical = BASE + ruta;
   const ogImagen = og.imagen || `${BASE}/assets/brand/og-nvy.png`;
   const ogTitulo = esc(og.titulo || titulo);
@@ -200,14 +208,14 @@ ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
 <link rel="preload" href="/assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/nvy.css?v=${CSS_V}">
-<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico';else if(location.pathname==='/'&&!sessionStorage.getItem('nvy-intro')&&!mm('(prefers-reduced-motion: reduce)'))h.className+=' con-intro'}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
+<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico'}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
 <script defer src="/assets/vendor/lenis.min.js"></script>
 <script defer src="/assets/js/nvy.js?v=${JS_V}"></script>
-<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
+${scripts.map((s) => `<script defer src="/assets/js/${s}?v=${version(`assets/js/${s}`)}"></script>\n`).join('')}<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
 ${ld ? `<script type="application/ld+json">${jsonLd(ld)}</script>\n` : ''}</head>
 <body id="top"${claseBody ? ` class="${claseBody}"` : ''}>
 <a class="saltar" href="#contenido">saltar al contenido</a>
-${cabecera()}
+${cabecera(claseCab)}
 ${menu()}
 ${cuerpo}
 ${pie()}
@@ -284,13 +292,39 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
         <p class="cita__autor"><strong>${esc(t.nombre)}</strong><span>${esc(t.cargo)}</span></p>
       </li>`).join('\n');
 
-  const cuerpo = `<div class="intro" aria-hidden="true"><span class="intro__marca">Nvy Studios</span><span class="intro__num" data-intro-num>0</span></div>
-<main id="contenido">
+  const linea1 = 'Webs a medida para';
+  const linea2 = 'marcas que se atreven.';
+  const carrusel = proyectos.map((p) => ({ p, v: vistas(p.slug).e[0] })).filter(({ v }) => v);
+  const tarjetas = carrusel.map(({ p, v }, i) => `        <a class="carrusel__item${i === 0 ? ' is-actual' : ''}" href="/trabajos/${p.slug}"${i === 0 ? '' : ' tabindex="-1"'}>
+          <span class="carrusel__foto">${picture(v, { sizes: '320px', alt: '', carga: i === 0 ? 'eager' : 'lazy' })}</span>
+          <span class="carrusel__nombre"><span>${esc(p.nombre)}</span>${icono('diagonal')}</span>
+        </a>`).join('\n');
+  const redesHero = [['Instagram', 'instagram', sitio.instagram], ['LinkedIn', 'linkedin', sitio.linkedin], ['WhatsApp', 'whatsapp', wa()]]
+    .filter(([, , u]) => u)
+    .map(([n, ic, u]) => `<a href="${esc(u)}" ${externo} aria-label="${n}">${icono(ic)}</a>`).join('');
+
+  const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
-    <h1 class="portada__h1" id="portada-titulo" aria-label="Nvy Studios. ${esc(sitio.bajada)}">
-      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}">${letras('Nvy Studios', { degradado: true })}</span>
-      <span class="portada__bajada"><span>${esc(sitio.bajada)}</span></span>
-    </h1>
+    <div class="portada__marco">
+      <canvas class="portada__fondo" aria-hidden="true" data-fondo></canvas>
+      <h1 class="portada__titulo" id="portada-titulo" aria-label="${esc(linea1)} ${esc(linea2)}">
+        <span class="portada__linea">${letras(linea1, { claro: true })}</span>
+        <span class="portada__linea">${letras(linea2, { claro: true, desde: linea1.replace(/ /g, '').length })}</span>
+      </h1>
+      <div class="portada__datos">
+        <p>${esc(sitio.ciudad)}</p>
+        <a href="tel:${sitio.telefono}">+56 9 4097 6219</a>
+        <div class="portada__redes">${redesHero}</div>
+      </div>
+      <div class="portada__pie">
+        <p class="portada__desc">${esc(sitio.heroTexto)}</p>
+        <a class="portada__cta" href="#trabajos">Explora nuestro trabajo ${icono('diagonal')}</a>
+      </div>
+      <div class="portada__proyectos" data-carrusel aria-label="Proyectos destacados">
+${tarjetas}
+        <span class="carrusel__barra" aria-hidden="true"><span data-carrusel-barra></span></span>
+      </div>
+    </div>
   </section>
 
   <section class="trabajos" id="trabajos" aria-labelledby="trabajos-titulo">
@@ -358,6 +392,8 @@ ${citas}
     ld,
     cuerpo,
     claseBody: 'pag-home',
+    claseCab: 'sobre-portada',
+    scripts: ['fondo.js'],
   });
 }
 

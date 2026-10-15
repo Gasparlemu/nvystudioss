@@ -40,6 +40,7 @@
   --pad: clamp(16px, 2.2vw, 32px);
   --gap: clamp(12px, 1.5vw, 24px);
   --ancho: calc(100vw - 2 * var(--pad));
+  --pad-hero: clamp(20px, 3.2vw, 52px);
 
   --sale: cubic-bezier(.16, 1, .3, 1);      /* entradas suaves */
   --cambia: cubic-bezier(.76, 0, .24, 1);   /* cortinas y menu */
@@ -123,22 +124,42 @@ html.lenis, html.lenis body { height: auto; }
 }
 .rotulo h2 { font: inherit; color: var(--tinta); }
 
-/* ---------- header ---------- */
+/* ---------- header: siempre visible ---------- */
 .cab {
   position: fixed; top: 0; left: 0; right: 0; z-index: 60;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  height: 64px; padding: 0 var(--pad);
-  font-size: 14px;
-  transition: transform .6s var(--sale), background-color .3s, box-shadow .3s, color .3s;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+  height: 72px; padding: 0 var(--pad);
+  font-size: 14px; color: var(--tinta);
+  transition: background-color .35s, box-shadow .35s, color .35s;
 }
-.cab.is-solida { background: var(--bg); box-shadow: 0 1px 0 var(--linea); }
-.cab.is-oculta { transform: translateY(-101%); }
-.cab__logo { font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -.03em; }
-.cab__menu { font-weight: 500; padding: 8px 0; min-width: 3.4em; text-align: right; transition: color .4s; }
-/* Con el menu abierto el header queda sobre el velo: solo "cerrar" pasa a blanco,
-   porque es lo unico que cae encima del panel azul. */
-html.menu-abierto .cab { background: transparent; box-shadow: none; transform: none; }
-html.menu-abierto .cab__menu { color: #fff; }
+.cab.is-solida {
+  background: rgba(255, 255, 255, .78); box-shadow: 0 1px 0 var(--linea);
+  -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%);
+}
+/* Sobre la portada el header va dentro del marco azul */
+.cab.sobre-portada { color: #fff; height: 82px; padding: 10px calc(10px + var(--pad-hero)) 0; }
+.cab__logo { justify-self: start; font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -.03em; }
+.cab__nav, .cab__menu {
+  background: rgba(255, 255, 255, .62); border: 1px solid rgba(11, 11, 12, .08);
+  -webkit-backdrop-filter: blur(14px) saturate(150%); backdrop-filter: blur(14px) saturate(150%);
+  transition: background-color .3s, border-color .3s, color .3s, opacity .3s;
+}
+.cab__nav { justify-self: center; display: flex; align-items: center; gap: 2px; padding: 5px 5px 5px 10px; border-radius: 14px; }
+.cab__nav a { padding: 7px 11px; border-radius: 9px; transition: background-color .25s, color .25s; }
+.cab__nav a:hover { color: var(--azul); }
+.cab__nav .cab__cta { margin-left: 8px; padding: 8px 15px; background: var(--azul); color: #fff; font-weight: 500; }
+.cab__nav .cab__cta:hover { color: #fff; background: var(--azul-2); }
+.cab__menu { justify-self: end; font-weight: 500; padding: 9px 18px; border-radius: 12px; min-width: 5.6em; text-align: center; }
+.cab__menu:hover { border-color: rgba(11, 11, 12, .2); }
+.cab.sobre-portada .cab__nav, .cab.sobre-portada .cab__menu { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .22); }
+.cab.sobre-portada .cab__nav a:hover { color: #fff; background: rgba(255, 255, 255, .12); }
+.cab.sobre-portada .cab__nav .cab__cta { background: #fff; color: var(--azul); }
+.cab.sobre-portada .cab__nav .cab__cta:hover { background: #e3ebff; }
+.cab.sobre-portada .cab__menu:hover { border-color: rgba(255, 255, 255, .45); }
+/* Con el menu abierto: sin barra; el boton queda blanco sobre el panel azul */
+html.menu-abierto .cab { background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+html.menu-abierto .cab__nav { opacity: 0; pointer-events: none; }
+html.menu-abierto .cab__menu { color: #fff; background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .28); }
 
 /* ---------- menu: panel lateral derecho en azul ---------- */
 .menu { position: fixed; inset: 0; z-index: 55; visibility: hidden; transition: visibility 0s linear .7s; }
@@ -228,13 +249,14 @@ html.menu-abierto .cab__menu { color: #fff; }
   -webkit-text-fill-color: transparent; color: transparent;
   padding: .06em .1em .26em .04em; margin: -.06em -.1em -.26em -.04em;
 }
+.palabra--claro .letra { background-image: var(--grad-claro); }
 .js:not(.estatico) [data-reveal="letras"] .letra,
-.js:not(.estatico) .portada__marca .letra {
+.js:not(.estatico) .portada__titulo .letra {
   transform: translateY(112%) rotate(7deg);
   transition: transform 1.15s var(--sale) calc(var(--n) * 34ms);
 }
 .js:not(.estatico) [data-reveal="letras"].is-visible .letra,
-.js.is-listo:not(.estatico) .portada__marca .letra { transform: none; }
+.js.is-listo:not(.estatico) .portada__titulo .letra { transform: none; }
 
 /* Parrafos: JS los parte en lineas y cada una sube con su desfase. */
 .js:not(.estatico) [data-reveal="lineas"]:not(.is-partido) { opacity: 0; }
@@ -263,53 +285,106 @@ html.menu-abierto .cab__menu { color: #fff; }
 .js:not(.estatico) [data-reveal="foto"].is-visible picture { clip-path: inset(0); }
 .js:not(.estatico) [data-reveal="foto"].is-visible img { transform: none; }
 
-/* Intro (solo la primera visita en escritorio): cortina azul con contador. */
-.intro { display: none; }
-.con-intro .intro {
-  display: flex; position: fixed; inset: 0; z-index: 95;
-  align-items: flex-end; justify-content: space-between; gap: 24px;
-  padding: var(--pad); color: #fff;
-  background-color: var(--azul);
-  background-image: radial-gradient(80% 60% at 100% 0%, rgba(169, 195, 248, .35), rgba(169, 195, 248, 0) 70%), linear-gradient(195deg, #1d44ad 0%, #0a1f5c 50%, #081849 100%);
-  transition: transform 1.05s var(--cambia);
+/* ---------- portada ----------
+   Marco redondeado con fondo azul animado (fondo.js) y los elementos repartidos
+   como en la referencia: titulo, datos a la derecha, texto + CTA abajo a la
+   izquierda y una tarjeta de vidrio con proyectos abajo a la derecha. */
+.portada { padding: 10px; }
+.portada__marco {
+  position: relative; overflow: hidden; isolation: isolate;
+  min-height: calc(100vh - 20px); min-height: calc(100svh - 20px);
+  border-radius: 22px; color: #fff;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 1.15fr auto 1fr auto;
+  grid-template-areas: ". ." "titulo datos" ". ." "pie proyectos";
+  column-gap: 32px;
+  padding: 104px var(--pad-hero) var(--pad-hero);
+  /* Respaldo mientras carga el fondo animado (o si no hay WebGL) */
+  background:
+    radial-gradient(60% 55% at 82% 12%, rgba(87, 125, 230, .75) 0%, rgba(87, 125, 230, 0) 70%),
+    radial-gradient(70% 60% at 15% 95%, #050f2e 0%, rgba(5, 15, 46, 0) 70%),
+    linear-gradient(160deg, #0a1f5c 0%, #12307f 48%, #081849 100%);
 }
-.con-intro .intro.is-sale { transform: translateY(-100%); }
-.intro__marca { font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: -.03em; padding-bottom: .6em; }
-.intro__num {
-  font-family: var(--display); font-weight: 500; letter-spacing: -.05em; line-height: .8;
-  font-size: clamp(96px, 17vw, 260px); font-variant-numeric: tabular-nums;
-  background-image: var(--grad-claro);
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
-  padding: .06em .1em .2em 0; margin-bottom: -.2em;
+.portada__marco::after {
+  content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14);
 }
-html.con-intro { overflow: hidden; }
+.portada__fondo { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; opacity: 0; transition: opacity 1.4s ease; }
+.portada__fondo.is-listo { opacity: 1; }
+.portada__titulo {
+  grid-area: titulo; align-self: center;
+  font-family: var(--display); font-weight: 500; letter-spacing: -.045em; line-height: .98;
+  font-size: clamp(44px, 6.6vw, 118px);
+}
+.portada__linea { display: block; white-space: nowrap; }
+.portada__datos {
+  grid-area: datos; align-self: center; justify-self: end;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  text-align: right; font-size: 13px; color: #fff;
+  text-shadow: 0 1px 14px rgba(5, 15, 46, .55);
+}
+.portada__datos p { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.portada__datos a:hover { color: #fff; }
+.portada__redes { display: flex; gap: 8px; margin-top: 14px; }
+.portada__redes a {
+  width: 38px; height: 38px; display: grid; place-items: center; border-radius: 10px; font-size: 18px; color: #fff;
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .2);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  transition: background-color .3s, transform .4s var(--sale);
+}
+.portada__redes a:hover { background: rgba(255, 255, 255, .22); transform: translateY(-2px); }
+.portada__pie { grid-area: pie; align-self: end; max-width: 390px; }
+.portada__desc { margin: 0; font-size: 15px; line-height: 1.55; color: rgba(255, 255, 255, .82); }
+.portada__cta {
+  display: inline-flex; align-items: center; gap: 14px; margin-top: 26px; padding-bottom: 10px;
+  font-family: var(--display); font-weight: 500; font-size: clamp(22px, 2vw, 30px); letter-spacing: -.03em;
+  border-bottom: 1px solid rgba(255, 255, 255, .5);
+  transition: border-color .3s, gap .45s var(--sale);
+}
+.portada__cta:hover { border-color: #fff; gap: 20px; }
+.portada__cta .ico { transition: transform .45s var(--sale); }
+.portada__cta:hover .ico { transform: translate(3px, -3px); }
 
-/* ---------- portada ---------- */
-.portada {
-  position: relative;
-  min-height: 100vh; min-height: 100svh;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 96px var(--pad) clamp(20px, 3vw, 40px);
+/* Tarjeta de vidrio con los proyectos, que van rotando */
+.portada__proyectos {
+  grid-area: proyectos; align-self: end; position: relative; display: grid;
+  width: clamp(240px, 21vw, 320px); padding: 8px 8px 0; border-radius: 16px;
+  background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .2);
+  -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%);
 }
-.portada__marca {
-  display: block;
-  font-family: var(--display); font-weight: 500; letter-spacing: -.05em; line-height: .8;
-  white-space: nowrap;
-  /* --em: ancho del texto en em (calculado en el build) => llena el ancho exacto */
-  font-size: calc(var(--ancho) / var(--em) * .995);
-  margin-left: -.035em;
-  margin-bottom: .22em; /* aire para que la cola de la "y" no cruce la linea de abajo */
-}
-.portada__bajada {
-  display: block; margin-top: clamp(16px, 2.4vw, 32px); padding-top: 16px;
-  border-top: 1px solid var(--linea);
-  font-family: var(--texto); font-size: clamp(14px, 1.1vw, 16px); font-weight: 400;
-  letter-spacing: 0; line-height: 1.4; color: var(--gris);
-}
-.portada__bajada > span { display: block; }
-.js:not(.estatico) .portada__bajada { opacity: 0; transform: translateY(14px); transition: opacity .9s, transform 1.1s var(--sale); transition-delay: .55s; }
-.js.is-listo:not(.estatico) .portada__bajada { opacity: 1; transform: none; }
-.portada__marca { will-change: transform; }
+/* Cambio de proyecto: la foto nueva se destapa desde abajo sobre la anterior y el
+   nombre sube como un marcador (el viejo sale por arriba). */
+.carrusel__item { grid-area: 1 / 1; display: block; visibility: hidden; z-index: 0; }
+.carrusel__item.is-actual { visibility: visible; z-index: 2; }
+.carrusel__item.sale { visibility: visible; z-index: 1; }
+.carrusel__foto { display: block; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 10px; background: rgba(255, 255, 255, .08); clip-path: inset(100% 0 0 0 round 10px); transition: clip-path 1s var(--cambia); }
+.carrusel__item.is-actual .carrusel__foto, .carrusel__item.sale .carrusel__foto { clip-path: inset(0 round 10px); }
+.carrusel__item.sale .carrusel__foto { transition: none; }
+.carrusel__foto img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); transition: transform 1.6s var(--sale); }
+.carrusel__item.is-actual .carrusel__foto img, .carrusel__item.sale .carrusel__foto img { transform: none; }
+.carrusel__nombre { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 4px 14px; font-size: 14px; overflow: hidden; }
+.carrusel__nombre > span, .carrusel__nombre > .ico { display: block; transform: translateY(130%); transition: transform .75s var(--sale) .18s; }
+.carrusel__item.is-actual .carrusel__nombre > span, .carrusel__item.is-actual .carrusel__nombre > .ico { transform: none; }
+.carrusel__item.sale .carrusel__nombre > span, .carrusel__item.sale .carrusel__nombre > .ico { transform: translateY(-130%); transition-delay: 0s; }
+.estatico .carrusel__foto { clip-path: none; transition: none; }
+.estatico .carrusel__foto img, .estatico .carrusel__nombre > span, .estatico .carrusel__nombre > .ico { transform: none; transition: none; }
+.carrusel__barra { position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; overflow: hidden; background: rgba(255, 255, 255, .12); }
+.carrusel__barra span { display: block; height: 100%; background: rgba(255, 255, 255, .8); transform-origin: left; transform: scaleX(0); }
+.carrusel__barra span.corre { animation: carrusel 4.5s linear forwards; }
+.portada__proyectos:hover .carrusel__barra span { animation-play-state: paused; }
+@keyframes carrusel { to { transform: scaleX(1); } }
+
+/* Entrada (solo escritorio): el titulo letra por letra y lo demas detras */
+.js:not(.estatico) .portada__datos,
+.js:not(.estatico) .portada__pie,
+.js:not(.estatico) .portada__proyectos { opacity: 0; transform: translateY(18px); transition: opacity 1s var(--sale), transform 1.2s var(--sale); }
+.js:not(.estatico) .portada__datos { transition-delay: .55s; }
+.js:not(.estatico) .portada__pie { transition-delay: .7s; }
+.js:not(.estatico) .portada__proyectos { transition-delay: .85s; }
+.js.is-listo:not(.estatico) .portada__datos,
+.js.is-listo:not(.estatico) .portada__pie,
+.js.is-listo:not(.estatico) .portada__proyectos { opacity: 1; transform: none; }
 
 /* ---------- trabajos ---------- */
 .trabajos { position: relative; padding: clamp(96px, 14vw, 200px) var(--pad) clamp(64px, 8vw, 120px); }
@@ -608,7 +683,15 @@ a.contacto__dato:hover { color: var(--azul); }
   .legal__cuerpo { padding-left: calc(50% + var(--gap) / 2); }
 }
 
+@media (max-width: 1100px) {
+  .portada__linea { white-space: normal; display: inline; }
+}
+
 @media (max-width: 900px) {
+  .cab { grid-template-columns: 1fr auto; }
+  .cab__nav { display: none; }
+  .portada__datos { display: none; }
+  .portada__marco { grid-template-areas: ". ." "titulo titulo" ". ." "pie proyectos"; }
   .cita__txt { grid-column: 1 / 13; }
   .cita__autor { grid-column: 1 / 13; margin-top: 16px; }
   .proyecto__resumen { grid-column: 1 / -1; }
@@ -630,8 +713,23 @@ a.contacto__dato:hover { color: var(--azul); }
   .titulo-seccion { margin-bottom: 40px; }
   .contacto .boton, .proyecto__acciones .boton, .no-existe .boton { width: 100%; justify-content: center; }
   .proyecto__acciones { max-width: none; }
-  .portada__marca { white-space: normal; font-size: calc(var(--ancho) / var(--em-max) * .99); line-height: .9; }
-  .portada__marca .palabra { display: block; width: fit-content; }
+  .portada { padding: 8px; }
+  .portada__marco {
+    min-height: calc(100svh - 16px); border-radius: 18px;
+    grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto auto auto;
+    grid-template-areas: "." "titulo" "pie" "proyectos";
+    row-gap: 28px; padding: 96px 20px 20px;
+  }
+  .portada__titulo { align-self: end; font-size: clamp(40px, 11.2vw, 54px); line-height: 1; }
+  .portada__linea { display: inline; white-space: normal; }
+  .portada__cta { margin-top: 20px; font-size: 22px; }
+  .portada__proyectos { width: 100%; padding: 8px; }
+  .carrusel__item { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 14px; }
+  .carrusel__item:not(.is-actual) { display: none; }
+  .carrusel__foto { border-radius: 8px; }
+  .carrusel__nombre { padding: 0 6px 0 0; font-size: 15px; }
+  .carrusel__barra { display: none; }
+  .cab.sobre-portada { padding: 8px 28px 0; }
 
   .trabajos__cab { grid-template-columns: 1fr; }
   .trabajos__ctrl { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; width: 100%; padding-bottom: 0; }
@@ -685,5 +783,5 @@ a.contacto__dato:hover { color: var(--azul); }
   [data-reveal="foto"] picture { clip-path: none !important; }
   .obra::before, [data-reveal="linea"]::before { transform: none !important; }
   .js [data-reveal="lineas"]:not(.is-partido) { opacity: 1; }
-  .js .portada__bajada { opacity: 1; transform: none; }
+  .js .portada__datos, .js .portada__pie, .js .portada__proyectos { opacity: 1; transform: none; }
 }

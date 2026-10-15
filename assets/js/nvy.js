@@ -12,10 +12,7 @@
   const puntero = matchMedia('(hover: hover) and (pointer: fine)');
   const estatico = html.classList.contains('estatico');
   const animar = !estatico && !reducido;
-  const conIntro = html.classList.contains('con-intro');
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  // La intro se ve una sola vez por visita, en la primera pagina que se abra.
-  try { sessionStorage.setItem('nvy-intro', '1'); } catch (e) { /* modo privado */ }
 
   /* ---------- scroll suave ---------- */
   let lenis = null;
@@ -29,22 +26,16 @@
     else window.scrollTo({ top: typeof destino === 'number' ? destino : destino.getBoundingClientRect().top + scrollY, behavior: reducido ? 'auto' : 'smooth' });
   };
 
-  /* ---------- header que se esconde al bajar + parallax de la portada ---------- */
+  /* ---------- header: siempre visible; cambia de estilo al salir de la portada ---------- */
   const cab = $('[data-cab]');
-  const marca = animar ? $('.portada__marca') : null;
-  let ultimoY = scrollY;
+  const portada = $('.portada__marco');
   let pendiente = false;
   const alScroll = () => {
     pendiente = false;
     const y = Math.max(0, scrollY);
-    if (!html.classList.contains('menu-abierto')) {
-      cab.classList.toggle('is-solida', y > 24);
-      if (y > ultimoY + 4 && y > 240) cab.classList.add('is-oculta');
-      else if (y < ultimoY - 4 || y < 240) cab.classList.remove('is-oculta');
-    }
-    // El titulo gigante baja mas lento que la pagina: se queda atras al hacer scroll.
-    if (marca && y < innerHeight * 1.3) marca.style.transform = `translate3d(0, ${(y * 0.3).toFixed(1)}px, 0)`;
-    ultimoY = y;
+    const sobrePortada = portada ? y < portada.offsetTop + portada.offsetHeight - 72 : false;
+    cab.classList.toggle('sobre-portada', sobrePortada);
+    cab.classList.toggle('is-solida', !sobrePortada && y > 24);
   };
   addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }, { passive: true });
   alScroll();
@@ -58,7 +49,6 @@
     menu.inert = false;
     menu.classList.add('is-abierto');
     html.classList.add('menu-abierto');
-    cab.classList.remove('is-oculta');
     boton.setAttribute('aria-expanded', 'true');
     boton.setAttribute('aria-label', 'Cerrar menú');
     botonTxt.textContent = 'cerrar';
@@ -118,6 +108,29 @@
     }
   }
 
+  /* ---------- portada: la tarjeta de proyectos rota sola ---------- */
+  // La barrita de abajo marca el tiempo; al terminar pasa al siguiente proyecto.
+  // Con el mouse encima se pausa (CSS). En celular queda fijo el primero.
+  const carrusel = $('[data-carrusel]');
+  if (carrusel && animar) {
+    const tarjetas = $$('.carrusel__item', carrusel);
+    const barra = $('[data-carrusel-barra]', carrusel);
+    let actual = 0;
+    const correr = () => { barra.classList.remove('corre'); void barra.offsetWidth; barra.classList.add('corre'); };
+    barra.addEventListener('animationend', () => {
+      const vieja = tarjetas[actual];
+      vieja.classList.remove('is-actual');
+      vieja.classList.add('sale');
+      vieja.tabIndex = -1;
+      setTimeout(() => vieja.classList.remove('sale'), 1100);
+      actual = (actual + 1) % tarjetas.length;
+      tarjetas[actual].classList.add('is-actual');
+      tarjetas[actual].removeAttribute('tabindex');
+      correr();
+    });
+    if (tarjetas.length > 1) correr();
+  }
+
   /* ---------- cinta de rubros: acelera con el scroll y vuelve a su ritmo ---------- */
   const pista = $('.cinta__pista');
   const animCinta = pista && pista.getAnimations ? pista.getAnimations()[0] : null;
@@ -163,27 +176,7 @@
     }, 180);
   });
 
-  /* ---------- intro: cortina azul con contador, solo la primera visita en escritorio ---------- */
-  const correrIntro = () => new Promise((listo) => {
-    const intro = $('.intro');
-    const num = $('[data-intro-num]', intro);
-    if (lenis) lenis.stop();
-    const t0 = performance.now();
-    const dura = 1150;
-    const paso = (t) => {
-      const p = Math.min(1, (t - t0) / dura);
-      num.textContent = Math.round((1 - Math.pow(1 - p, 3)) * 100);
-      if (p < 1) return requestAnimationFrame(paso);
-      setTimeout(() => {
-        intro.classList.add('is-sale');
-        listo();
-        setTimeout(() => { html.classList.remove('con-intro'); if (lenis) lenis.start(); }, 1100);
-      }, 160);
-    };
-    requestAnimationFrame(paso);
-  });
-
-  /* ---------- arranque: despues de la intro o de la cortina entre paginas ---------- */
+  /* ---------- arranque: despues de la cortina entre paginas (si la hay) ---------- */
   const io = new IntersectionObserver((entradas) => {
     for (const e of entradas) {
       if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
@@ -208,10 +201,6 @@
     else fn();
   };
   cuandoActiva(() => {
-    if (conIntro && $('.intro')) {
-      correrIntro().then(() => setTimeout(arrancar, 260));
-      return;
-    }
     transicion().then((vt) => {
       if (!vt || !animar) return arrancar();
       vt.ready.then(() => setTimeout(arrancar, 520), arrancar);
