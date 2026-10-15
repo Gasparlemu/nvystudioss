@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- GENERADO por _build/build.mjs desde data/proyectos.json. No editar a mano: se pisa en el proximo build. -->
 <!--
   ============================================================================
   AVISO IMPORTANTE
@@ -14,145 +15,82 @@
   - El listado de encargados de tratamiento (proveedores) cuando cambie.
   ============================================================================
 -->
-<html lang="es-CL">
+<html lang="es-CL" class="no-js">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Política de Privacidad — NVY Studios</title>
-<meta name="description" content="Cómo NVY Studios trata los datos personales de quienes contactan el estudio, conforme a la Ley 19.628 y la Ley 21.719 de Chile." />
-
-<link rel="canonical" href="https://www.nvystudios.cl/privacidad.html" />
-<meta name="robots" content="index, follow" />
-<meta name="theme-color" content="#0A2580" />
-<meta name="author" content="Gaspar Quijada" />
-
-<link rel="icon" href="/assets/brand/favicon.ico" sizes="any" />
-<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png" />
-<link rel="icon" href="/assets/brand/favicon-16.png" sizes="16x16" type="image/png" />
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png" />
-<link rel="manifest" href="/site.webmanifest" />
-
-<meta property="og:type" content="article" />
-<meta property="og:site_name" content="NVY Studios" />
-<meta property="og:locale" content="es_CL" />
-<meta property="og:url" content="https://www.nvystudios.cl/privacidad.html" />
-<meta property="og:title" content="Política de Privacidad — NVY Studios" />
-<meta property="og:description" content="Cómo trato los datos personales de quienes contactan el estudio." />
-<meta property="og:image" content="https://www.nvystudios.cl/assets/brand/og.png" />
-
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- La fuente no bloquea el primer render: entra como media="print" y se
-     activa al cargar. Hasta entonces se lee con la tipografia del sistema. -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all';this.onload=null" />
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" /></noscript>
-<style>
-  :root{
-    --bg:#F5F5F7; --fg:#1D1D1F; --mut:#5C5C61; --mut-2:#6E6E73;
-    --line:rgba(0,0,0,.10); --blue-4:#0A2580; --gold:#C9A84C;
-    --max:1200px; --ease:cubic-bezier(.22,1,.36,1);
-  }
-  *{box-sizing:border-box;min-width:0}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);overflow-x:hidden}
-  html{-webkit-font-smoothing:antialiased}
-  body{font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.7;letter-spacing:-.011em}
-  img{max-width:100%;display:block}
-  a{color:var(--blue-4)}
-
-  .wrap{max-width:var(--max);margin:0 auto;padding:0 32px;width:100%}
-  @media (max-width:560px){ .wrap{padding:0 18px} }
-
-  .skip-link{
-    position:absolute;left:-9999px;top:0;z-index:100;
-    background:#fff;color:var(--blue-4);padding:12px 20px;border-radius:0 0 10px 0;
-    font-size:14px;font-weight:600;text-decoration:none;
-  }
-  .skip-link:focus{left:0}
-
-  .nav{position:sticky;top:0;z-index:40;padding:14px 16px;background:rgba(245,245,247,.86);backdrop-filter:blur(18px)}
-  .nav-inner{
-    margin:0 auto;max-width:var(--max);display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:10px 14px 10px 18px;border:1px solid rgba(255,255,255,.7);border-radius:999px;
-    background:linear-gradient(160deg, rgba(255,255,255,.82), rgba(255,255,255,.62));
-    box-shadow:0 8px 32px rgba(10,37,128,.08), 0 0 0 1px rgba(0,0,0,.04);
-  }
-  .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;letter-spacing:-.02em;text-decoration:none;color:var(--fg)}
-  .brand small{color:var(--mut);font-weight:400;margin-left:4px}
-  .nav-back{color:var(--mut);text-decoration:none;font-size:13.5px;font-weight:500;white-space:nowrap}
-  .nav-back:hover{color:var(--blue-4)}
-
-  .legal{padding:72px 0 96px}
-  .legal-head{max-width:70ch;margin-bottom:48px}
-  .kicker{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut-2);font-weight:500;display:inline-flex;align-items:center;gap:12px}
-  .kicker::before{content:"";width:24px;height:1px;background:rgba(0,0,0,.18)}
-  .legal h1{font-size:clamp(32px,4.6vw,52px);font-weight:700;letter-spacing:-.04em;line-height:1.05;margin:22px 0 0}
-  .legal .updated{margin-top:18px;font-size:13.5px;color:var(--mut-2)}
-
-  .legal-body{max-width:70ch}
-  .legal-body h2{
-    font-size:22px;font-weight:600;letter-spacing:-.025em;line-height:1.25;
-    margin:48px 0 14px;padding-top:26px;border-top:1px solid var(--line);
-  }
-  .legal-body h2:first-of-type{border-top:0;padding-top:0;margin-top:36px}
-  .legal-body h3{font-size:16.5px;font-weight:600;letter-spacing:-.015em;margin:26px 0 8px}
-  .legal-body p{color:var(--mut);font-size:16px;line-height:1.75;margin:0 0 16px}
-  .legal-body ul{margin:0 0 18px;padding-left:22px;color:var(--mut);font-size:16px;line-height:1.75}
-  .legal-body li{margin-bottom:9px}
-  .legal-body strong{color:var(--fg);font-weight:600}
-
-  .callout{
-    border:1px solid rgba(201,168,76,.4);background:rgba(201,168,76,.09);
-    border-radius:16px;padding:22px 26px;margin:0 0 40px;
-  }
-  .callout p{margin:0;font-size:14.5px;color:#6B5A22;line-height:1.65}
-  .callout strong{color:#4A3D11}
-
-  footer{border-top:1px solid var(--line);padding:56px 0 44px;margin-top:40px}
-  .foot{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
-  .foot .left{max-width:520px}
-  .foot .left .brand{font-size:18px;margin-bottom:12px}
-  .foot .left p{font-size:14px;color:var(--mut);margin:0}
-  .foot ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
-  .foot .cols{display:flex;gap:60px;flex-wrap:wrap}
-  .foot a{color:var(--mut);text-decoration:none;font-size:14px}
-  .foot a:hover{color:var(--blue-4)}
-  .foot .label{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut-2);font-weight:500}
-  .colophon{margin-top:44px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:11.5px;color:var(--mut-2);letter-spacing:.14em;text-transform:uppercase;flex-wrap:wrap;gap:12px;font-weight:500}
-</style>
+<meta name="description" content="Cómo NVY Studios trata los datos personales de quienes contactan el estudio, conforme a la Ley 19.628 y la Ley 21.719 de Chile.">
+<link rel="canonical" href="https://www.nvystudios.cl/privacidad.html">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0A1F5C">
+<meta name="author" content="Gaspar Quijada">
+<link rel="icon" href="/assets/brand/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/assets/brand/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="NVY Studios">
+<meta property="og:locale" content="es_CL">
+<meta property="og:url" content="https://www.nvystudios.cl/privacidad.html">
+<meta property="og:title" content="Política de Privacidad — NVY Studios">
+<meta property="og:description" content="Cómo trato los datos personales de quienes contactan el estudio.">
+<meta property="og:image" content="https://www.nvystudios.cl/assets/brand/og-nvy.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Política de Privacidad — NVY Studios">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Política de Privacidad — NVY Studios">
+<meta name="twitter:description" content="Cómo trato los datos personales de quienes contactan el estudio.">
+<meta name="twitter:image" content="https://www.nvystudios.cl/assets/brand/og-nvy.png">
+<link rel="preload" href="/assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/nvy.css?v=8ccbfa5d">
+<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
+<script defer src="/assets/vendor/lenis.min.js"></script>
+<script defer src="/assets/js/nvy.js?v=974b0138"></script>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
 </head>
-<body>
-
-<a class="skip-link" href="#contenido">Saltar al contenido</a>
-
-<nav class="nav" aria-label="Principal">
-  <div class="nav-inner">
-    <a href="/" class="brand">
-      <img src="assets/brand/logo-mark.png" alt="" width="34" height="34" style="width:34px;height:34px;border-radius:7px;object-fit:cover;flex-shrink:0">
-      Nvy Studios <small>— Valdivia</small>
-    </a>
-    <a class="nav-back" href="/">← Volver al sitio</a>
+<body id="top" class="pag-legal">
+<a class="saltar" href="#contenido">saltar al contenido</a>
+<header class="cab" data-cab>
+  <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio">Nvy Studios</a>
+  <div class="cab__der">
+    <time class="cab__reloj" data-reloj></time>
+    <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menu</span></button>
   </div>
-</nav>
-
-<main class="legal" id="contenido">
-  <div class="wrap">
-    <div class="legal-head">
-      <span class="kicker">Legal</span>
-      <h1>Política de Privacidad</h1>
-      <p class="updated">Última actualización: 25 de julio de 2026</p>
-    </div>
-
-    <div class="legal-body">
+</header>
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" data-menu inert>
+  <nav class="menu__nav" aria-label="Principal">
+    <ol class="menu__lista">
+      <li class="menu__item" style="--i:0"><a class="menu__link" href="/#trabajos" data-menu-link><span class="menu__num">01</span><span class="menu__txt"><span>trabajos</span></span></a></li>
+      <li class="menu__item" style="--i:1"><a class="menu__link" href="/#sobre-mi" data-menu-link><span class="menu__num">02</span><span class="menu__txt"><span>sobre mí</span></span></a></li>
+      <li class="menu__item" style="--i:2"><a class="menu__link" href="/#contacto" data-menu-link><span class="menu__num">03</span><span class="menu__txt"><span>contacto</span></span></a></li>
+    </ol>
+  </nav>
+  <div class="menu__pie">
+    <div class="menu__col"><span class="menu__lbl">redes</span><a href="https://www.linkedin.com/in/gasparnvy/" target="_blank" rel="noopener noreferrer">linkedin <svg class="ico ico--diagonal" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M6.5 17.5 17.5 6.5m-9.5 0h9.5V16"/></svg></a></div>
+    <div class="menu__col"><span class="menu__lbl">escribir</span><a href="mailto:contacto@nvystudios.cl">contacto@nvystudios.cl</a><a href="https://wa.me/56940976219?text=Hola%20Gaspar%2C%20vi%20tu%20portafolio%20y%20quiero%20conversar%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer">whatsapp <svg class="ico ico--diagonal" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M6.5 17.5 17.5 6.5m-9.5 0h9.5V16"/></svg></a></div>
+    <div class="menu__col"><span class="menu__lbl">estudio</span><span>Valdivia, Chile</span></div>
+  </div>
+</div>
+<main id="contenido" class="legal">
+  <header class="legal__cab">
+    <a class="volver" href="/"><svg class="ico ico--izquierda" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M20.5 12h-16m6.5 6.5L4.5 12 11 5.5"/></svg> inicio</a>
+    <p class="legal__lbl">legal</p>
+    <h1 class="legal__titulo" data-reveal="mascara"><span>Política de Privacidad</span></h1>
+    <p class="legal__fecha">Última actualización: 25 de julio de 2026</p>
+  </header>
+  <div class="legal__cuerpo">
       <div class="callout">
         <p><strong>Aviso.</strong> Este documento es una base redactada con ayuda de inteligencia artificial y no constituye asesoría legal. Está pendiente de revisión por un abogado.</p>
       </div>
-
+      
       <h2>1. Quién es responsable de tus datos</h2>
       <p>El responsable del tratamiento es <strong>NVY Studios</strong>, estudio de diseño y desarrollo web operado de forma individual por <strong>Gaspar Quijada</strong>, con domicilio en Valdivia, Región de Los Ríos, Chile.</p>
       <p>Para cualquier consulta sobre esta política o sobre tus datos, puedes escribir a <a href="mailto:contacto@nvystudios.cl">contacto@nvystudios.cl</a> o al WhatsApp <a href="https://wa.me/56940976219">+56 9 4097 6219</a>.</p>
-
+      
       <h2>2. Qué datos recojo y cómo</h2>
       <p>Este sitio <strong>no tiene formulario de contacto propio ni sistema de registro</strong>. No se recogen datos automáticamente al navegar, más allá de lo que se indica en la sección de cookies y terceros.</p>
       <p>Recibo datos personales únicamente cuando tú decides contactarme por tu cuenta, a través de:</p>
@@ -161,7 +99,7 @@
         <li><strong>Correo electrónico:</strong> tu dirección de correo, tu nombre y el contenido de los mensajes.</li>
       </ul>
       <p>Si llegamos a trabajar juntos, durante el proyecto puedo recibir además información de tu negocio necesaria para construir el sitio: razón social, datos de contacto públicos, textos, fotografías, logotipos y credenciales de servicios que tú me facilites. Nunca te voy a pedir contraseñas personales, datos bancarios ni información de tarjetas por estos canales.</p>
-
+      
       <h2>3. Para qué uso los datos</h2>
       <ul>
         <li>Responder tus consultas y elaborar presupuestos.</li>
@@ -170,7 +108,7 @@
         <li>Prestar el servicio de mantención mensual, si lo contratas.</li>
       </ul>
       <p>No uso tus datos para publicidad, no los vendo y no los cedo a terceros con fines comerciales.</p>
-
+      
       <h2>4. Por cuánto tiempo los guardo</h2>
       <ul>
         <li><strong>Consultas que no derivan en un proyecto:</strong> hasta 12 meses desde el último mensaje.</li>
@@ -178,7 +116,7 @@
         <li><strong>Credenciales de acceso que me facilites:</strong> se eliminan al cerrar el proyecto, salvo que contrates mantención.</li>
       </ul>
       <p>Puedes pedir la eliminación antes de esos plazos, salvo que exista una obligación legal de conservarlos.</p>
-
+      
       <h2>5. Con quién se comparten</h2>
       <p>Para operar necesito apoyarme en proveedores que actúan como encargados de tratamiento. Los datos pueden alojarse en servidores fuera de Chile:</p>
       <ul>
@@ -187,7 +125,7 @@
         <li><strong>Meta Platforms, Inc.</strong> — mensajería por WhatsApp.</li>
       </ul>
       <p>Cada uno tiene sus propias políticas de privacidad, que te recomiendo revisar. Fuera de estos casos, y de una obligación legal o requerimiento de autoridad competente, no comparto tus datos con nadie.</p>
-
+      
       <h2>6. Tus derechos</h2>
       <p>Conforme a la <strong>Ley 19.628 sobre protección de la vida privada</strong> y a la <strong>Ley 21.719</strong>, puedes ejercer en cualquier momento tus derechos de:</p>
       <ul>
@@ -197,7 +135,7 @@
         <li><strong>Oposición:</strong> oponerte a un tratamiento determinado.</li>
       </ul>
       <p>Para ejercerlos, escríbeme a <a href="mailto:contacto@nvystudios.cl">contacto@nvystudios.cl</a> indicando cuál derecho quieres ejercer. Respondo dentro de los plazos que fija la ley. Si consideras que no he respondido de forma adecuada, puedes reclamar ante la autoridad de protección de datos que corresponda.</p>
-
+      
       <h2>7. Cookies y servicios de terceros</h2>
       <p><strong>Este sitio no instala cookies propias</strong>, no usa herramientas de analítica y no hace seguimiento publicitario.</p>
       <p>Sí carga dos recursos externos que, por el funcionamiento normal de internet, reciben tu dirección IP y datos básicos de tu navegador al solicitarlos:</p>
@@ -206,57 +144,21 @@
         <li><strong>unpkg.com</strong>, para la librería de desplazamiento suave.</li>
       </ul>
       <p>Si prefieres evitarlo, puedes bloquear esos dominios en tu navegador. El sitio sigue siendo legible sin ellos.</p>
-
+      
       <h2>8. Seguridad</h2>
       <p>Tomo medidas razonables para proteger la información: acceso restringido a los equipos y cuentas que uso, y autenticación en dos pasos en los servicios que lo permiten. Ningún sistema es completamente infalible, así que no puedo garantizar seguridad absoluta.</p>
-
+      
       <h2>9. Menores de edad</h2>
       <p>Los servicios están dirigidos a personas y empresas que contratan servicios profesionales. No están dirigidos a menores de edad ni recojo datos de menores de forma consciente.</p>
-
+      
       <h2>10. Cambios en esta política</h2>
       <p>Si modifico esta política, actualizo la fecha del encabezado. Los cambios relevantes te los aviso por el mismo canal por el que estemos en contacto si hay un proyecto en curso.</p>
-    </div>
   </div>
 </main>
-
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div class="left">
-        <a href="/" class="brand">
-          <img src="assets/brand/logo-mark.png" alt="" width="30" height="30" loading="lazy" decoding="async" style="width:30px;height:30px;border-radius:6px;object-fit:cover;flex-shrink:0">
-          Nvy Studios
-        </a>
-        <p>Diseño y desarrollo web a medida. Valdivia, Chile.</p>
-      </div>
-      <div class="cols">
-        <ul>
-          <li class="label">Estudio</li>
-          <li><a href="/#pilares">Pilares</a></li>
-          <li><a href="/#proyectos">Portafolio</a></li>
-          <li><a href="/#inversion">Inversión</a></li>
-          <li><a href="/#proceso">Proceso</a></li>
-          <li><a href="/#faq">FAQ</a></li>
-        </ul>
-        <ul>
-          <li class="label">Contacto</li>
-          <li><a href="https://wa.me/56940976219">+56 9 4097 6219</a></li>
-          <li><a href="mailto:contacto@nvystudios.cl">contacto@nvystudios.cl</a></li>
-          <li><span style="color:#6E6E73;font-size:14px">Valdivia, Chile</span></li>
-        </ul>
-        <ul>
-          <li class="label">Legal</li>
-          <li><a href="/privacidad.html">Política de Privacidad</a></li>
-          <li><a href="/terminos.html">Términos y Condiciones</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="colophon">
-      <span>© 2026 Nvy Studios</span>
-      <span></span>
-    </div>
-  </div>
+<footer class="pie">
+  <p class="pie__copy">© 2026 Nvy Studios</p>
+  <nav class="pie__legal" aria-label="Legal"><a href="/privacidad.html">privacidad</a><a href="/terminos.html">términos</a></nav>
+  <a class="pie__arriba" href="#top" data-arriba>back to top <svg class="ico ico--arriba" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false"><path d="M12 20.5v-16m-6.5 6.5L12 4.5l6.5 6.5"/></svg></a>
 </footer>
-
 </body>
 </html>

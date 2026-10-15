@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /_build/
+Disallow: /data/
 
 Sitemap: https://www.nvystudios.cl/sitemap.xml

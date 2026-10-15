@@ -1,0 +1,233 @@
+{
+  "sitio": {
+    "nombre": "Nvy Studios",
+    "url": "https://www.nvystudios.cl",
+    "titulo": "NVY Studios — Diseño web a medida en Valdivia",
+    "descripcion": "Estudio de diseño y desarrollo web en Valdivia. Sitios a medida sin plantillas, SEO local y sistemas de fidelización para pymes del sur de Chile.",
+    "ogDescripcion": "Sitios web diseñados y programados desde cero. Sin plantillas, atención directa con el diseñador, entrega en 5 a 14 días.",
+    "bajada": "Diseño y desarrollo web a medida · Valdivia, Chile",
+    "correo": "contacto@nvystudios.cl",
+    "telefono": "+56940976219",
+    "whatsapp": "56940976219",
+    "whatsappTexto": "Hola Gaspar, vi tu portafolio y quiero conversar sobre un proyecto.",
+    "ciudad": "Valdivia, Chile",
+    "estadosVisibles": ["lanzado"],
+    "instagram": "",
+    "linkedin": "https://www.linkedin.com/in/gasparnvy/",
+    "sobreMi": "Soy Gaspar, diseñador independiente en Valdivia. Diseño y programo cada sitio a mano, sin plantillas. Trato directo: hablas conmigo desde la primera idea hasta el lanzamiento.",
+    "rubros": [
+      "Clínicas dentales",
+      "Psicólogos",
+      "Tour operadores",
+      "Restaurantes",
+      "Gimnasios",
+      "Estudios profesionales",
+      "Centros estéticos",
+      "Salones de belleza",
+      "Joyerías",
+      "Productoras audiovisuales",
+      "Fundaciones"
+    ]
+  },
+
+  "proyectos": [
+    {
+      "slug": "oncosur",
+      "nombre": "Oncosur",
+      "cliente": "Fundación Oncosur",
+      "rubro": "fundación",
+      "anio": 2026,
+      "estado": "lanzado",
+      "plan": "Web Profesional",
+      "url": "https://www.fundaciononcosur.cl",
+      "resumen": "Fundación que acompaña a niños con cáncer y a sus familias en el sur de Chile. El desafío era transmitir confianza institucional sin perder la calidez. El resultado es un sitio claro y humano, pensado para familias y donantes.",
+      "descripcion": "Sitio web para Fundación Oncosur, que acompaña a niños con cáncer y a sus familias en el sur de Chile. Diseño y desarrollo a medida por NVY Studios."
+    },
+    {
+      "slug": "zona-estetica",
+      "nombre": "Zona Estética",
+      "cliente": "Zona Estética Valdivia",
+      "rubro": "salón de belleza",
+      "anio": 2026,
+      "estado": "lanzado",
+      "plan": "Web Profesional",
+      "url": "https://www.zonaesteticavaldivia.cl",
+      "resumen": "Salón de belleza integral con ocho profesionales en el centro de Valdivia. Había que ordenar una carta amplia de servicios y mostrar el nivel del equipo. Servicios por especialidad, trabajos reales y reservas directas por WhatsApp.",
+      "descripcion": "Sitio web para Zona Estética Valdivia, salón de belleza integral: servicios por especialidad, trabajos reales y reservas por WhatsApp. Por NVY Studios."
+    },
+    {
+      "slug": "metales-nobles",
+      "nombre": "Metales Nobles",
+      "cliente": "Luis Quijada Pilichi",
+      "rubro": "joyería contemporánea",
+      "anio": 2026,
+      "estado": "lanzado",
+      "plan": "Landing Page",
+      "url": "https://metales-nobles.vercel.app",
+      "resumen": "Sitio de obra del joyero Luis Quijada Pilichi, Maestro Artesano Contemporáneo de Valdivia. Cuatro muestras con ficha propia, el taller donde nace cada pieza y contacto para encargos. Sobrio, para que la obra hable sola.",
+      "descripcion": "Sitio web de Luis Quijada Pilichi, joyero contemporáneo de Valdivia: muestras Arbóreo, Arquiyería, Insectario y Reino Fungi. Diseño web por NVY Studios."
+    },
+    {
+      "slug": "gestion-sur",
+      "nombre": "Gestión Sur",
+      "cliente": "Gestión Sur",
+      "rubro": "prevención de riesgos",
+      "anio": 2026,
+      "estado": "lanzado",
+      "plan": "Landing Page",
+      "url": "https://gestionsur.vercel.app",
+      "resumen": "Consultoría en prevención de riesgos, calidad y ambiente, con más de 27 empresas asesoradas en la Región de Los Ríos. Una web seria y directa, que da credibilidad antes del primer contacto.",
+      "descripcion": "Sitio web para Gestión Sur, consultoría en prevención de riesgos, calidad y ambiente en el sur de Chile. Diseño y desarrollo a medida por NVY Studios."
+    },
+    {
+      "slug": "i-max",
+      "nombre": "I-MAX Valdivia",
+      "cliente": "I-MAX Valdivia",
+      "rubro": "imagenología dental",
+      "anio": 2026,
+      "estado": "lanzado",
+      "plan": "",
+      "url": "https://www.i-maxval.cl",
+      "resumen": "Centro de imagenología maxilofacial 3D en Valdivia. El nuevo sitio reemplazó un WordPress antiguo: exámenes ordenados por categoría, equipo profesional y contacto directo, con SEO local para búsquedas como radiografía dental y cone beam.",
+      "descripcion": "Sitio web para I-MAX Valdivia, centro de imagenología maxilofacial 3D: radiografía dental y tomografía cone beam. Diseño y desarrollo por NVY Studios."
+    },
+    {
+      "slug": "inka-trewa",
+      "nombre": "Inka Trewa",
+      "cliente": "Inka Trewa",
+      "rubro": "terapia asistida",
+      "anio": 2026,
+      "estado": "en-desarrollo",
+      "plan": "Web Profesional",
+      "url": "https://inka-trewa-web.vercel.app",
+      "resumen": "Programa de intervención asistida con perros en Valdivia. El reto era explicar una terapia poco conocida con cercanía. Cuatro áreas de servicio, fichas del equipo canino y solicitud de programas a medida.",
+      "descripcion": "Sitio web en desarrollo para Inka Trewa, programa de terapia asistida con perros en Valdivia. Diseño y desarrollo a medida por NVY Studios.",
+      "avance": { "fase": "fase 04 · ajustes finales", "porcentaje": 85 }
+    },
+    {
+      "slug": "ainilebu-films",
+      "nombre": "Ainilebu Films",
+      "cliente": "Ainilebu Films",
+      "rubro": "productora audiovisual",
+      "anio": 2026,
+      "estado": "en-desarrollo",
+      "plan": "Experiencia Premium",
+      "url": "https://ainilebu-films.vercel.app",
+      "resumen": "Productora dedicada al rescate cultural y patrimonial del sur de Chile desde 2019. Un portafolio de documental y ficción con fichas de producción, donde las imágenes llevan el peso.",
+      "descripcion": "Sitio web en desarrollo para Ainilebu Films, productora audiovisual de rescate patrimonial del sur de Chile. Diseño y desarrollo por NVY Studios.",
+      "avance": { "fase": "fase 03 · desarrollo", "porcentaje": 60 }
+    },
+    {
+      "slug": "andrade-visions",
+      "nombre": "Andrade Visions",
+      "cliente": "Andrade Visions",
+      "rubro": "contenido de marca",
+      "anio": 2026,
+      "estado": "en-desarrollo",
+      "plan": "Web Profesional",
+      "url": "https://www.andradevisions.cl",
+      "resumen": "Productora de Valdivia enfocada en contenido para marcas. Portafolio en tres divisiones (comercial, música y cultura, personal) con fichas de proyecto. La imagen manda y el diseño se hace a un lado.",
+      "descripcion": "Sitio web en desarrollo para Andrade Visions, productora audiovisual de contenido para marcas en Valdivia. Diseño y desarrollo por NVY Studios.",
+      "avance": { "fase": "fase 03 · desarrollo", "porcentaje": 70 }
+    },
+    {
+      "slug": "rutas-del-sur",
+      "nombre": "Rutas del Sur",
+      "cliente": "Rutas del Sur",
+      "rubro": "tour operador",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://demotour.vercel.app",
+      "resumen": "Maqueta para un tour operador del sur de Chile. Nueve tours con ficha propia, galería, mapa y reservas por WhatsApp.",
+      "descripcion": "Maqueta de sitio web para un tour operador del sur de Chile: tours con ficha propia, galería, mapa y reservas por WhatsApp. Diseño de NVY Studios."
+    },
+    {
+      "slug": "niebla-cafeteria",
+      "nombre": "Niebla Cafetería",
+      "cliente": "Niebla Cafetería",
+      "rubro": "cafetería",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://democafe-lime.vercel.app",
+      "resumen": "Maqueta para una cafetería de especialidad. Menú interactivo, historia de la casa, galería y reservas por WhatsApp.",
+      "descripcion": "Maqueta de sitio web para una cafetería de especialidad: menú interactivo, historia, galería y reservas por WhatsApp. Diseño de NVY Studios."
+    },
+    {
+      "slug": "fit-valdivia",
+      "nombre": "Fit Valdivia",
+      "cliente": "Fit Valdivia",
+      "rubro": "gimnasio",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://webfit-woad.vercel.app",
+      "resumen": "Maqueta para un gimnasio. Coaches del equipo, equipamiento, tres planes de membresía y captación con semana gratis.",
+      "descripcion": "Maqueta de sitio web para un gimnasio en Valdivia: coaches, equipamiento, planes de membresía y semana gratis. Diseño de NVY Studios."
+    },
+    {
+      "slug": "sonrisa-dental",
+      "nombre": "Sonrisa Dental",
+      "cliente": "Sonrisa Dental",
+      "rubro": "clínica dental",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://democlinicadental-six.vercel.app",
+      "resumen": "Maqueta para un centro de diagnóstico dental. Servicios, equipo profesional, galería y contacto directo por WhatsApp.",
+      "descripcion": "Maqueta de sitio web para un centro de diagnóstico dental: servicios, equipo profesional, galería y contacto por WhatsApp. Diseño de NVY Studios."
+    },
+    {
+      "slug": "tomas-carcamo",
+      "nombre": "Tomás Cárcamo",
+      "cliente": "Tomás Cárcamo",
+      "rubro": "director de cine",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://tomas-carcamo.vercel.app",
+      "resumen": "Maqueta de portafolio para un director y guionista. Obra seleccionada, reel y fichas de cortometraje, documental y publicidad.",
+      "descripcion": "Maqueta de portafolio web para un director y guionista de cine: obra seleccionada, reel y fichas de proyectos. Diseño de NVY Studios."
+    },
+    {
+      "slug": "clinica-salud",
+      "nombre": "Clínica Salud",
+      "cliente": "Clínica Salud",
+      "rubro": "centro médico",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://democlinicagen.vercel.app",
+      "resumen": "Maqueta para un centro médico multidisciplinario. Medicina general, kinesiología y salud mental, con preguntas frecuentes y agenda online.",
+      "descripcion": "Maqueta de sitio web para un centro médico: medicina general, kinesiología, salud mental y agenda online. Diseño de NVY Studios."
+    }
+  ],
+
+  "testimonios": [
+    {
+      "texto": "Logró entender perfectamente lo que queríamos transmitir como fundación y transformarlo en una página web moderna, clara y muy humana.",
+      "nombre": "Patricia Elorz",
+      "cargo": "Presidenta, Fundación Oncosur",
+      "proyecto": "oncosur"
+    },
+    {
+      "texto": "Hoy varios clientes me dicen que la página les da mucha más credibilidad antes de contratar. Para un prevencionista independiente, eso lo es todo.",
+      "nombre": "Jaime González",
+      "cargo": "Prevencionista de riesgos, Gestión Sur",
+      "proyecto": "gestion-sur"
+    },
+    {
+      "texto": "Lo que más valoro es que se tomó el tiempo de entender el oficio antes de diseñar nada. Hoy puedo mandar el link y la pieza se explica sola.",
+      "nombre": "Luis Quijada",
+      "cargo": "Joyero artesanal, Metales Nobles",
+      "proyecto": "metales-nobles"
+    },
+    {
+      "texto": "Las clientas ahora llegan sabiendo qué servicio quieren y reservan directo por WhatsApp.",
+      "nombre": "Zona Estética Valdivia",
+      "cargo": "Salón de belleza integral",
+      "proyecto": "zona-estetica"
+    }
+  ]
+}
