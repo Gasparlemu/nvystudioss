@@ -374,7 +374,7 @@ function paginaProyecto(p, i) {
   <header class="proyecto__cab">
     <a class="volver" href="/#trabajos">${icono('izquierda')} trabajos</a>
     <p class="proyecto__idx">${num(i)} / ${num(proyectos.length - 1)}</p>
-    <h1 class="proyecto__titulo" data-reveal="mascara" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}"><span>${esc(p.nombre)}</span></h1>
+    <h1 class="proyecto__titulo" data-reveal="mascara" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}"><span class="degradado">${esc(p.nombre)}</span></h1>
     <dl class="ficha">
 ${ficha.map(([dt, dd]) => `      <div class="ficha__item"><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}
     </dl>
@@ -395,7 +395,7 @@ ${piezas.join('\n')}
   <nav class="siguiente" aria-label="Siguiente proyecto">
     <a class="siguiente__link" href="/trabajos/${sig.slug}">
       <span class="siguiente__lbl">siguiente proyecto ${icono('derecha')}</span>
-      <span class="siguiente__nombre" style="--em:${anchoEm(sig.nombre).toFixed(3)};--em-max:${Math.max(...sig.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}"><span>${esc(sig.nombre)}</span></span>
+      <span class="siguiente__nombre" style="--em:${anchoEm(sig.nombre).toFixed(3)};--em-max:${Math.max(...sig.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}"><span class="degradado">${esc(sig.nombre)}</span></span>
       <span class="siguiente__rubro">${esc(sig.rubro)}</span>
     </a>
   </nav>
