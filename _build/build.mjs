@@ -103,6 +103,23 @@ function picture(v, { sizes, alt, carga = 'lazy' }) {
 }
 const sinCaptura = (p) => `<div class="sin-captura" aria-hidden="true"><span>${esc(p.nombre)}</span></div>`;
 
+// Parte un titulo en letras para que entren una por una. Cada palabra es su propia
+// mascara y lleva su ancho (--w); cada letra lleva su posicion dentro de la palabra
+// (--x, en em). Con eso el degradado se ve continuo en toda la palabra aunque cada
+// letra sea su propia caja. El titulo que lo usa lleva aria-label con el texto entero.
+function letras(texto, { degradado = false } = {}) {
+  let n = 0;
+  return texto.split(' ').map((palabra) => {
+    let x = 0;
+    const ls = [...palabra].map((ch) => {
+      const s = `<span class="letra" style="--n:${n++};--x:${x.toFixed(3)}">${esc(ch)}</span>`;
+      x += anchoEm(ch);
+      return s;
+    }).join('');
+    return `<span class="palabra${degradado ? ' palabra--degradado' : ''}" style="--w:${anchoEm(palabra).toFixed(3)}" aria-hidden="true">${ls}</span>`;
+  }).join(' ');
+}
+
 // ---------- piezas comunes ----------
 const CSS_V = version('assets/css/nvy.css');
 const JS_V = version('assets/js/nvy.js');
@@ -110,7 +127,7 @@ const JS_V = version('assets/js/nvy.js');
 function cabecera() {
   return `<header class="cab" data-cab>
   <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio">Nvy Studios</a>
-  <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menu</span></button>
+  <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menú</span></button>
 </header>`;
 }
 
@@ -122,7 +139,7 @@ function menu() {
   <div class="menu__panel">
   <nav class="menu__nav" aria-label="Principal">
     <ol class="menu__lista">
-${links.map(([href, txt], i) => `      <li class="menu__item" style="--i:${i}"><a class="menu__link" href="${href}" data-menu-link><span class="menu__num">${num(i)}</span><span class="menu__txt"><span>${txt}</span></span></a></li>`).join('\n')}
+${links.map(([href, txt], i) => `      <li class="menu__item" style="--i:${i}"><a class="menu__link" href="${href}" data-menu-link><span class="menu__txt"><span>${txt}</span></span></a></li>`).join('\n')}
     </ol>
   </nav>
   <div class="menu__pie">
@@ -137,7 +154,7 @@ function pie() {
   return `<footer class="pie">
   <p class="pie__copy">© ${ANIO} Nvy Studios</p>
   <nav class="pie__legal" aria-label="Legal"><a href="/privacidad.html">privacidad</a><a href="/terminos.html">términos</a></nav>
-  <a class="pie__arriba" href="#top" data-arriba>back to top ${icono('arriba')}</a>
+  <a class="pie__arriba" href="#top" data-arriba>volver arriba ${icono('arriba')}</a>
 </footer>`;
 }
 
@@ -183,7 +200,7 @@ ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
 <link rel="preload" href="/assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/nvy.css?v=${CSS_V}">
-<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
+<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico';else if(location.pathname==='/'&&!sessionStorage.getItem('nvy-intro')&&!mm('(prefers-reduced-motion: reduce)'))h.className+=' con-intro'}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
 <script defer src="/assets/vendor/lenis.min.js"></script>
 <script defer src="/assets/js/nvy.js?v=${JS_V}"></script>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
@@ -241,7 +258,6 @@ function paginaHome() {
     const portada = v.e[0];
     return `      <li class="obra" data-estado="${p.estado}"${portada ? ` data-preview="${portada.base}"` : ''}>
         <a class="obra__link" href="/trabajos/${p.slug}">
-          <span class="obra__num">${num(i)}</span>
           <span class="obra__nombre"><span>${esc(p.nombre)}</span></span>
           <span class="obra__rubro">${esc(p.rubro)}</span>
           <span class="obra__anio">${p.anio}</span>
@@ -264,23 +280,22 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
 
   const cinta = sitio.rubros.map((r) => `<span>${esc(r)}</span><i></i>`).join('');
   const citas = testimoniosVisibles.map((t, i) => `      <li class="cita">
-        <span class="cita__num">${num(i)}</span>
         <blockquote class="cita__txt" data-reveal="lineas"><p>“${esc(t.texto)}”</p></blockquote>
         <p class="cita__autor"><strong>${esc(t.nombre)}</strong><span>${esc(t.cargo)}</span></p>
       </li>`).join('\n');
 
-  const cuerpo = `<main id="contenido">
+  const cuerpo = `<div class="intro" aria-hidden="true"><span class="intro__marca">Nvy Studios</span><span class="intro__num" data-intro-num>0</span></div>
+<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
-    <h1 class="portada__h1" id="portada-titulo">
-      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}"><span class="portada__l"><span class="degradado">Nvy</span></span> <span class="portada__l"><span class="degradado">Studios</span></span></span>
+    <h1 class="portada__h1" id="portada-titulo" aria-label="Nvy Studios. ${esc(sitio.bajada)}">
+      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}">${letras('Nvy Studios', { degradado: true })}</span>
       <span class="portada__bajada"><span>${esc(sitio.bajada)}</span></span>
     </h1>
-    <a class="portada__bajar" href="#trabajos" data-ancla><span>trabajos</span> ${icono('abajo')}</a>
   </section>
 
   <section class="trabajos" id="trabajos" aria-labelledby="trabajos-titulo">
     <div class="trabajos__cab">
-      <h2 class="trabajos__titulo" id="trabajos-titulo" data-reveal="mascara"><span>Trabajos</span><sup class="trabajos__n" aria-hidden="true">[<span data-contador>${proyectos.length}</span>]</sup></h2>
+      <h2 class="titulo-seccion" id="trabajos-titulo" aria-label="Trabajos" data-reveal="letras">${letras('Trabajos')}</h2>
       <div class="trabajos__ctrl">
 ${filtros}        <div class="vistas" role="group" aria-label="Cambiar vista">
           <button class="ctrl" type="button" data-vista="lista" aria-pressed="true">lista</button><span aria-hidden="true">|</span><button class="ctrl" type="button" data-vista="grilla" aria-pressed="false">grilla</button>
@@ -288,7 +303,7 @@ ${filtros}        <div class="vistas" role="group" aria-label="Cambiar vista">
       </div>
     </div>
     <p class="solo-lector" aria-live="polite" data-anuncio></p>
-    <div class="obras__cols" aria-hidden="true"><span>n.º</span><span>proyecto</span><span>rubro</span><span>año</span><span>estado</span></div>
+    <div class="obras__cols" aria-hidden="true"><span>proyecto</span><span>rubro</span><span>año</span><span>estado</span></div>
     <ol class="obras" data-obras data-vista="lista">
 ${obras}
     </ol>
@@ -298,22 +313,22 @@ ${obras}
   <div class="cinta" aria-hidden="true"><div class="cinta__pista">${cinta}${cinta}</div></div>
 
   <section class="sobre" id="sobre-mi" aria-labelledby="sobre-titulo">
-    <div class="rotulo"><h2 id="sobre-titulo">sobre mí</h2><span>(02)</span></div>
+    <h2 class="titulo-seccion" id="sobre-titulo" aria-label="Sobre mí" data-reveal="letras">${letras('Sobre mí')}</h2>
     <div class="sobre__texto">
       <p class="sobre__lead" data-reveal="lineas">${esc(sitio.sobreMi)}</p>
 ${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>
   </section>
 
   <section class="testimonios" aria-labelledby="testimonios-titulo">
-    <div class="rotulo"><h2 id="testimonios-titulo">testimonios</h2><span>(03)</span></div>
+    <h2 class="titulo-seccion" id="testimonios-titulo" aria-label="Testimonios" data-reveal="letras">${letras('Testimonios')}</h2>
     <ol class="citas">
 ${citas}
     </ol>
   </section>
 
   <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
-    <div class="rotulo"><span>contacto</span><span>(04)</span></div>
-    <h2 class="contacto__titulo" id="contacto-titulo" data-reveal="mascara" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}"><span class="degradado">¿Conversamos?</span></h2>
+    <div class="rotulo" data-reveal="linea"><span>contacto</span></div>
+    <h2 class="contacto__titulo" id="contacto-titulo" aria-label="¿Conversamos?" data-reveal="letras" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}">${letras('¿Conversamos?', { degradado: true })}</h2>
     <div class="contacto__fila">
       <a class="boton" href="${wa()}" ${externo}>escribir por whatsapp ${icono('diagonal')}</a>
       <a class="contacto__dato" href="mailto:${sitio.correo}">${sitio.correo}</a>
@@ -373,8 +388,7 @@ function paginaProyecto(p, i) {
   const cuerpo = `<main id="contenido" class="proyecto">
   <header class="proyecto__cab">
     <a class="volver" href="/#trabajos">${icono('izquierda')} trabajos</a>
-    <p class="proyecto__idx">${num(i)} / ${num(proyectos.length - 1)}</p>
-    <h1 class="proyecto__titulo" data-reveal="mascara" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}"><span class="degradado">${esc(p.nombre)}</span></h1>
+    <h1 class="proyecto__titulo" aria-label="${esc(p.nombre)}" data-reveal="letras" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}">${letras(p.nombre, { degradado: true })}</h1>
     <dl class="ficha">
 ${ficha.map(([dt, dd]) => `      <div class="ficha__item"><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}
     </dl>
@@ -393,9 +407,9 @@ ${piezas.join('\n')}
   </section>
 
   <nav class="siguiente" aria-label="Siguiente proyecto">
-    <a class="siguiente__link" href="/trabajos/${sig.slug}">
+    <a class="siguiente__link" href="/trabajos/${sig.slug}" aria-label="Siguiente proyecto: ${esc(sig.nombre)}">
       <span class="siguiente__lbl">siguiente proyecto ${icono('derecha')}</span>
-      <span class="siguiente__nombre" style="--em:${anchoEm(sig.nombre).toFixed(3)};--em-max:${Math.max(...sig.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}"><span class="degradado">${esc(sig.nombre)}</span></span>
+      <span class="siguiente__nombre" data-reveal="letras" style="--em:${anchoEm(sig.nombre).toFixed(3)};--em-max:${Math.max(...sig.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}">${letras(sig.nombre, { degradado: true })}</span>
       <span class="siguiente__rubro">${esc(sig.rubro)}</span>
     </a>
   </nav>

@@ -1,4 +1,5 @@
-/* NVY Studios — interacciones del portafolio. Sin dependencias salvo Lenis. */
+/* NVY Studios — interacciones del portafolio. Sin dependencias salvo Lenis.
+   En celular (.estatico) no hay animaciones de entrada: todo aparece quieto. */
 (() => {
   'use strict';
   window.NVY = true;
@@ -9,7 +10,12 @@
   const $$ = (s, c = d) => [...c.querySelectorAll(s)];
   const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const puntero = matchMedia('(hover: hover) and (pointer: fine)');
+  const estatico = html.classList.contains('estatico');
+  const animar = !estatico && !reducido;
+  const conIntro = html.classList.contains('con-intro');
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // La intro se ve una sola vez por visita, en la primera pagina que se abra.
+  try { sessionStorage.setItem('nvy-intro', '1'); } catch (e) { /* modo privado */ }
 
   /* ---------- scroll suave ---------- */
   let lenis = null;
@@ -23,8 +29,9 @@
     else window.scrollTo({ top: typeof destino === 'number' ? destino : destino.getBoundingClientRect().top + scrollY, behavior: reducido ? 'auto' : 'smooth' });
   };
 
-  /* ---------- header: se esconde al bajar y vuelve al subir ---------- */
+  /* ---------- header que se esconde al bajar + parallax de la portada ---------- */
   const cab = $('[data-cab]');
+  const marca = animar ? $('.portada__marca') : null;
   let ultimoY = scrollY;
   let pendiente = false;
   const alScroll = () => {
@@ -35,6 +42,8 @@
       if (y > ultimoY + 4 && y > 240) cab.classList.add('is-oculta');
       else if (y < ultimoY - 4 || y < 240) cab.classList.remove('is-oculta');
     }
+    // El titulo gigante baja mas lento que la pagina: se queda atras al hacer scroll.
+    if (marca && y < innerHeight * 1.3) marca.style.transform = `translate3d(0, ${(y * 0.3).toFixed(1)}px, 0)`;
     ultimoY = y;
   };
   addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }, { passive: true });
@@ -61,7 +70,7 @@
     html.classList.remove('menu-abierto');
     boton.setAttribute('aria-expanded', 'false');
     boton.removeAttribute('aria-label');
-    botonTxt.textContent = 'menu';
+    botonTxt.textContent = 'menú';
     menu.inert = true;
     if (lenis) lenis.start(); else html.style.overflow = '';
     if (devolverFoco) boton.focus({ preventScroll: true });
@@ -96,7 +105,36 @@
     }
   });
 
-  /* ---------- textos que suben linea por linea ---------- */
+  /* ---------- boton magnetico: se inclina hacia el mouse ---------- */
+  if (animar && puntero.matches) {
+    for (const b of $$('.boton')) {
+      b.addEventListener('pointermove', (e) => {
+        const r = b.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2);
+        const dy = e.clientY - (r.top + r.height / 2);
+        b.style.transform = `translate(${(dx * 0.22).toFixed(1)}px, ${(dy * 0.35).toFixed(1)}px)`;
+      });
+      b.addEventListener('pointerleave', () => { b.style.transform = ''; });
+    }
+  }
+
+  /* ---------- cinta de rubros: acelera con el scroll y vuelve a su ritmo ---------- */
+  const pista = $('.cinta__pista');
+  const animCinta = pista && pista.getAnimations ? pista.getAnimations()[0] : null;
+  if (animCinta && lenis && animar) {
+    let ritmo = 1;
+    let objetivo = 1;
+    lenis.on('scroll', (l) => { objetivo = Math.max(objetivo, 1 + Math.min(6, Math.abs(l.velocity) * 0.45)); });
+    const latir = () => {
+      objetivo += (1 - objetivo) * 0.04;
+      const nuevo = ritmo + (objetivo - ritmo) * 0.12;
+      if (Math.abs(nuevo - ritmo) > 0.005) { ritmo = nuevo; animCinta.playbackRate = ritmo; }
+      requestAnimationFrame(latir);
+    };
+    requestAnimationFrame(latir);
+  }
+
+  /* ---------- parrafos que suben linea por linea ---------- */
   const partir = (el) => {
     const bloque = $('p', el) || el;
     if (!el.dataset.texto) el.dataset.texto = bloque.textContent.trim();
@@ -111,7 +149,7 @@
     bloque.innerHTML = lineas.map((l, i) => `<span class="linea" style="--l:${i}"><span>${esc(l.join(' '))}</span></span>`).join('');
     el.classList.add('is-partido');
   };
-  const parrafos = $$('[data-reveal="lineas"]');
+  const parrafos = animar ? $$('[data-reveal="lineas"]') : [];
   const listasFuentes = d.fonts ? d.fonts.ready : Promise.resolve();
   listasFuentes.then(() => parrafos.forEach(partir));
   let anchoAntes = innerWidth;
@@ -125,7 +163,27 @@
     }, 180);
   });
 
-  /* ---------- arranque: despues de la cortina (si la hay) ---------- */
+  /* ---------- intro: cortina azul con contador, solo la primera visita en escritorio ---------- */
+  const correrIntro = () => new Promise((listo) => {
+    const intro = $('.intro');
+    const num = $('[data-intro-num]', intro);
+    if (lenis) lenis.stop();
+    const t0 = performance.now();
+    const dura = 1150;
+    const paso = (t) => {
+      const p = Math.min(1, (t - t0) / dura);
+      num.textContent = Math.round((1 - Math.pow(1 - p, 3)) * 100);
+      if (p < 1) return requestAnimationFrame(paso);
+      setTimeout(() => {
+        intro.classList.add('is-sale');
+        listo();
+        setTimeout(() => { html.classList.remove('con-intro'); if (lenis) lenis.start(); }, 1100);
+      }, 160);
+    };
+    requestAnimationFrame(paso);
+  });
+
+  /* ---------- arranque: despues de la intro o de la cortina entre paginas ---------- */
   const io = new IntersectionObserver((entradas) => {
     for (const e of entradas) {
       if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
@@ -137,7 +195,7 @@
     if (arrancado) return;
     arrancado = true;
     html.classList.add('is-listo');
-    listasFuentes.then(() => $$('[data-reveal]').forEach((el) => io.observe(el)));
+    if (animar) listasFuentes.then(() => $$('[data-reveal]').forEach((el) => io.observe(el)));
   };
   const transicion = () => new Promise((res) => {
     if (!('onpagereveal' in window)) return res(null);
@@ -150,8 +208,12 @@
     else fn();
   };
   cuandoActiva(() => {
+    if (conIntro && $('.intro')) {
+      correrIntro().then(() => setTimeout(arrancar, 260));
+      return;
+    }
     transicion().then((vt) => {
-      if (!vt || reducido) return arrancar();
+      if (!vt || !animar) return arrancar();
       vt.ready.then(() => setTimeout(arrancar, 520), arrancar);
     });
   });
@@ -159,14 +221,29 @@
   // Al volver con el boton atras (bfcache) la pagina puede quedar con el menu abierto.
   addEventListener('pageshow', (e) => { if (e.persisted && abierto()) cerrar(false); });
 
-  /* ---------- trabajos: filtros, vista, captura flotante y filas tactiles ---------- */
+  /* ---------- trabajos: filtros, vista, filas que entran y captura al centro ---------- */
   const obras = $('[data-obras]');
   if (!obras) return;
   const seccion = obras.closest('.trabajos');
   const items = $$('.obra', obras);
-  const contador = $('[data-contador]');
   const anuncio = $('[data-anuncio]');
   let ocultarPrevia = () => {};
+
+  // Las filas aparecen una tras otra: primero se dibuja la linea y despues sube el texto.
+  if (animar) {
+    const ioFilas = new IntersectionObserver((ents) => {
+      if (!ents.some((e) => e.isIntersecting)) return;
+      ioFilas.disconnect();
+      let k = 0;
+      for (const li of items) {
+        if (li.hidden) { li.classList.add('is-visible'); continue; }
+        setTimeout(() => li.classList.add('is-visible'), 120 + k++ * 85);
+      }
+    }, { threshold: 0.04 });
+    ioFilas.observe(obras);
+  } else {
+    items.forEach((li) => li.classList.add('is-visible'));
+  }
 
   const cambiar = (aplicar) => {
     ocultarPrevia();
@@ -176,14 +253,15 @@
       let k = 0;
       for (const li of items) {
         li.classList.remove('is-entra', 'is-abierta');
-        if (li.hidden) continue;
+        li.classList.add('is-visible');
+        if (li.hidden || !animar) continue;
         li.style.setProperty('--k', k++);
         void li.offsetWidth;
         li.classList.add('is-entra');
       }
       obras.classList.remove('is-cambiando');
       if (lenis) lenis.resize();
-    }, reducido ? 0 : 230);
+    }, animar ? 230 : 0);
   };
 
   for (const b of $$('[data-filtro]')) {
@@ -197,10 +275,6 @@
           li.hidden = !(filtro === 'todos' || li.dataset.estado === filtro);
           if (!li.hidden) n++;
         }
-        contador.textContent = n;
-        contador.classList.remove('is-cambia');
-        void contador.offsetWidth;
-        contador.classList.add('is-cambia');
         anuncio.textContent = `${n} ${n === 1 ? 'proyecto' : 'proyectos'}`;
       });
     });
@@ -239,42 +313,49 @@
     if (lenis) setTimeout(() => lenis.resize(), 650);
   });
 
-  // Escritorio + lista: la captura flota y sigue al mouse con retraso suave.
+  // Escritorio + lista: la captura aparece siempre al centro de la pantalla. Al
+  // bajar a otra fila la nueva entra desde abajo; al subir, desde arriba.
   const previa = $('[data-previa]');
-  if (!previa || reducido) return;
-  const caja = d.createElement('div');
-  caja.className = 'vista-previa__in';
-  previa.appendChild(caja);
+  if (!previa || reducido || !puntero.matches) return;
+  const marco = d.createElement('div');
+  marco.className = 'vista-previa__in';
+  previa.appendChild(marco);
   const fotos = new Map();
   const foto = (base) => {
     if (!fotos.has(base)) {
       const p = d.createElement('picture');
-      // La captura flotante mide como maximo 400 px: la de 800 alcanza para retina.
+      // La captura mide como maximo 480 px: la de 800 alcanza para retina.
       p.innerHTML = `<source type="image/avif" srcset="${base}-800.avif">`
         + `<img src="${base}-800.webp" alt="" decoding="async">`;
-      caja.appendChild(p);
+      marco.appendChild(p);
       fotos.set(base, p);
     }
     return fotos.get(base);
   };
-  let x = 0; let y = 0; let tx = 0; let ty = 0; let cx = 0; let cy = 0;
+  let actual = null;
+  let indiceActual = -1;
   let activa = false;
-  let raf = 0;
-  const mover = () => {
-    x += (tx - x) * 0.13;
-    y += (ty - y) * 0.13;
-    previa.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
-    raf = (activa || Math.abs(tx - x) > 0.4 || Math.abs(ty - y) > 0.4) ? requestAnimationFrame(mover) : 0;
-  };
-  const mostrar = (base) => {
-    const p = foto(base);
-    fotos.forEach((f) => f.classList.toggle('is-actual', f === p));
+  let cx = 0;
+  let cy = 0;
+  const mostrar = (li) => {
+    const p = foto(li.dataset.preview);
+    const i = items.indexOf(li);
     if (!activa) {
-      activa = true;
-      x = tx; y = ty;
+      // Al volver a aparecer, la foto ya esta en su lugar y solo se abre el marco.
+      fotos.forEach((f) => { f.className = f === p ? 'is-actual quieta' : 'quieta'; });
+      void marco.offsetWidth;
+      fotos.forEach((f) => f.classList.remove('quieta'));
+      actual = p; indiceActual = i; activa = true;
       previa.classList.add('is-activa');
-      if (!raf) raf = requestAnimationFrame(mover);
+      return;
     }
+    if (p === actual) return;
+    const baja = i > indiceActual;
+    p.className = `quieta ${baja ? 'sale-abajo' : 'sale-arriba'}`;
+    void p.offsetWidth;
+    p.className = 'is-actual';
+    if (actual) actual.className = baja ? 'sale-arriba' : 'sale-abajo';
+    actual = p; indiceActual = i;
   };
   ocultarPrevia = () => { activa = false; previa.classList.remove('is-activa'); };
   const filaBajo = (px, py) => {
@@ -282,28 +363,17 @@
     const li = el && el.closest ? el.closest('.obra') : null;
     return li && obras.contains(li) ? li : null;
   };
-  const apuntar = (px, py) => {
-    cx = px; cy = py;
-    tx = Math.min(px, innerWidth - caja.offsetWidth - 48);
-    ty = py;
+  const revisar = () => {
+    const li = filaBajo(cx, cy);
+    if (li && li.dataset.preview && obras.dataset.vista === 'lista') mostrar(li);
+    else ocultarPrevia();
   };
 
   obras.addEventListener('pointerenter', () => {
-    if (puntero.matches) items.forEach((li) => li.dataset.preview && foto(li.dataset.preview));
+    items.forEach((li) => li.dataset.preview && foto(li.dataset.preview));
   }, { once: true });
-  obras.addEventListener('pointermove', (e) => {
-    if (!puntero.matches || obras.dataset.vista !== 'lista') return;
-    apuntar(e.clientX, e.clientY);
-    const li = filaBajo(e.clientX, e.clientY);
-    if (li && li.dataset.preview) mostrar(li.dataset.preview);
-    else ocultarPrevia();
-  }, { passive: true });
+  obras.addEventListener('pointermove', (e) => { cx = e.clientX; cy = e.clientY; revisar(); }, { passive: true });
   obras.addEventListener('pointerleave', ocultarPrevia);
   // Si la pagina se mueve con el mouse quieto, la fila bajo el cursor cambia.
-  addEventListener('scroll', () => {
-    if (!activa) return;
-    const li = filaBajo(cx, cy);
-    if (li && li.dataset.preview) mostrar(li.dataset.preview);
-    else ocultarPrevia();
-  }, { passive: true });
+  addEventListener('scroll', () => { if (activa) revisar(); }, { passive: true });
 })();
