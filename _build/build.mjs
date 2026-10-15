@@ -263,11 +263,6 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
 `;
 
   const cinta = sitio.rubros.map((r) => `<span>${esc(r)}</span><i></i>`).join('');
-  const foto = ['avif', 'webp', 'jpg', 'jpeg', 'png'].map((e) => `assets/img/sobre-mi.${e}`).find((r) => existsSync(join(RAIZ, r)));
-  const fotoHtml = foto
-    ? `<img src="/${foto}" alt="Gaspar Quijada, diseñador de Nvy Studios" loading="lazy" decoding="async">`
-    : `<div class="sobre__hueco"><span>tu foto aquí</span><code>/assets/img/sobre-mi.jpg</code><span>formato vertical 4:5</span></div>`;
-
   const citas = testimoniosVisibles.map((t, i) => `      <li class="cita">
         <span class="cita__num">${num(i)}</span>
         <blockquote class="cita__txt" data-reveal="lineas"><p>“${esc(t.texto)}”</p></blockquote>
@@ -304,7 +299,6 @@ ${obras}
 
   <section class="sobre" id="sobre-mi" aria-labelledby="sobre-titulo">
     <div class="rotulo"><h2 id="sobre-titulo">sobre mí</h2><span>(02)</span></div>
-    <figure class="sobre__foto" data-reveal="foto">${fotoHtml}</figure>
     <div class="sobre__texto">
       <p class="sobre__lead" data-reveal="lineas">${esc(sitio.sobreMi)}</p>
 ${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>

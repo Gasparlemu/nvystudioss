@@ -25,13 +25,12 @@ Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer pu
 
 ## Qué se publica
 
-`sitio.estadosVisibles` define qué proyectos aparecen. Hoy es `["lanzado"]`.
+`sitio.estadosVisibles` define qué proyectos aparecen. Hoy es `["lanzado", "en-desarrollo"]`; las demos quedan fuera.
 - Cuando un proyecto en desarrollo se lance, cambiarle el `estado` a `lanzado` y recapturarlo.
-- Para mostrar también los en desarrollo: `["lanzado", "en-desarrollo"]`. Los filtros aparecen solos cuando hay más de un estado.
+- Para mostrar solo los lanzados: `["lanzado"]`. Los filtros aparecen solos cuando hay más de un estado.
 
 ## Otros
 
 - Instagram: completar `sitio.instagram` en el JSON. Aparece automáticamente en el menú, en "sobre mí" y en los datos estructurados.
-- Foto de "sobre mí": guardarla como `assets/img/sobre-mi.jpg` (vertical, 4:5, unos 1200 px de ancho) y correr el build.
 - Imagen para compartir el link: `node _build/og.mjs`.
 - Si cambia la fuente o el tracking de los títulos gigantes: `node _build/calibrar-anchos.mjs`.

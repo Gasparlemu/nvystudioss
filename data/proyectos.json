@@ -11,7 +11,7 @@
     "whatsapp": "56940976219",
     "whatsappTexto": "Hola Gaspar, vi tu portafolio y quiero conversar sobre un proyecto.",
     "ciudad": "Valdivia, Chile",
-    "estadosVisibles": ["lanzado"],
+    "estadosVisibles": ["lanzado", "en-desarrollo"],
     "instagram": "",
     "linkedin": "https://www.linkedin.com/in/gasparnvy/",
     "sobreMi": "Soy Gaspar, diseñador independiente en Valdivia. Diseño y programo cada sitio a mano, sin plantillas. Trato directo: hablas conmigo desde la primera idea hasta el lanzamiento.",
@@ -31,6 +31,18 @@
   },
 
   "proyectos": [
+    {
+      "slug": "i-max",
+      "nombre": "I-MAX Valdivia",
+      "cliente": "I-MAX Valdivia",
+      "rubro": "imagenología dental",
+      "anio": 2026,
+      "estado": "lanzado",
+      "plan": "",
+      "url": "https://www.i-maxval.cl",
+      "resumen": "Centro de imagenología maxilofacial 3D en Valdivia. El nuevo sitio reemplazó un WordPress antiguo: exámenes ordenados por categoría, equipo profesional y contacto directo, con SEO local para búsquedas como radiografía dental y cone beam.",
+      "descripcion": "Sitio web para I-MAX Valdivia, centro de imagenología maxilofacial 3D: radiografía dental y tomografía cone beam. Diseño y desarrollo por NVY Studios."
+    },
     {
       "slug": "oncosur",
       "nombre": "Oncosur",
@@ -78,18 +90,6 @@
       "url": "https://gestionsur.vercel.app",
       "resumen": "Consultoría en prevención de riesgos, calidad y ambiente, con más de 27 empresas asesoradas en la Región de Los Ríos. Una web seria y directa, que da credibilidad antes del primer contacto.",
       "descripcion": "Sitio web para Gestión Sur, consultoría en prevención de riesgos, calidad y ambiente en el sur de Chile. Diseño y desarrollo a medida por NVY Studios."
-    },
-    {
-      "slug": "i-max",
-      "nombre": "I-MAX Valdivia",
-      "cliente": "I-MAX Valdivia",
-      "rubro": "imagenología dental",
-      "anio": 2026,
-      "estado": "lanzado",
-      "plan": "",
-      "url": "https://www.i-maxval.cl",
-      "resumen": "Centro de imagenología maxilofacial 3D en Valdivia. El nuevo sitio reemplazó un WordPress antiguo: exámenes ordenados por categoría, equipo profesional y contacto directo, con SEO local para búsquedas como radiografía dental y cone beam.",
-      "descripcion": "Sitio web para I-MAX Valdivia, centro de imagenología maxilofacial 3D: radiografía dental y tomografía cone beam. Diseño y desarrollo por NVY Studios."
     },
     {
       "slug": "inka-trewa",

@@ -390,18 +390,11 @@ html:not(.js) .portada__l > span,
   padding: clamp(96px, 12vw, 180px) var(--pad);
 }
 .sobre .rotulo { grid-column: 1 / -1; }
-.sobre__foto { grid-column: 1 / 5; aspect-ratio: 4 / 5; background: var(--bg-2); overflow: hidden; }
-.sobre__foto img { width: 100%; height: 100%; object-fit: cover; }
-.sobre__hueco {
-  height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  border: 1px dashed rgba(11, 11, 12, .3); padding: 16px; text-align: center;
-  font-size: 13px; color: var(--gris-2);
-}
-.sobre__hueco code { font-family: var(--texto); color: var(--tinta); }
-.sobre__texto { grid-column: 6 / 13; align-self: end; }
+/* Sin foto: el texto es la pieza de la seccion, desde la columna 4. */
+.sobre__texto { grid-column: 4 / 13; }
 .sobre__lead {
-  font-family: var(--display); font-weight: 400; letter-spacing: -.035em; line-height: 1.12;
-  font-size: clamp(26px, 3.1vw, 50px);
+  font-family: var(--display); font-weight: 400; letter-spacing: -.04em; line-height: 1.08;
+  font-size: clamp(30px, 4.2vw, 68px);
 }
 .sobre__redes { display: flex; gap: 28px; margin-top: clamp(24px, 3vw, 40px); font-size: 15px; }
 .sobre__redes a { display: inline-flex; align-items: center; gap: 6px; }
@@ -555,8 +548,6 @@ a.contacto__dato:hover { color: var(--azul); }
 }
 
 @media (max-width: 900px) {
-  .sobre__foto { grid-column: 1 / 7; }
-  .sobre__texto { grid-column: 7 / 13; }
   .cita__txt { grid-column: 2 / 13; }
   .cita__autor { grid-column: 2 / 13; margin-top: 16px; }
   .proyecto__resumen { grid-column: 1 / -1; }
@@ -584,8 +575,7 @@ a.contacto__dato:hover { color: var(--azul); }
   .obras[data-vista="lista"] .obra.is-abierta .obra__flecha { transform: rotate(-90deg); color: var(--azul); }
   .obras[data-vista="grilla"] { grid-template-columns: 1fr; }
 
-  .sobre__foto { grid-column: 1 / -1; max-width: 420px; }
-  .sobre__texto { grid-column: 1 / -1; margin-top: 32px; }
+  .sobre__texto { grid-column: 1 / -1; }
   .cita__num { grid-column: 1 / -1; margin-bottom: 10px; }
   .cita__txt, .cita__autor { grid-column: 1 / -1; }
   .contacto__fila { flex-direction: column; align-items: flex-start; }
