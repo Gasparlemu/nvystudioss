@@ -118,20 +118,26 @@ const sinCaptura = (p) => `<div class="sin-captura" aria-hidden="true"><span>${e
 // letra sea su propia caja. El titulo que lo usa lleva aria-label con el texto entero.
 // Con "corte", las letras desde esa posicion (sin contar espacios) usan el segundo color
 // de la marca (nombres de dos tonos, como en el logo de Oncosur).
-function letras(texto, { degradado = false, desde = 0, corte = Infinity } = {}) {
+// "ajustes" ({ posicion: em }) corre una letra, y las que le siguen, para afinar un par.
+function letras(texto, { degradado = false, desde = 0, corte = Infinity, ajustes = {} } = {}) {
   let n = desde;
   let k = 0;
   return texto.split(' ').map((palabra) => {
     let x = 0;
     const ls = [...palabra].map((ch) => {
-      const s = `<span class="letra${k++ >= corte ? ' letra--b' : ''}" style="--n:${n++};--x:${x.toFixed(3)}">${esc(ch)}</span>`;
+      const i = k++;
+      const extra = ajustes[i] || 0;
+      x += extra;
+      const estilo = `--n:${n++}${degradado ? `;--x:${x.toFixed(4)}` : ''}${extra ? `;margin-left:calc(${degradado ? '-.04em + ' : ''}${extra}em)` : ''}`;
+      const s = `<span class="letra${i >= corte ? ' letra--b' : ''}" style="${estilo}">${esc(ch)}</span>`;
       x += anchoEm(ch);
       return s;
     }).join('');
     const clase = degradado ? ' palabra--degradado' : '';
-    return `<span class="palabra${clase}" style="--w:${anchoEm(palabra).toFixed(3)}" aria-hidden="true">${ls}</span>`;
+    return `<span class="palabra${clase}"${degradado ? ` style="--w:${x.toFixed(4)}"` : ''} aria-hidden="true">${ls}</span>`;
   }).join(' ');
 }
+
 
 // Colores de marca de cada proyecto (sacados de su logo o su sitio) para pintar su nombre.
 // Van como variables CSS: --m1..4 la paleta principal y --n1..4 la del segundo tramo.
@@ -284,6 +290,10 @@ const NEGOCIO = {
 };
 
 // ---------- home ----------
+// La "S" y la "t" de Studios se tocan justo en el borde. Con el espaciado de la portada
+// la t se montaba 0.0035 em sobre la S (medido sobre el dibujo real de la fuente a 1000 px).
+const JUNTA_ST = 0.0035;
+
 function paginaHome() {
   const obras = proyectos.map((p, i) => {
     const v = vistas(p.slug);
@@ -312,14 +322,14 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
 
   const cinta = sitio.rubros.map((r) => `<span>${esc(r)}</span><i></i>`).join('');
   const citas = testimoniosVisibles.map((t, i) => `      <li class="cita">
-        <blockquote class="cita__txt" data-reveal="lineas"><p>“${esc(t.texto)}”</p></blockquote>
+        <blockquote class="cita__txt" data-reveal="texto"><p>“${esc(t.texto)}”</p></blockquote>
         <p class="cita__autor"><strong>${esc(t.nombre)}</strong><span>${esc(t.cargo)}</span></p>
       </li>`).join('\n');
 
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
     <h1 class="portada__h1" id="portada-titulo" aria-label="Nvy Studios. ${esc(sitio.bajada)}">
-      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}">${letras('Nvy Studios', { degradado: true })}</span>
+      <span class="portada__marca" style="--em:${(anchoEm('Nvy Studios') + JUNTA_ST).toFixed(4)};--em-max:${(anchoEm('Studios') + JUNTA_ST).toFixed(4)}">${letras('Nvy Studios', { degradado: true, ajustes: { 4: JUNTA_ST } })}</span>
       <span class="portada__bajada">${sitio.bajada.split(' · ').map((t) => `<span>${esc(t)}</span>`).join('')}</span>
     </h1>
   </section>
@@ -346,7 +356,7 @@ ${obras}
   <section class="sobre" id="sobre-mi" aria-labelledby="sobre-titulo">
     <h2 class="titulo-seccion" id="sobre-titulo" aria-label="Sobre mí" data-reveal="letras">${letras('Sobre mí')}</h2>
     <div class="sobre__texto">
-      <p class="sobre__lead" data-reveal="lineas">${esc(sitio.sobreMi)}</p>
+      <p class="sobre__lead" data-reveal="texto">${esc(sitio.sobreMi)}</p>
 ${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>
   </section>
 
@@ -426,7 +436,7 @@ ${ficha.map(([dt, dd]) => `      <div class="ficha__item"><dt>${dt}</dt><dd>${es
   </header>
 
   <section class="proyecto__intro" aria-label="Sobre el proyecto">
-    <p class="proyecto__resumen" data-reveal="lineas">${esc(p.resumen)}</p>
+    <p class="proyecto__resumen" data-reveal="texto">${esc(p.resumen)}</p>
     <div class="proyecto__acciones">${avance}
       <a class="boton" href="${esc(p.url)}" ${externo}>${BOTON_SITIO[p.estado]} ${icono('diagonal')}</a>
       <span class="proyecto__dominio">${esc(dominio(p.url))}</span>

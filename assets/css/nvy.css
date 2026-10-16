@@ -264,16 +264,11 @@ html.menu-abierto .cab__menu { color: #fff; }
 }
 .js:not(.estatico) [data-reveal="letras"].is-visible .letra,
 .js.is-listo:not(.estatico) .portada__marca .letra { transform: none; }
-
-/* Parrafos: JS los parte en lineas y cada una sube con su desfase. */
-.js:not(.estatico) [data-reveal="lineas"]:not(.is-partido) { opacity: 0; }
-[data-reveal="lineas"] .linea { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
-[data-reveal="lineas"] .linea > span { display: block; }
-.js:not(.estatico) [data-reveal="lineas"] .linea > span {
-  transform: translateY(110%);
-  transition: transform 1s var(--sale) calc(var(--l, 0) * .075s);
-}
-.js:not(.estatico) [data-reveal="lineas"].is-visible .linea > span { transform: none; }
+/* Parrafos: el bloque entero sube y aparece. Es una sola pieza que mueve la tarjeta de
+   video (opacidad y posicion), asi que no compite con el scroll: letra por letra eran
+   cientos de animaciones a la vez y la pagina se trababa. */
+.js:not(.estatico) [data-reveal="texto"] { opacity: 0; transform: translateY(28px); transition: opacity 1s var(--sale), transform 1.15s var(--sale); }
+.js:not(.estatico) [data-reveal="texto"].is-visible { opacity: 1; transform: none; }
 
 /* Lineas finas que se dibujan de izquierda a derecha. */
 [data-reveal="linea"] { position: relative; }
@@ -684,8 +679,7 @@ a.contacto__dato:hover { color: var(--azul); }
     transition-duration: .01ms !important; transition-delay: 0s !important;
   }
   .cinta__pista { animation: none; }
-  .letra, .linea > span, .obra__link, .obra { transform: none !important; opacity: 1 !important; }
+  .letra, .obra__link, .obra, [data-reveal="texto"] { transform: none !important; opacity: 1 !important; }
   .obra::before, [data-reveal="linea"]::before { transform: none !important; }
-  .js [data-reveal="lineas"]:not(.is-partido) { opacity: 1; }
   .js .portada__bajada { opacity: 1; transform: none; }
 }

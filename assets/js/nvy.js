@@ -12,7 +12,6 @@
   const puntero = matchMedia('(hover: hover) and (pointer: fine)');
   const estatico = html.classList.contains('estatico');
   const animar = !estatico && !reducido;
-  const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ---------- scroll suave ---------- */
   let lenis = null;
@@ -124,39 +123,15 @@
     requestAnimationFrame(latir);
   }
 
-  /* ---------- parrafos que suben linea por linea ---------- */
-  const partir = (el) => {
-    const bloque = $('p', el) || el;
-    if (!el.dataset.texto) el.dataset.texto = bloque.textContent.trim();
-    const palabras = el.dataset.texto.split(/\s+/);
-    bloque.innerHTML = palabras.map((p) => `<span class="pal">${esc(p)}</span>`).join(' ');
-    const lineas = [];
-    let arriba = null;
-    for (const s of $$('.pal', bloque)) {
-      if (s.offsetTop !== arriba) { lineas.push([]); arriba = s.offsetTop; }
-      lineas[lineas.length - 1].push(s.textContent);
-    }
-    bloque.innerHTML = lineas.map((l, i) => `<span class="linea" style="--l:${i}"><span>${esc(l.join(' '))}</span></span>`).join('');
-    el.classList.add('is-partido');
-  };
-  const parrafos = animar ? $$('[data-reveal="lineas"]') : [];
+  // Las animaciones de entrada esperan a las fuentes, para que las letras no cambien de forma.
   const listasFuentes = d.fonts ? d.fonts.ready : Promise.resolve();
-  listasFuentes.then(() => parrafos.forEach(partir));
-  let anchoAntes = innerWidth;
-  let tResize;
-  addEventListener('resize', () => {
-    clearTimeout(tResize);
-    tResize = setTimeout(() => {
-      if (innerWidth === anchoAntes) return;
-      anchoAntes = innerWidth;
-      parrafos.forEach(partir);
-    }, 180);
-  });
 
   /* ---------- arranque: despues de la cortina entre paginas (si la hay) ---------- */
   const io = new IntersectionObserver((entradas) => {
     for (const e of entradas) {
-      if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('is-visible');
+      io.unobserve(e.target);
     }
   }, { rootMargin: '0px 0px -6% 0px', threshold: 0.08 });
 
