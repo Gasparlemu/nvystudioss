@@ -14,6 +14,40 @@
   const animar = !estatico && !reducido;
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+  /* ---------- modo oscuro de prueba ---------- */
+  // Si la pestaña entro con ?modo=oscuro (o ?modo=claro) aparece un interruptor arriba al
+  // centro para comparar los dos modos. Sin ese parametro no existe.
+  try {
+    if (sessionStorage.getItem('nvy-modo')) {
+      const caja = d.createElement('div');
+      caja.setAttribute('style', 'position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:70;display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(128,128,128,.22);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);font:500 13px/1 var(--texto)');
+      const pintar = () => {
+        const oscuro = html.getAttribute('data-modo') === 'oscuro';
+        [...caja.children].forEach((b) => {
+          const activo = (b.dataset.m === 'oscuro') === oscuro;
+          b.style.cssText = `padding:9px 15px;border-radius:999px;background:${activo ? 'var(--tinta)' : 'transparent'};color:${activo ? 'var(--bg)' : 'var(--tinta)'}`;
+        });
+      };
+      for (const m of ['claro', 'oscuro']) {
+        const b = d.createElement('button');
+        b.type = 'button';
+        b.dataset.m = m;
+        b.textContent = m;
+        b.addEventListener('click', () => {
+          if (m === 'oscuro') html.setAttribute('data-modo', 'oscuro');
+          else html.removeAttribute('data-modo');
+          sessionStorage.setItem('nvy-modo', m);
+          const meta = $('meta[name="theme-color"]');
+          if (meta) meta.content = m === 'oscuro' ? '#0b0b0c' : '#0A1F5C';
+          pintar();
+        });
+        caja.appendChild(b);
+      }
+      pintar();
+      d.body.appendChild(caja);
+    }
+  } catch (e) { /* sin sessionStorage (modo privado) */ }
+
   /* ---------- scroll suave ---------- */
   let lenis = null;
   if (!reducido && window.Lenis) {
@@ -26,16 +60,16 @@
     else window.scrollTo({ top: typeof destino === 'number' ? destino : destino.getBoundingClientRect().top + scrollY, behavior: reducido ? 'auto' : 'smooth' });
   };
 
-  /* ---------- header: siempre visible; cambia de estilo al salir de la portada ---------- */
+  /* ---------- header: siempre visible ---------- */
+  // En la portada de la home la marca chica se esconde (ya esta gigante) y aparece al bajar.
   const cab = $('[data-cab]');
-  const portada = $('.portada__marco');
+  const portada = $('.portada');
   let pendiente = false;
   const alScroll = () => {
     pendiente = false;
     const y = Math.max(0, scrollY);
-    const sobrePortada = portada ? y < portada.offsetTop + portada.offsetHeight - 72 : false;
-    cab.classList.toggle('sobre-portada', sobrePortada);
-    cab.classList.toggle('is-solida', !sobrePortada && y > 24);
+    cab.classList.toggle('en-portada', portada ? y < portada.offsetHeight * 0.55 : false);
+    cab.classList.toggle('is-solida', y > 24);
   };
   addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }, { passive: true });
   alScroll();
@@ -105,61 +139,6 @@
         b.style.transform = `translate(${(dx * 0.22).toFixed(1)}px, ${(dy * 0.35).toFixed(1)}px)`;
       });
       b.addEventListener('pointerleave', () => { b.style.transform = ''; });
-    }
-  }
-
-  /* ---------- portada: los proyectos van cambiando abajo a la derecha ---------- */
-  // Cada barrita marca el tiempo de un proyecto; al llenarse pasa al siguiente.
-  // Con el mouse encima se pausa (CSS) y tocar una barrita salta a ese proyecto.
-  // En celular queda fijo el primero.
-  const destacados = $('[data-destacados]');
-  if (destacados && animar) {
-    const nombres = $$('.destacado', destacados);
-    const barras = $$('.destacados__barra', destacados);
-    let actual = 0;
-    const correr = () => {
-      barras.forEach((b) => $('i', b).classList.remove('corre'));
-      const i = $('i', barras[actual]);
-      void i.offsetWidth;
-      i.classList.add('corre');
-    };
-    const ir = (i) => {
-      if (i === actual) return;
-      const viejo = nombres[actual];
-      viejo.classList.remove('is-actual');
-      viejo.classList.add('sale');
-      viejo.tabIndex = -1;
-      viejo.setAttribute('aria-hidden', 'true');
-      clearTimeout(viejo.salida);
-      viejo.salida = setTimeout(() => viejo.classList.remove('sale'), 900);
-      // El nuevo siempre entra desde abajo, aunque venga saliendo recien.
-      const nuevo = nombres[i];
-      clearTimeout(nuevo.salida);
-      nuevo.classList.remove('sale');
-      nuevo.classList.add('quieto');
-      void nuevo.offsetWidth;
-      nuevo.classList.remove('quieto');
-      nuevo.classList.add('is-actual');
-      nuevo.removeAttribute('tabindex');
-      nuevo.removeAttribute('aria-hidden');
-      actual = i;
-      barras.forEach((b, k) => { b.classList.toggle('is-vista', k < i); b.classList.toggle('is-actual', k === i); });
-      correr();
-    };
-    destacados.addEventListener('animationend', (e) => {
-      if (e.target.classList.contains('corre')) ir((actual + 1) % nombres.length);
-    });
-    barras.forEach((b, k) => b.addEventListener('click', () => ir(k)));
-    if (nombres.length > 1) {
-      const empezar = () => setTimeout(correr, 900);
-      if (html.classList.contains('is-listo')) empezar();
-      else {
-        new MutationObserver((_, obs) => {
-          if (!html.classList.contains('is-listo')) return;
-          obs.disconnect();
-          empezar();
-        }).observe(html, { attributes: true, attributeFilter: ['class'] });
-      }
     }
   }
 

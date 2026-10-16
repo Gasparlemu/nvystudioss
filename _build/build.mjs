@@ -77,14 +77,6 @@ const TRAZOS = {
 };
 const icono = (nombre) => `<svg class="ico ico--${nombre}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">${TRAZOS[nombre]}</svg>`;
 
-// Logos de redes en relleno (Simple Icons, licencia CC0): se ven nitidos en tamano chico.
-const REDES = {
-  instagram: 'M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z',
-  linkedin: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
-  whatsapp: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z',
-};
-const logoRed = (nombre) => `<svg class="ico ico--${nombre}" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false"><path d="${REDES[nombre]}"/></svg>`;
-
 // Lee las capturas que existan para un proyecto: e1..eN (escritorio) y m1..mN (celular).
 function vistas(slug) {
   const dir = join(RAIZ, 'assets', 'img', 'trabajos', slug);
@@ -126,7 +118,7 @@ const sinCaptura = (p) => `<div class="sin-captura" aria-hidden="true"><span>${e
 // letra sea su propia caja. El titulo que lo usa lleva aria-label con el texto entero.
 // Con "corte", las letras desde esa posicion (sin contar espacios) usan el segundo color
 // de la marca (nombres de dos tonos, como en el logo de Oncosur).
-function letras(texto, { degradado = false, claro = false, desde = 0, corte = Infinity } = {}) {
+function letras(texto, { degradado = false, desde = 0, corte = Infinity } = {}) {
   let n = desde;
   let k = 0;
   return texto.split(' ').map((palabra) => {
@@ -136,7 +128,7 @@ function letras(texto, { degradado = false, claro = false, desde = 0, corte = In
       x += anchoEm(ch);
       return s;
     }).join('');
-    const clase = degradado ? ' palabra--degradado' : claro ? ' palabra--degradado palabra--claro' : '';
+    const clase = degradado ? ' palabra--degradado' : '';
     return `<span class="palabra${clase}" style="--w:${anchoEm(palabra).toFixed(3)}" aria-hidden="true">${ls}</span>`;
   }).join(' ');
 }
@@ -164,13 +156,9 @@ function tramos(texto, corte) {
 const CSS_V = version('assets/css/nvy.css');
 const JS_V = version('assets/js/nvy.js');
 
-function cabecera(clase = '') {
-  return `<header class="cab${clase ? ` ${clase}` : ''}" data-cab>
+function cabecera() {
+  return `<header class="cab" data-cab>
   <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio">Nvy Studios</a>
-  <nav class="cab__nav" aria-label="Secciones">
-    <a href="/#trabajos">Trabajos</a><a href="/#sobre-mi">Sobre mí</a><a href="/#contacto">Contacto</a>
-    <a class="cab__cta" href="${wa()}" ${externo}>Conversemos</a>
-  </nav>
   <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menú</span></button>
 </header>`;
 }
@@ -202,7 +190,9 @@ function pie() {
 </footer>`;
 }
 
-function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '', claseCab = '', scripts = [] }) {
+// El script del head marca la pagina antes de pintarla: js, sin transiciones entre
+// paginas, estatico (celular) y el modo oscuro de prueba (?modo=oscuro, queda en la pestaña).
+function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '' }) {
   const canonical = BASE + ruta;
   const ogImagen = og.imagen || `${BASE}/assets/brand/og-nvy.png`;
   const ogTitulo = esc(og.titulo || titulo);
@@ -244,14 +234,14 @@ ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
 <link rel="preload" href="/assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/nvy.css?v=${CSS_V}">
-<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico'}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
+<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico'}catch(e){}try{var md=new URLSearchParams(location.search).get('modo');if(md)sessionStorage.setItem('nvy-modo',md);if(sessionStorage.getItem('nvy-modo')==='oscuro'){h.setAttribute('data-modo','oscuro');document.querySelector('meta[name=theme-color]').content='#0b0b0c'}}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
 <script defer src="/assets/vendor/lenis.min.js"></script>
 <script defer src="/assets/js/nvy.js?v=${JS_V}"></script>
-${scripts.map((s) => `<script defer src="/assets/js/${s}?v=${version(`assets/js/${s}`)}"></script>\n`).join('')}<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
 ${ld ? `<script type="application/ld+json">${jsonLd(ld)}</script>\n` : ''}</head>
 <body id="top"${claseBody ? ` class="${claseBody}"` : ''}>
 <a class="saltar" href="#contenido">saltar al contenido</a>
-${cabecera(claseCab)}
+${cabecera()}
 ${menu()}
 ${cuerpo}
 ${pie()}
@@ -328,44 +318,12 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
         <p class="cita__autor"><strong>${esc(t.nombre)}</strong><span>${esc(t.cargo)}</span></p>
       </li>`).join('\n');
 
-  const linea1 = 'Webs a medida para';
-  const linea2 = 'marcas que se atreven.';
-  // Abajo a la derecha: el nombre de cada proyecto, que cambia letra por letra.
-  // Las barritas marcan el tiempo de cada uno y sirven para saltar a otro.
-  const deletrear = (texto) => [...texto].map((ch, i) => (ch === ' '
-    ? '<span class="dl dl--esp"> </span>'
-    : `<span class="dl" style="--i:${i}">${esc(ch)}</span>`)).join('');
-  const destacados = proyectos.map((p, i) => `          <a class="destacado${i === 0 ? ' is-actual' : ''}" href="/trabajos/${p.slug}" aria-label="${esc(p.nombre)}"${i === 0 ? '' : ' tabindex="-1" aria-hidden="true"'}><span class="destacado__nombre">${deletrear(p.nombre)}</span>${icono('diagonal')}</a>`).join('\n');
-  const barras = proyectos.map((p, i) => `<button class="destacados__barra${i === 0 ? ' is-actual' : ''}" type="button" aria-label="Mostrar ${esc(p.nombre)}"><i></i></button>`).join('');
-  const redesHero = [['Instagram', 'instagram', sitio.instagram], ['LinkedIn', 'linkedin', sitio.linkedin], ['WhatsApp', 'whatsapp', wa()]]
-    .filter(([, , u]) => u)
-    .map(([n, ic, u]) => `<a href="${esc(u)}" ${externo} aria-label="${n}">${logoRed(ic)}</a>`).join('');
-
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
-    <div class="portada__marco">
-      <canvas class="portada__fondo" aria-hidden="true" data-fondo></canvas>
-      <h1 class="portada__titulo" id="portada-titulo" aria-label="${esc(linea1)} ${esc(linea2)}">
-        <span class="portada__linea">${letras(linea1, { claro: true })}</span>
-        <span class="portada__linea">${letras(linea2, { claro: true, desde: linea1.replace(/ /g, '').length })}</span>
-      </h1>
-      <div class="portada__datos">
-        <p>${esc(sitio.ciudad)}</p>
-        <a href="tel:${sitio.telefono}">+56 9 4097 6219</a>
-        <div class="portada__redes">${redesHero}</div>
-      </div>
-      <div class="portada__pie">
-        <p class="portada__desc">${esc(sitio.heroTexto)}</p>
-        <a class="portada__cta" href="#trabajos">Explora nuestro trabajo ${icono('diagonal')}</a>
-      </div>
-      <div class="portada__proyectos" data-destacados>
-        <p class="destacados__rotulo">Proyectos recientes</p>
-        <div class="destacados__nombres">
-${destacados}
-        </div>
-        <div class="destacados__barras" role="group" aria-label="Elegir proyecto">${barras}</div>
-      </div>
-    </div>
+    <h1 class="portada__h1" id="portada-titulo" aria-label="Nvy Studios. ${esc(sitio.bajada)}">
+      <span class="portada__marca" style="--em:${anchoEm('Nvy Studios').toFixed(3)};--em-max:${anchoEm('Studios').toFixed(3)}">${letras('Nvy Studios', { degradado: true })}</span>
+      <span class="portada__bajada">${sitio.bajada.split(' · ').map((t) => `<span>${esc(t)}</span>`).join('')}</span>
+    </h1>
   </section>
 
   <section class="trabajos" id="trabajos" aria-labelledby="trabajos-titulo">
@@ -433,8 +391,6 @@ ${citas}
     ld,
     cuerpo,
     claseBody: 'pag-home',
-    claseCab: 'sobre-portada',
-    scripts: ['fondo.js'],
   });
 }
 
