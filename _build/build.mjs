@@ -190,8 +190,6 @@ function pie() {
 </footer>`;
 }
 
-// El script del head marca la pagina antes de pintarla: js, sin transiciones entre
-// paginas, estatico (celular) y el modo oscuro de prueba (?modo=oscuro, queda en la pestaña).
 function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '' }) {
   const canonical = BASE + ruta;
   const ogImagen = og.imagen || `${BASE}/assets/brand/og-nvy.png`;
@@ -207,7 +205,7 @@ ${MARCA}${aviso ? `\n${aviso}` : ''}
 <meta name="description" content="${esc(descripcion)}">
 <link rel="canonical" href="${canonical}">
 <meta name="robots" content="${indexar ? 'index, follow, max-image-preview:large' : 'noindex, follow'}">
-<meta name="theme-color" content="#0A1F5C">
+<meta name="theme-color" content="#0B0B0C">
 <meta name="author" content="Gaspar Quijada">
 ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
      No quitar: si desaparece, Google revoca la verificacion del dominio. -->
@@ -234,7 +232,7 @@ ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
 <link rel="preload" href="/assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/nvy.css?v=${CSS_V}">
-<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico'}catch(e){}try{var md=new URLSearchParams(location.search).get('modo');if(md)sessionStorage.setItem('nvy-modo',md);if(sessionStorage.getItem('nvy-modo')==='oscuro'){h.setAttribute('data-modo','oscuro');document.querySelector('meta[name=theme-color]').content='#0b0b0c'}}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
+<script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico'}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
 <script defer src="/assets/vendor/lenis.min.js"></script>
 <script defer src="/assets/js/nvy.js?v=${JS_V}"></script>
 <script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>

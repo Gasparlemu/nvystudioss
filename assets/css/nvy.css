@@ -1,6 +1,6 @@
 /* =========================================================================
    NVY Studios — portafolio
-   Sistema: blanco, casi negro y un solo acento azul marino (y su modo oscuro).
+   Sistema: fondo casi negro, texto blanco y un solo acento azul (el de la marca).
    Tipografias: Inter Tight (titulos) e Inter (texto, numeros, etiquetas).
    ========================================================================= */
 
@@ -22,16 +22,20 @@
 }
 
 :root {
-  --bg: #ffffff;
-  --bg-2: #f7f7f5;
-  --tinta: #0b0b0c;
-  --gris: #55565a;          /* texto secundario, 7.4:1 sobre blanco */
-  --gris-2: #6e6f73;        /* etiquetas, 5:1 sobre blanco */
-  --linea: rgba(11, 11, 12, .12);
-  --azul: #0a1f5c;
-  --azul-2: #071640;
+  color-scheme: dark;
+  --bg: #0b0b0c;
+  --bg-2: #151517;
+  --tinta: #f3f3ef;
+  --gris: #a6a7ab;          /* texto secundario, 7.9:1 sobre el fondo */
+  --gris-2: #8b8c91;        /* etiquetas, 5.6:1 */
+  --linea: rgba(243, 243, 239, .14);
+  /* Acento: el azul de la marca, un poco mas claro para que se lea sobre negro (4.6:1).
+     El azul marino puro (#0a1f5c) queda en botones, menu y degradados. */
+  --azul: #4a74e8;
+  --azul-2: #6d8ff0;
   --celeste: #a9c3f8;
-  /* Degradados del texto: de arriba hacia abajo, sin animacion */
+  /* Degradados del texto: de arriba hacia abajo, sin animacion.
+     El de los titulos es el mismo azul de la version blanca. */
   /* Brillo diagonal tenue encima: da el efecto de vidrio sin animar nada. */
   --brillo: linear-gradient(112deg, rgba(255,255,255,0) 32%, rgba(236,243,255,.7) 46%, rgba(255,255,255,0) 60%);
   --grad-azul: var(--brillo), linear-gradient(176deg, #0a1f5c 12%, #2a55cc 46%, #9dbaf7 74%, #e6eeff 100%);
@@ -47,26 +51,8 @@
   --display: "Inter Tight", "Inter", system-ui, sans-serif;
   --texto: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --cab-fondo: rgba(255, 255, 255, .78);   /* header al bajar */
-  --cortina: #0b0b0c;                      /* transicion entre paginas */
-}
-
-/* Modo oscuro (de prueba: se activa con ?modo=oscuro y queda en la pestaña).
-   Se invierten el blanco y el casi negro. El acento pasa a celeste, porque el azul
-   marino no se lee sobre negro, y los titulos van de blanco a celeste. */
-html[data-modo="oscuro"] {
-  color-scheme: dark;
-  --bg: #0b0b0c;
-  --bg-2: #151517;
-  --tinta: #f3f3ef;
-  --gris: #a6a7ab;          /* 7.9:1 sobre el fondo */
-  --gris-2: #8b8c91;        /* 5.6:1 */
-  --linea: rgba(243, 243, 239, .14);
-  --azul: #a9c3f8;
-  --azul-2: #c9d9fb;
-  --grad-azul: var(--grad-claro);
-  --cab-fondo: rgba(11, 11, 12, .72);
-  --cortina: #0a1f5c;
+  --cab-fondo: rgba(11, 11, 12, .72);      /* header al bajar */
+  --cortina: #0a1f5c;                      /* transicion entre paginas */
 }
 
 /* ---------- base ---------- */
@@ -91,7 +77,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 h1, h2, h3, p, dl, dd, figure, blockquote { margin: 0; }
 [hidden] { display: none !important; }
 :focus-visible { outline: 2px solid var(--azul); outline-offset: 3px; }
-::selection { background: var(--azul); color: var(--bg); }
+::selection { background: var(--azul); color: #fff; }
 
 .ico { width: 1em; height: 1em; flex: none; }
 .solo-lector {
@@ -262,19 +248,15 @@ html.menu-abierto .cab__menu { color: #fff; }
   padding: .06em .1em .26em .04em; margin: -.06em -.1em -.26em -.04em;
 }
 /* Nombres de proyecto con los colores de su marca (--m*, --n* salen de proyectos.json).
-   Mismo efecto de vidrio que el azul: tono oscuro arriba, claro abajo y un brillo. */
+   Efecto de vidrio con un brillo: sobre negro va el tono claro arriba y el principal
+   abajo (el tono mas oscuro de cada marca no se veria). */
 .marca {
   --brillo-marca: linear-gradient(112deg, rgba(255,255,255,0) 32%, rgba(255,255,255,.55) 46%, rgba(255,255,255,0) 60%);
-  --grad-marca: var(--brillo-marca), linear-gradient(176deg, var(--m1) 12%, var(--m2) 46%, var(--m3) 74%, var(--m4) 100%);
-  --grad-marca-b: var(--brillo-marca), linear-gradient(176deg, var(--n1, var(--m1)) 12%, var(--n2, var(--m2)) 46%, var(--n3, var(--m3)) 74%, var(--n4, var(--m4)) 100%);
-}
-.marca .palabra--degradado .letra { background-image: var(--grad-marca); }
-.marca .palabra--degradado .letra--b { background-image: var(--grad-marca-b); }
-/* En oscuro, al reves: el tono claro arriba y el principal abajo (el oscuro no se ve sobre negro). */
-html[data-modo="oscuro"] .marca {
   --grad-marca: var(--brillo-marca), linear-gradient(176deg, var(--m4) 8%, var(--m3) 42%, var(--m2) 82%);
   --grad-marca-b: var(--brillo-marca), linear-gradient(176deg, var(--n4, var(--m4)) 8%, var(--n3, var(--m3)) 42%, var(--n2, var(--m2)) 82%);
 }
+.marca .palabra--degradado .letra { background-image: var(--grad-marca); }
+.marca .palabra--degradado .letra--b { background-image: var(--grad-marca-b); }
 .js:not(.estatico) [data-reveal="letras"] .letra,
 .js:not(.estatico) .portada__marca .letra {
   transform: translateY(112%) rotate(7deg);
@@ -384,11 +366,8 @@ html[data-modo="oscuro"] .marca {
 .obra__nombre > span { display: inline-block; transition: transform .6s var(--sale), color .35s; }
 /* Al pasar el mouse el nombre toma los colores de su marca (el degradado ya esta debajo del texto). */
 .obra__nombre .tramo { -webkit-background-clip: text; background-clip: text; transition: color .35s; }
-/* En texto chico, solo los tres tonos fuertes (sin el casi blanco de abajo). */
-.obra__nombre.marca .tramo { background-image: linear-gradient(176deg, var(--m1) 10%, var(--m2) 55%, var(--m3) 100%); }
-.obra__nombre.marca .tramo--b { background-image: linear-gradient(176deg, var(--n1) 10%, var(--n2) 55%, var(--n3) 100%); }
-html[data-modo="oscuro"] .obra__nombre.marca .tramo { background-image: linear-gradient(176deg, var(--m4) 0%, var(--m3) 45%, var(--m2) 100%); }
-html[data-modo="oscuro"] .obra__nombre.marca .tramo--b { background-image: linear-gradient(176deg, var(--n4) 0%, var(--n3) 45%, var(--n2) 100%); }
+.obra__nombre.marca .tramo { background-image: linear-gradient(176deg, var(--m4) 0%, var(--m3) 45%, var(--m2) 100%); }
+.obra__nombre.marca .tramo--b { background-image: linear-gradient(176deg, var(--n4) 0%, var(--n3) 45%, var(--n2) 100%); }
 /* En celular (sin mouse) la fila abierta muestra el nombre con sus colores. */
 .obras[data-vista="lista"] .obra.is-abierta .obra__nombre.marca .tramo { color: transparent; }
 .obra__flecha { display: flex; align-self: center; font-size: 20px; transition: transform .5s var(--sale), color .35s; }

@@ -14,40 +14,6 @@
   const animar = !estatico && !reducido;
   const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  /* ---------- modo oscuro de prueba ---------- */
-  // Si la pestaña entro con ?modo=oscuro (o ?modo=claro) aparece un interruptor arriba al
-  // centro para comparar los dos modos. Sin ese parametro no existe.
-  try {
-    if (sessionStorage.getItem('nvy-modo')) {
-      const caja = d.createElement('div');
-      caja.setAttribute('style', 'position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:70;display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(128,128,128,.22);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);font:500 13px/1 var(--texto)');
-      const pintar = () => {
-        const oscuro = html.getAttribute('data-modo') === 'oscuro';
-        [...caja.children].forEach((b) => {
-          const activo = (b.dataset.m === 'oscuro') === oscuro;
-          b.style.cssText = `padding:9px 15px;border-radius:999px;background:${activo ? 'var(--tinta)' : 'transparent'};color:${activo ? 'var(--bg)' : 'var(--tinta)'}`;
-        });
-      };
-      for (const m of ['claro', 'oscuro']) {
-        const b = d.createElement('button');
-        b.type = 'button';
-        b.dataset.m = m;
-        b.textContent = m;
-        b.addEventListener('click', () => {
-          if (m === 'oscuro') html.setAttribute('data-modo', 'oscuro');
-          else html.removeAttribute('data-modo');
-          sessionStorage.setItem('nvy-modo', m);
-          const meta = $('meta[name="theme-color"]');
-          if (meta) meta.content = m === 'oscuro' ? '#0b0b0c' : '#0A1F5C';
-          pintar();
-        });
-        caja.appendChild(b);
-      }
-      pintar();
-      d.body.appendChild(caja);
-    }
-  } catch (e) { /* sin sessionStorage (modo privado) */ }
-
   /* ---------- scroll suave ---------- */
   let lenis = null;
   if (!reducido && window.Lenis) {

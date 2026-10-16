@@ -36,4 +36,4 @@ Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer pu
 - Instagram: completar `sitio.instagram` en el JSON. Aparece automáticamente en el menú, en "sobre mí" y en los datos estructurados.
 - Imagen para compartir el link: `node _build/og.mjs`.
 - Si cambia la fuente o el tracking de los títulos gigantes: `node _build/calibrar-anchos.mjs`.
-- Modo oscuro de prueba: abrir cualquier página con `?modo=oscuro` (o `?modo=claro`). La pestaña lo recuerda y aparece un interruptor arriba al centro para comparar.
+- Colores: la web es negra con el azul de la marca. Todo sale de las variables de `:root` en `assets/css/nvy.css`; la version blanca anterior queda en el commit 3f846fc.
