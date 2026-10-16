@@ -237,10 +237,9 @@ ${MARCA}${aviso ? `\n${aviso}` : ''}
 ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
      No quitar: si desaparece, Google revoca la verificacion del dominio. -->
 <meta name="google-site-verification" content="qMeHLmhfhbZDGK7SI2YYOOThsJwS5k1eij4IBdaVsSo">
-` : ''}<link rel="icon" href="/assets/brand/favicon.ico" sizes="any">
-<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/assets/brand/favicon-16.png" sizes="16x16" type="image/png">
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png">
+` : ''}<link rel="icon" href="/assets/brand/favicon.ico?v=${version('assets/brand/favicon.ico')}" sizes="32x32">
+<link rel="icon" href="/assets/brand/favicon.svg?v=${version('assets/brand/favicon.svg')}" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/brand/apple-touch-icon.png?v=${version('assets/brand/apple-touch-icon.png')}">
 <link rel="manifest" href="/site.webmanifest">
 <meta property="og:type" content="${og.tipo || 'website'}">
 <meta property="og:site_name" content="NVY Studios">
