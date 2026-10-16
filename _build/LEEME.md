@@ -10,6 +10,8 @@ Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer pu
    - `estado`: `lanzado`, `en-desarrollo` o `demo`.
    - `avance`: solo en desarrollo. Ejemplo: `{ "fase": "fase 03 · desarrollo", "porcentaje": 60 }`.
    - `plan`: puede ir vacío (`""`); en ese caso no se muestra.
+   - `colores`: los 4 tonos de la marca del cliente para pintar su nombre (oscuro, principal, claro, brillo), sacados de su logo o su sitio. Ej.: `["#8c223a", "#ad2d49", "#d9577a", "#f6dbe2"]`. Sin este campo el nombre va en el azul de NVY.
+   - `colores2` + `corte`: para nombres de dos tonos como en el logo. `corte` = cuántas letras (sin espacios) llevan el primer color. Ej. Oncosur: `"corte": 4` (Onco amarillo, sur celeste).
 2. Capturas (escritorio y celular, 3 vistas cada uno):
    ```
    npm i --no-save sharp
@@ -34,3 +36,4 @@ Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer pu
 - Instagram: completar `sitio.instagram` en el JSON. Aparece automáticamente en el menú, en "sobre mí" y en los datos estructurados.
 - Imagen para compartir el link: `node _build/og.mjs`.
 - Si cambia la fuente o el tracking de los títulos gigantes: `node _build/calibrar-anchos.mjs`.
+- Fondo de la portada (`assets/js/fondo.js`): con `?fondo` en la dirección aparece un selector para comparar versiones (ej. `/?fondo=seda`). Sin el parámetro se usa la primera de la lista `VERSIONES`.

@@ -108,27 +108,59 @@
     }
   }
 
-  /* ---------- portada: la tarjeta de proyectos rota sola ---------- */
-  // La barrita de abajo marca el tiempo; al terminar pasa al siguiente proyecto.
-  // Con el mouse encima se pausa (CSS). En celular queda fijo el primero.
-  const carrusel = $('[data-carrusel]');
-  if (carrusel && animar) {
-    const tarjetas = $$('.carrusel__item', carrusel);
-    const barra = $('[data-carrusel-barra]', carrusel);
+  /* ---------- portada: los proyectos van cambiando abajo a la derecha ---------- */
+  // Cada barrita marca el tiempo de un proyecto; al llenarse pasa al siguiente.
+  // Con el mouse encima se pausa (CSS) y tocar una barrita salta a ese proyecto.
+  // En celular queda fijo el primero.
+  const destacados = $('[data-destacados]');
+  if (destacados && animar) {
+    const nombres = $$('.destacado', destacados);
+    const barras = $$('.destacados__barra', destacados);
     let actual = 0;
-    const correr = () => { barra.classList.remove('corre'); void barra.offsetWidth; barra.classList.add('corre'); };
-    barra.addEventListener('animationend', () => {
-      const vieja = tarjetas[actual];
-      vieja.classList.remove('is-actual');
-      vieja.classList.add('sale');
-      vieja.tabIndex = -1;
-      setTimeout(() => vieja.classList.remove('sale'), 1100);
-      actual = (actual + 1) % tarjetas.length;
-      tarjetas[actual].classList.add('is-actual');
-      tarjetas[actual].removeAttribute('tabindex');
+    const correr = () => {
+      barras.forEach((b) => $('i', b).classList.remove('corre'));
+      const i = $('i', barras[actual]);
+      void i.offsetWidth;
+      i.classList.add('corre');
+    };
+    const ir = (i) => {
+      if (i === actual) return;
+      const viejo = nombres[actual];
+      viejo.classList.remove('is-actual');
+      viejo.classList.add('sale');
+      viejo.tabIndex = -1;
+      viejo.setAttribute('aria-hidden', 'true');
+      clearTimeout(viejo.salida);
+      viejo.salida = setTimeout(() => viejo.classList.remove('sale'), 900);
+      // El nuevo siempre entra desde abajo, aunque venga saliendo recien.
+      const nuevo = nombres[i];
+      clearTimeout(nuevo.salida);
+      nuevo.classList.remove('sale');
+      nuevo.classList.add('quieto');
+      void nuevo.offsetWidth;
+      nuevo.classList.remove('quieto');
+      nuevo.classList.add('is-actual');
+      nuevo.removeAttribute('tabindex');
+      nuevo.removeAttribute('aria-hidden');
+      actual = i;
+      barras.forEach((b, k) => { b.classList.toggle('is-vista', k < i); b.classList.toggle('is-actual', k === i); });
       correr();
+    };
+    destacados.addEventListener('animationend', (e) => {
+      if (e.target.classList.contains('corre')) ir((actual + 1) % nombres.length);
     });
-    if (tarjetas.length > 1) correr();
+    barras.forEach((b, k) => b.addEventListener('click', () => ir(k)));
+    if (nombres.length > 1) {
+      const empezar = () => setTimeout(correr, 900);
+      if (html.classList.contains('is-listo')) empezar();
+      else {
+        new MutationObserver((_, obs) => {
+          if (!html.classList.contains('is-listo')) return;
+          obs.disconnect();
+          empezar();
+        }).observe(html, { attributes: true, attributeFilter: ['class'] });
+      }
+    }
   }
 
   /* ---------- cinta de rubros: acelera con el scroll y vuelve a su ritmo ---------- */
@@ -236,22 +268,27 @@
 
   const cambiar = (aplicar) => {
     ocultarPrevia();
-    obras.classList.add('is-cambiando');
-    setTimeout(() => {
-      aplicar();
-      let k = 0;
-      for (const li of items) {
-        li.classList.remove('is-entra', 'is-abierta');
-        li.classList.add('is-visible');
-        if (li.hidden || !animar) continue;
-        li.style.setProperty('--k', k++);
-        void li.offsetWidth;
-        li.classList.add('is-entra');
-      }
-      obras.classList.remove('is-cambiando');
-      if (lenis) lenis.resize();
-    }, animar ? 230 : 0);
+    aplicar();
+    let k = 0;
+    for (const li of items) {
+      li.classList.remove('is-entra', 'is-abierta');
+      li.classList.add('is-visible');
+      if (li.hidden || !animar || obras.dataset.vista !== 'lista') continue;
+      li.style.setProperty('--k', k++);
+      void li.offsetWidth;
+      li.classList.add('is-entra');
+    }
+    if (lenis) lenis.resize();
   };
+
+  // Las capturas se descargan apenas la pagina queda libre: asi la grilla, la fila
+  // abierta en el celular y la captura del centro aparecen al tiro.
+  const alQuedarLibre = (fn) => {
+    const libre = () => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 300));
+    if (d.readyState === 'complete') libre();
+    else addEventListener('load', libre, { once: true });
+  };
+  alQuedarLibre(() => $$('img[loading="lazy"]', obras).forEach((img) => { img.loading = 'eager'; }));
 
   for (const b of $$('[data-filtro]')) {
     b.addEventListener('click', () => {
@@ -303,7 +340,7 @@
   });
 
   // Escritorio + lista: la captura aparece siempre al centro de la pantalla. Al
-  // bajar a otra fila la nueva entra desde abajo; al subir, desde arriba.
+  // pasar a otra fila cambia al tiro, con un desenfoque cortisimo.
   const previa = $('[data-previa]');
   if (!previa || reducido || !puntero.matches) return;
   const marco = d.createElement('div');
@@ -318,33 +355,29 @@
         + `<img src="${base}-800.webp" alt="" decoding="async">`;
       marco.appendChild(p);
       fotos.set(base, p);
+      $('img', p).decode().catch(() => {});
     }
     return fotos.get(base);
   };
   let actual = null;
-  let indiceActual = -1;
   let activa = false;
   let cx = 0;
   let cy = 0;
   const mostrar = (li) => {
     const p = foto(li.dataset.preview);
-    const i = items.indexOf(li);
     if (!activa) {
-      // Al volver a aparecer, la foto ya esta en su lugar y solo se abre el marco.
-      fotos.forEach((f) => { f.className = f === p ? 'is-actual quieta' : 'quieta'; });
-      void marco.offsetWidth;
-      fotos.forEach((f) => f.classList.remove('quieta'));
-      actual = p; indiceActual = i; activa = true;
+      // Al volver a aparecer solo se abre el marco, con la foto ya puesta.
+      fotos.forEach((f) => f.classList.toggle('is-actual', f === p));
+      actual = p;
+      activa = true;
       previa.classList.add('is-activa');
       return;
     }
     if (p === actual) return;
-    const baja = i > indiceActual;
-    p.className = `quieta ${baja ? 'sale-abajo' : 'sale-arriba'}`;
-    void p.offsetWidth;
-    p.className = 'is-actual';
-    if (actual) actual.className = baja ? 'sale-arriba' : 'sale-abajo';
-    actual = p; indiceActual = i;
+    actual.classList.remove('is-actual');
+    p.classList.add('is-actual');
+    actual = p;
+    marco.animate([{ filter: 'blur(10px)' }, { filter: 'blur(0)' }], { duration: 170, easing: 'ease-out' });
   };
   ocultarPrevia = () => { activa = false; previa.classList.remove('is-activa'); };
   const filaBajo = (px, py) => {
@@ -358,9 +391,7 @@
     else ocultarPrevia();
   };
 
-  obras.addEventListener('pointerenter', () => {
-    items.forEach((li) => li.dataset.preview && foto(li.dataset.preview));
-  }, { once: true });
+  alQuedarLibre(() => items.forEach((li) => li.dataset.preview && foto(li.dataset.preview)));
   obras.addEventListener('pointermove', (e) => { cx = e.clientX; cy = e.clientY; revisar(); }, { passive: true });
   obras.addEventListener('pointerleave', ocultarPrevia);
   // Si la pagina se mueve con el mouse quieto, la fila bajo el cursor cambia.

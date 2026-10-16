@@ -40,6 +40,12 @@ for (const p of todos) {
   if (p.estado === 'en-desarrollo' && p.avance && !(p.avance.porcentaje >= 0 && p.avance.porcentaje <= 100)) {
     throw new Error(`"${p.slug}": avance.porcentaje tiene que ir de 0 a 100`);
   }
+  for (const k of ['colores', 'colores2']) {
+    if (p[k] && !(Array.isArray(p[k]) && p[k].length === 4 && p[k].every((x) => /^#[0-9a-f]{6}$/i.test(x)))) {
+      throw new Error(`"${p.slug}": ${k} tiene que ser una lista de 4 colores hex (oscuro, principal, claro, brillo)`);
+    }
+  }
+  if (p.colores2 && !(p.corte > 0)) throw new Error(`"${p.slug}": con colores2 falta "corte" (letras del primer tramo)`);
   slugs.add(p.slug);
 }
 
@@ -70,6 +76,14 @@ const TRAZOS = {
   whatsapp: '<path d="M4.6 19.4l1.1-3.5a8 8 0 1 1 3 2.9z"/><path d="M9.3 8.9c.1 2.4 2.3 4.7 4.9 5l.9-1.2-1.6-.9-.8.6c-.8-.4-1.5-1.1-1.9-1.9l.6-.8-.9-1.6z"/>',
 };
 const icono = (nombre) => `<svg class="ico ico--${nombre}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">${TRAZOS[nombre]}</svg>`;
+
+// Logos de redes en relleno (Simple Icons, licencia CC0): se ven nitidos en tamano chico.
+const REDES = {
+  instagram: 'M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z',
+  linkedin: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
+  whatsapp: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z',
+};
+const logoRed = (nombre) => `<svg class="ico ico--${nombre}" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true" focusable="false"><path d="${REDES[nombre]}"/></svg>`;
 
 // Lee las capturas que existan para un proyecto: e1..eN (escritorio) y m1..mN (celular).
 function vistas(slug) {
@@ -110,18 +124,40 @@ const sinCaptura = (p) => `<div class="sin-captura" aria-hidden="true"><span>${e
 // mascara y lleva su ancho (--w); cada letra lleva su posicion dentro de la palabra
 // (--x, en em). Con eso el degradado se ve continuo en toda la palabra aunque cada
 // letra sea su propia caja. El titulo que lo usa lleva aria-label con el texto entero.
-function letras(texto, { degradado = false, claro = false, desde = 0 } = {}) {
+// Con "corte", las letras desde esa posicion (sin contar espacios) usan el segundo color
+// de la marca (nombres de dos tonos, como en el logo de Oncosur).
+function letras(texto, { degradado = false, claro = false, desde = 0, corte = Infinity } = {}) {
   let n = desde;
+  let k = 0;
   return texto.split(' ').map((palabra) => {
     let x = 0;
     const ls = [...palabra].map((ch) => {
-      const s = `<span class="letra" style="--n:${n++};--x:${x.toFixed(3)}">${esc(ch)}</span>`;
+      const s = `<span class="letra${k++ >= corte ? ' letra--b' : ''}" style="--n:${n++};--x:${x.toFixed(3)}">${esc(ch)}</span>`;
       x += anchoEm(ch);
       return s;
     }).join('');
     const clase = degradado ? ' palabra--degradado' : claro ? ' palabra--degradado palabra--claro' : '';
     return `<span class="palabra${clase}" style="--w:${anchoEm(palabra).toFixed(3)}" aria-hidden="true">${ls}</span>`;
   }).join(' ');
+}
+
+// Colores de marca de cada proyecto (sacados de su logo o su sitio) para pintar su nombre.
+// Van como variables CSS: --m1..4 la paleta principal y --n1..4 la del segundo tramo.
+const estiloMarca = (p) => [
+  ...(p.colores || []).map((x, i) => `--m${i + 1}:${x}`),
+  ...(p.colores2 || []).map((x, i) => `--n${i + 1}:${x}`),
+].join(';');
+// El mismo corte para textos que no se parten en letras (la lista de trabajos).
+function tramos(texto, corte) {
+  if (!corte) return `<span class="tramo">${esc(texto)}</span>`;
+  let k = 0;
+  let i = 0;
+  for (; i < texto.length; i++) {
+    if (texto[i] === ' ') continue;
+    if (k === corte) break;
+    k++;
+  }
+  return `<span class="tramo">${esc(texto.slice(0, i))}</span><span class="tramo tramo--b">${esc(texto.slice(i))}</span>`;
 }
 
 // ---------- piezas comunes ----------
@@ -266,7 +302,7 @@ function paginaHome() {
     const portada = v.e[0];
     return `      <li class="obra" data-estado="${p.estado}"${portada ? ` data-preview="${portada.base}"` : ''}>
         <a class="obra__link" href="/trabajos/${p.slug}">
-          <span class="obra__nombre"><span>${esc(p.nombre)}</span></span>
+          <span class="obra__nombre${p.colores ? ' marca' : ''}"${p.colores ? ` style="${estiloMarca(p)}"` : ''}><span>${tramos(p.nombre, p.corte)}</span></span>
           <span class="obra__rubro">${esc(p.rubro)}</span>
           <span class="obra__anio">${p.anio}</span>
           <span class="obra__estado">${ESTADOS[p.estado]}</span>
@@ -294,14 +330,16 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
 
   const linea1 = 'Webs a medida para';
   const linea2 = 'marcas que se atreven.';
-  const carrusel = proyectos.map((p) => ({ p, v: vistas(p.slug).e[0] })).filter(({ v }) => v);
-  const tarjetas = carrusel.map(({ p, v }, i) => `        <a class="carrusel__item${i === 0 ? ' is-actual' : ''}" href="/trabajos/${p.slug}"${i === 0 ? '' : ' tabindex="-1"'}>
-          <span class="carrusel__foto">${picture(v, { sizes: '320px', alt: '', carga: i === 0 ? 'eager' : 'lazy' })}</span>
-          <span class="carrusel__nombre"><span>${esc(p.nombre)}</span>${icono('diagonal')}</span>
-        </a>`).join('\n');
+  // Abajo a la derecha: el nombre de cada proyecto, que cambia letra por letra.
+  // Las barritas marcan el tiempo de cada uno y sirven para saltar a otro.
+  const deletrear = (texto) => [...texto].map((ch, i) => (ch === ' '
+    ? '<span class="dl dl--esp"> </span>'
+    : `<span class="dl" style="--i:${i}">${esc(ch)}</span>`)).join('');
+  const destacados = proyectos.map((p, i) => `          <a class="destacado${i === 0 ? ' is-actual' : ''}" href="/trabajos/${p.slug}" aria-label="${esc(p.nombre)}"${i === 0 ? '' : ' tabindex="-1" aria-hidden="true"'}><span class="destacado__nombre">${deletrear(p.nombre)}</span>${icono('diagonal')}</a>`).join('\n');
+  const barras = proyectos.map((p, i) => `<button class="destacados__barra${i === 0 ? ' is-actual' : ''}" type="button" aria-label="Mostrar ${esc(p.nombre)}"><i></i></button>`).join('');
   const redesHero = [['Instagram', 'instagram', sitio.instagram], ['LinkedIn', 'linkedin', sitio.linkedin], ['WhatsApp', 'whatsapp', wa()]]
     .filter(([, , u]) => u)
-    .map(([n, ic, u]) => `<a href="${esc(u)}" ${externo} aria-label="${n}">${icono(ic)}</a>`).join('');
+    .map(([n, ic, u]) => `<a href="${esc(u)}" ${externo} aria-label="${n}">${logoRed(ic)}</a>`).join('');
 
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
@@ -320,9 +358,12 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
         <p class="portada__desc">${esc(sitio.heroTexto)}</p>
         <a class="portada__cta" href="#trabajos">Explora nuestro trabajo ${icono('diagonal')}</a>
       </div>
-      <div class="portada__proyectos" data-carrusel aria-label="Proyectos destacados">
-${tarjetas}
-        <span class="carrusel__barra" aria-hidden="true"><span data-carrusel-barra></span></span>
+      <div class="portada__proyectos" data-destacados>
+        <p class="destacados__rotulo">Proyectos recientes</p>
+        <div class="destacados__nombres">
+${destacados}
+        </div>
+        <div class="destacados__barras" role="group" aria-label="Elegir proyecto">${barras}</div>
       </div>
     </div>
   </section>
@@ -416,15 +457,15 @@ function paginaProyecto(p, i) {
         </div>` : '';
 
   const piezas = [];
-  if (v.e[0]) piezas.push(`    <figure class="gal gal--ancha" data-reveal="foto">${picture(v.e[0], { sizes: '(min-width: 1400px) 1320px, 94vw', alt: `Portada del sitio de ${nombre} en escritorio`, carga: 'eager' })}<figcaption>escritorio</figcaption></figure>`);
-  if (v.m.length) piezas.push(`    <figure class="gal gal--moviles" data-reveal="foto"><div class="gal__moviles" style="--n:${v.m.length}">${v.m.map((m, k) => picture(m, { sizes: '(min-width: 900px) 24vw, 42vw', alt: `Vista ${k + 1} del sitio de ${nombre} en celular` })).join('')}</div><figcaption>celular</figcaption></figure>`);
-  if (v.e.length > 1) piezas.push(`    <div class="gal gal--dos">${v.e.slice(1).map((e, k) => `<figure data-reveal="foto">${picture(e, { sizes: '(min-width: 900px) 46vw, 94vw', alt: `Sección ${k + 2} del sitio de ${nombre} en escritorio` })}</figure>`).join('')}</div>`);
+  if (v.e[0]) piezas.push(`    <figure class="gal gal--ancha">${picture(v.e[0], { sizes: '(min-width: 1400px) 1320px, 94vw', alt: `Portada del sitio de ${nombre} en escritorio`, carga: 'eager' })}<figcaption>escritorio</figcaption></figure>`);
+  if (v.m.length) piezas.push(`    <figure class="gal gal--moviles"><div class="gal__moviles" style="--n:${v.m.length}">${v.m.map((m, k) => picture(m, { sizes: '(min-width: 900px) 24vw, 42vw', alt: `Vista ${k + 1} del sitio de ${nombre} en celular` })).join('')}</div><figcaption>celular</figcaption></figure>`);
+  if (v.e.length > 1) piezas.push(`    <div class="gal gal--dos">${v.e.slice(1).map((e, k) => `<figure>${picture(e, { sizes: '(min-width: 900px) 46vw, 94vw', alt: `Sección ${k + 2} del sitio de ${nombre} en escritorio` })}</figure>`).join('')}</div>`);
   if (!piezas.length) piezas.push(`    <figure class="gal gal--ancha">${sinCaptura(p)}</figure>`);
 
   const cuerpo = `<main id="contenido" class="proyecto">
   <header class="proyecto__cab">
     <a class="volver" href="/#trabajos">${icono('izquierda')} trabajos</a>
-    <h1 class="proyecto__titulo" aria-label="${esc(p.nombre)}" data-reveal="letras" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}">${letras(p.nombre, { degradado: true })}</h1>
+    <h1 class="proyecto__titulo${p.colores ? ' marca' : ''}" aria-label="${esc(p.nombre)}" data-reveal="letras" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}${p.colores ? `;${estiloMarca(p)}` : ''}">${letras(p.nombre, { degradado: true, corte: p.corte })}</h1>
     <dl class="ficha">
 ${ficha.map(([dt, dd]) => `      <div class="ficha__item"><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}
     </dl>
@@ -445,7 +486,7 @@ ${piezas.join('\n')}
   <nav class="siguiente" aria-label="Siguiente proyecto">
     <a class="siguiente__link" href="/trabajos/${sig.slug}" aria-label="Siguiente proyecto: ${esc(sig.nombre)}">
       <span class="siguiente__lbl">siguiente proyecto ${icono('derecha')}</span>
-      <span class="siguiente__nombre" data-reveal="letras" style="--em:${anchoEm(sig.nombre).toFixed(3)};--em-max:${Math.max(...sig.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}">${letras(sig.nombre, { degradado: true })}</span>
+      <span class="siguiente__nombre${sig.colores ? ' marca' : ''}" data-reveal="letras" style="--em:${anchoEm(sig.nombre).toFixed(3)};--em-max:${Math.max(...sig.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}${sig.colores ? `;${estiloMarca(sig)}` : ''}">${letras(sig.nombre, { degradado: true, corte: sig.corte })}</span>
       <span class="siguiente__rubro">${esc(sig.rubro)}</span>
     </a>
   </nav>
