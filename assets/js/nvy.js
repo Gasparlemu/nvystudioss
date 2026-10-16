@@ -44,7 +44,9 @@
   const boton = $('[data-menu-boton]');
   const botonTxt = $('[data-menu-txt]');
   const abierto = () => menu.classList.contains('is-abierto');
-  const abrir = () => {
+  // El foco solo salta al menu si se abrio con el teclado: con el dedo o el mouse,
+  // Safari en iPhone le dibujaria un recuadro a "trabajos".
+  const abrir = (conTeclado = false) => {
     menu.inert = false;
     menu.classList.add('is-abierto');
     html.classList.add('menu-abierto');
@@ -52,7 +54,7 @@
     boton.setAttribute('aria-label', 'Cerrar menú');
     botonTxt.textContent = 'cerrar';
     if (lenis) lenis.stop(); else html.style.overflow = 'hidden';
-    setTimeout(() => { const primero = $('.menu__link', menu); if (primero) primero.focus({ preventScroll: true }); }, 60);
+    if (conTeclado) setTimeout(() => { const primero = $('.menu__link', menu); if (primero) primero.focus({ preventScroll: true }); }, 60);
   };
   const cerrar = (devolverFoco = true) => {
     menu.classList.remove('is-abierto');
@@ -64,8 +66,9 @@
     if (lenis) lenis.start(); else html.style.overflow = '';
     if (devolverFoco) boton.focus({ preventScroll: true });
   };
-  boton.addEventListener('click', () => (abierto() ? cerrar() : abrir()));
-  $('[data-menu-cerrar]', menu).addEventListener('click', () => cerrar());
+  // Un click hecho con el teclado (Enter o espacio) llega con detail 0.
+  boton.addEventListener('click', (e) => (abierto() ? cerrar(e.detail === 0) : abrir(e.detail === 0)));
+  $('[data-menu-cerrar]', menu).addEventListener('click', () => cerrar(false));
   d.addEventListener('keydown', (e) => {
     if (!abierto()) return;
     if (e.key === 'Escape') { e.preventDefault(); cerrar(); return; }
