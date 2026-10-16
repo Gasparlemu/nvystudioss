@@ -160,6 +160,12 @@ const tonoVisible = (paleta, i) => (luminancia(paleta[i]) < 0.08 ? paleta[i + 1]
 const coloresLinea = (p) => (!p ? null : p.linea || (p.colores
   ? [tonoVisible(p.colores, 1), p.colores2 ? tonoVisible(p.colores2, 1) : p.colores[2]]
   : null));
+// Telon de la transicion al entrar a un proyecto: los colores de su nombre, de claro
+// arriba a oscuro abajo. Si la marca tiene dos tonos (como Oncosur), mitad y mitad.
+const tramoTelon = (pal) => `linear-gradient(176deg, ${pal[2]}, ${pal[1]} 55%, ${pal[0]})`;
+const telon = (p) => (!p.colores ? '' : p.colores2
+  ? `${tramoTelon(p.colores)} left / 50% 100% no-repeat, ${tramoTelon(p.colores2)} right / 50% 100% no-repeat`
+  : tramoTelon(p.colores));
 // El mismo corte para textos que no se parten en letras (la lista de trabajos).
 function tramos(texto, corte) {
   if (!corte) return `<span class="tramo">${esc(texto)}</span>`;
@@ -211,14 +217,14 @@ function pie() {
 </footer>`;
 }
 
-function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '' }) {
+function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '', cortina = '' }) {
   const canonical = BASE + ruta;
   const ogImagen = og.imagen || `${BASE}/assets/brand/og-nvy.png`;
   const ogTitulo = esc(og.titulo || titulo);
   const ogDesc = esc(og.descripcion || descripcion);
   return `<!doctype html>
 ${MARCA}${aviso ? `\n${aviso}` : ''}
-<html lang="es-CL" class="no-js">
+<html lang="es-CL" class="no-js"${cortina ? ` style="--cortina:${cortina}"` : ''}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -516,6 +522,7 @@ ${piezas.join('\n')}
     ld,
     cuerpo,
     claseBody: 'pag-proyecto',
+    cortina: telon(p),
   });
 }
 

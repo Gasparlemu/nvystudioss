@@ -52,7 +52,7 @@
   --texto: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --cab-fondo: rgba(11, 11, 12, .72);      /* header al bajar */
-  --cortina: #0a1f5c;                      /* transicion entre paginas */
+  --cortina: #0a1f5c;                      /* transicion entre paginas (cada proyecto pone la suya) */
 }
 
 /* ---------- base ---------- */
