@@ -45,6 +45,9 @@ for (const p of todos) {
       throw new Error(`"${p.slug}": ${k} tiene que ser una lista de 4 colores hex (oscuro, principal, claro, brillo)`);
     }
   }
+  if (p.linea && !(Array.isArray(p.linea) && p.linea.length === 2 && p.linea.every((x) => /^#[0-9a-f]{6}$/i.test(x)))) {
+    throw new Error(`"${p.slug}": linea tiene que ser una lista de 2 colores hex (izquierda, derecha)`);
+  }
   if (p.colores2 && !(p.corte > 0)) throw new Error(`"${p.slug}": con colores2 falta "corte" (letras del primer tramo)`);
   slugs.add(p.slug);
 }
@@ -145,6 +148,18 @@ const estiloMarca = (p) => [
   ...(p.colores || []).map((x, i) => `--m${i + 1}:${x}`),
   ...(p.colores2 || []).map((x, i) => `--n${i + 1}:${x}`),
 ].join(';');
+// Dos colores planos de la marca para la linea de su reseña: "linea" en el JSON si esta,
+// o el principal y el del segundo tramo (el claro, si la marca tiene uno solo). Sobre
+// negro, un tono muy oscuro se cambia por el siguiente mas claro para que la linea se vea.
+const luminancia = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const tonoVisible = (paleta, i) => (luminancia(paleta[i]) < 0.08 ? paleta[i + 1] : paleta[i]);
+const coloresLinea = (p) => (!p ? null : p.linea || (p.colores
+  ? [tonoVisible(p.colores, 1), p.colores2 ? tonoVisible(p.colores2, 1) : p.colores[2]]
+  : null));
 // El mismo corte para textos que no se parten en letras (la lista de trabajos).
 function tramos(texto, corte) {
   if (!corte) return `<span class="tramo">${esc(texto)}</span>`;
@@ -321,10 +336,13 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
 `;
 
   const cinta = sitio.rubros.map((r) => `<span>${esc(r)}</span><i></i>`).join('');
-  const citas = testimoniosVisibles.map((t, i) => `      <li class="cita">
+  const citas = testimoniosVisibles.map((t) => {
+    const linea = coloresLinea(proyectos.find((p) => p.slug === t.proyecto));
+    return `      <li class="cita${linea ? ' cita--marca' : ''}"${linea ? ` style="--l1:${linea[0]};--l2:${linea[1]}"` : ''}>
         <blockquote class="cita__txt" data-reveal="texto"><p>“${esc(t.texto)}”</p></blockquote>
         <p class="cita__autor"><strong>${esc(t.nombre)}</strong><span>${esc(t.cargo)}</span></p>
-      </li>`).join('\n');
+      </li>`;
+  }).join('\n');
 
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">

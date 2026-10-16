@@ -467,6 +467,13 @@ html.menu-abierto .cab__menu { color: #fff; }
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap);
   padding: clamp(28px, 3.4vw, 48px) 0; border-top: 1px solid var(--linea);
 }
+/* Reseña de un cliente con marca: la linea de arriba va mitad y mitad con sus dos
+   colores (--l1 a la izquierda, --l2 a la derecha), planos. */
+.cita--marca { position: relative; border-top-color: transparent; }
+.cita--marca::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 2px;
+  background: linear-gradient(90deg, var(--l1) 50%, var(--l2) 50%);
+}
 .cita__txt {
   grid-column: 1 / 10;
   font-family: var(--display); font-weight: 400; letter-spacing: -.025em; line-height: 1.22;
