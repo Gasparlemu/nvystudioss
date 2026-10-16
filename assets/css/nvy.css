@@ -663,7 +663,7 @@ a.contacto__dato:hover { color: var(--azul); }
 
 /* ---------- transicion entre paginas (View Transitions entre documentos) ----------
    La pagina vieja se recorta hacia arriba y la nueva aparece desde abajo,
-   con el casi negro de fondo: una cortina que sube. */
+   con el telon de fondo (azul, o los colores del proyecto al entrar a uno). Tambien en celular. */
 @view-transition { navigation: auto; }
 ::view-transition { background: var(--cortina); }
 ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
@@ -671,9 +671,6 @@ a.contacto__dato:hover { color: var(--azul); }
 ::view-transition-new(root) { animation: vt-entra .7s var(--cambia) .32s both; }
 @keyframes vt-sale { to { clip-path: inset(0 0 100% 0); } }
 @keyframes vt-entra { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
-@media (max-width: 720px), (hover: none) {
-  @view-transition { navigation: none; }
-}
 /* Navegadores sin transicion entre paginas: fundido de entrada simple. */
 .sin-vt:not(.estatico) body { animation: fundido .6s ease both; }
 @keyframes fundido { from { opacity: 0; } }
