@@ -110,6 +110,28 @@
     }
   }
 
+  /* ---------- sobre mi: el texto se enciende al bajar ---------- */
+  // --avance va de 0 a la cantidad de palabras mientras el parrafo cruza la pantalla:
+  // empieza cuando asoma por abajo y termina cuando su final llega al 40 % de la altura.
+  // Es un solo valor por cuadro, asi que no compite con el scroll.
+  const textoScroll = $('[data-scroll-texto]');
+  if (textoScroll && !reducido) {
+    const total = textoScroll.children.length;
+    let pendienteTexto = false;
+    const encender = () => {
+      pendienteTexto = false;
+      const r = textoScroll.getBoundingClientRect();
+      const inicio = innerHeight * 0.85;
+      const fin = innerHeight * 0.4;
+      const p = Math.min(1, Math.max(0, (inicio - r.top) / (inicio - fin + r.height)));
+      textoScroll.style.setProperty('--avance', (p * (total + 1)).toFixed(2));
+    };
+    textoScroll.classList.add('is-activo');
+    addEventListener('scroll', () => { if (!pendienteTexto) { pendienteTexto = true; requestAnimationFrame(encender); } }, { passive: true });
+    addEventListener('resize', encender);
+    encender();
+  }
+
   /* ---------- cinta de rubros: acelera con el scroll y vuelve a su ritmo ---------- */
   const pista = $('.cinta__pista');
   const animCinta = pista && pista.getAnimations ? pista.getAnimations()[0] : null;

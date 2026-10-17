@@ -379,7 +379,7 @@ ${obras}
   <section class="sobre" id="sobre-mi" aria-labelledby="sobre-titulo">
     <h2 class="titulo-seccion" id="sobre-titulo" aria-label="Sobre mí" data-reveal="letras">${letras('Sobre mí')}</h2>
     <div class="sobre__texto">
-      <p class="sobre__lead" data-reveal="texto">${esc(sitio.sobreMi)}</p>
+      <p class="sobre__lead" data-scroll-texto>${sitio.sobreMi.split(' ').map((w, i) => `<span style="--i:${i}">${esc(w)}</span>`).join(' ')}</p>
 ${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>
   </section>
 

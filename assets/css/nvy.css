@@ -458,6 +458,9 @@ html.menu-abierto .cab__menu { color: #fff; }
   font-family: var(--display); font-weight: 400; letter-spacing: -.04em; line-height: 1.08;
   font-size: clamp(30px, 4.2vw, 68px);
 }
+/* El texto parte en sombra y se enciende palabra por palabra mientras se baja: nvy.js
+   mueve --avance (de 0 a la cantidad de palabras) segun el scroll. Sin JS, todo blanco. */
+.sobre__lead.is-activo > span { opacity: calc(.18 + .82 * clamp(0, var(--avance, 0) - var(--i), 1)); }
 .sobre__redes { display: flex; gap: 28px; margin-top: clamp(24px, 3vw, 40px); font-size: 15px; }
 .sobre__redes a { display: inline-flex; align-items: center; gap: 6px; }
 .sobre__redes a:hover { color: var(--azul); }
