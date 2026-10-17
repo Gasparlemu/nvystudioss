@@ -193,7 +193,6 @@
   const seccion = obras.closest('.trabajos');
   const items = $$('.obra', obras);
   const anuncio = $('[data-anuncio]');
-  let ocultarPrevia = () => {};
 
   // Las filas aparecen una tras otra: primero se dibuja la linea y despues sube el texto.
   if (animar) {
@@ -212,11 +211,11 @@
   }
 
   const cambiar = (aplicar) => {
-    ocultarPrevia();
     aplicar();
     let k = 0;
     for (const li of items) {
-      li.classList.remove('is-entra', 'is-abierta');
+      li.classList.remove('is-entra');
+      if (li.classList.contains('is-abierta')) marcar(li, false);
       li.classList.add('is-visible');
       if (li.hidden || !animar || obras.dataset.vista !== 'lista') continue;
       li.style.setProperty('--k', k++);
@@ -263,82 +262,34 @@
     });
   }
 
-  // Tactil + lista: el primer toque abre la captura dentro de la fila, el segundo entra.
+  // Lista: un clic o toque en la fila la despliega con una vista corta del proyecto y
+  // otro clic la cierra (una abierta a la vez). Se entra con "ver proyecto" o la captura.
+  // Ctrl/cmd + clic sigue abriendo el proyecto en otra pestaña.
   const linkDe = (li) => $('.obra__link', li);
-  const tactil = () => !puntero.matches;
-  if (tactil()) items.forEach((li) => linkDe(li).setAttribute('aria-expanded', 'false'));
+  const marcar = (li, abierta) => {
+    li.classList.toggle('is-abierta', abierta);
+    linkDe(li).setAttribute('aria-expanded', String(abierta));
+    $$('.obra__media a', li).forEach((a) => { a.tabIndex = abierta ? 0 : -1; });
+  };
+  items.forEach((li) => linkDe(li).setAttribute('aria-expanded', 'false'));
   obras.addEventListener('click', (e) => {
     const link = e.target.closest('.obra__link');
-    if (!link || !tactil() || obras.dataset.vista !== 'lista') return;
-    const li = link.closest('.obra');
-    if (li.classList.contains('is-abierta')) return;
+    if (!link || obras.dataset.vista !== 'lista' || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
-    for (const otro of items) {
-      if (otro !== li && otro.classList.contains('is-abierta')) {
-        otro.classList.remove('is-abierta');
-        linkDe(otro).setAttribute('aria-expanded', 'false');
+    const li = link.closest('.obra');
+    const abrir = !li.classList.contains('is-abierta');
+    items.forEach((otro) => { if (otro !== li && otro.classList.contains('is-abierta')) marcar(otro, false); });
+    marcar(li, abrir);
+    // Al terminar el despliegue: Lenis recalcula el alto y, si la fila quedo cortada
+    // abajo, la pagina baja lo justo para mostrarla entera.
+    setTimeout(() => {
+      if (lenis) lenis.resize();
+      if (!abrir) return;
+      const sobra = li.getBoundingClientRect().bottom - innerHeight + 24;
+      if (sobra > 0) {
+        if (lenis) lenis.scrollTo(scrollY + sobra, { duration: 0.8 });
+        else scrollBy({ top: sobra, behavior: reducido ? 'auto' : 'smooth' });
       }
-    }
-    li.classList.add('is-abierta');
-    link.setAttribute('aria-expanded', 'true');
-    if (lenis) setTimeout(() => lenis.resize(), 650);
+    }, 520);
   });
-
-  // Escritorio + lista: la captura aparece siempre al centro de la pantalla. Al
-  // pasar a otra fila cambia al tiro, con un desenfoque cortisimo.
-  const previa = $('[data-previa]');
-  if (!previa || reducido || !puntero.matches) return;
-  const marco = d.createElement('div');
-  marco.className = 'vista-previa__in';
-  previa.appendChild(marco);
-  const fotos = new Map();
-  const foto = (base) => {
-    if (!fotos.has(base)) {
-      const p = d.createElement('picture');
-      // La captura mide como maximo 480 px: la de 800 alcanza para retina.
-      p.innerHTML = `<source type="image/avif" srcset="${base}-800.avif">`
-        + `<img src="${base}-800.webp" alt="" decoding="async">`;
-      marco.appendChild(p);
-      fotos.set(base, p);
-      $('img', p).decode().catch(() => {});
-    }
-    return fotos.get(base);
-  };
-  let actual = null;
-  let activa = false;
-  let cx = 0;
-  let cy = 0;
-  const mostrar = (li) => {
-    const p = foto(li.dataset.preview);
-    if (!activa) {
-      // Al volver a aparecer solo se abre el marco, con la foto ya puesta.
-      fotos.forEach((f) => f.classList.toggle('is-actual', f === p));
-      actual = p;
-      activa = true;
-      previa.classList.add('is-activa');
-      return;
-    }
-    if (p === actual) return;
-    actual.classList.remove('is-actual');
-    p.classList.add('is-actual');
-    actual = p;
-    marco.animate([{ filter: 'blur(10px)' }, { filter: 'blur(0)' }], { duration: 170, easing: 'ease-out' });
-  };
-  ocultarPrevia = () => { activa = false; previa.classList.remove('is-activa'); };
-  const filaBajo = (px, py) => {
-    const el = d.elementFromPoint(px, py);
-    const li = el && el.closest ? el.closest('.obra') : null;
-    return li && obras.contains(li) ? li : null;
-  };
-  const revisar = () => {
-    const li = filaBajo(cx, cy);
-    if (li && li.dataset.preview && obras.dataset.vista === 'lista') mostrar(li);
-    else ocultarPrevia();
-  };
-
-  alQuedarLibre(() => items.forEach((li) => li.dataset.preview && foto(li.dataset.preview)));
-  obras.addEventListener('pointermove', (e) => { cx = e.clientX; cy = e.clientY; revisar(); }, { passive: true });
-  obras.addEventListener('pointerleave', ocultarPrevia);
-  // Si la pagina se mueve con el mouse quieto, la fila bajo el cursor cambia.
-  addEventListener('scroll', () => { if (activa) revisar(); }, { passive: true });
 })();

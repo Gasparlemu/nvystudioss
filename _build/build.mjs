@@ -318,7 +318,7 @@ function paginaHome() {
   const obras = proyectos.map((p, i) => {
     const v = vistas(p.slug);
     const portada = v.e[0];
-    return `      <li class="obra" data-estado="${p.estado}"${portada ? ` data-preview="${portada.base}"` : ''}>
+    return `      <li class="obra" data-estado="${p.estado}">
         <a class="obra__link" href="/trabajos/${p.slug}">
           <span class="obra__nombre${p.colores ? ' marca' : ''}"${p.colores ? ` style="${estiloMarca(p)}"` : ''}><span>${tramos(p.nombre, p.corte)}</span></span>
           <span class="obra__rubro">${esc(p.rubro)}</span>
@@ -327,8 +327,11 @@ function paginaHome() {
           <span class="obra__flecha">${icono('derecha')}</span>
         </a>
         <div class="obra__media"><div class="obra__media-in">
-          <div class="obra__foto">${portada ? picture(portada, { sizes: '(min-width: 900px) 48vw, 92vw', alt: `Portada del sitio de ${p.cliente || p.nombre}` }) : sinCaptura(p)}</div>
-          <a class="obra__ver" href="/trabajos/${p.slug}" tabindex="-1">ver proyecto ${icono('derecha')}</a>
+          <a class="obra__foto" href="/trabajos/${p.slug}" tabindex="-1">${portada ? picture(portada, { sizes: '(min-width: 900px) 48vw, 92vw', alt: `Portada del sitio de ${p.cliente || p.nombre}` }) : sinCaptura(p)}</a>
+          <div class="obra__info">
+            <p class="obra__resumen">${esc(p.resumen.split(/(?<=\.)\s/)[0])}</p>
+            <a class="obra__ver" href="/trabajos/${p.slug}" tabindex="-1">ver proyecto ${icono('derecha')}</a>
+          </div>
         </div></div>
       </li>`;
   }).join('\n');
@@ -371,7 +374,6 @@ ${filtros}        <div class="vistas" role="group" aria-label="Cambiar vista">
     <ol class="obras" data-obras data-vista="lista">
 ${obras}
     </ol>
-    <div class="vista-previa" aria-hidden="true" data-previa></div>
   </section>
 
   <div class="cinta" aria-hidden="true"><div class="cinta__pista">${cinta}${cinta}</div></div>

@@ -368,30 +368,46 @@ html.menu-abierto .cab__menu { color: #fff; }
 /* En celular (sin mouse) la fila abierta muestra el nombre con sus colores. */
 .obras[data-vista="lista"] .obra.is-abierta .obra__nombre.marca .tramo { color: transparent; }
 .obra__flecha { display: flex; align-self: center; font-size: 20px; transition: transform .5s var(--sale), color .35s; }
+/* La flecha indica si la fila esta abierta: abajo cerrada, arriba abierta. */
+.obras[data-vista="lista"] .obra__flecha { transform: rotate(90deg); }
+.obras[data-vista="lista"] .obra.is-abierta .obra__flecha { transform: rotate(-90deg); color: var(--azul); }
 @media (hover: hover) {
   .obras[data-vista="lista"]:hover .obra__link { opacity: .32; }
   .obras[data-vista="lista"] .obra__link:hover,
   .obras[data-vista="lista"] .obra__link:focus-visible { opacity: 1; }
   .obras[data-vista="lista"] .obra__link:hover .obra__nombre > span { transform: translateX(14px); color: var(--azul); }
   .obras[data-vista="lista"] .obra__link:hover .obra__nombre.marca .tramo { color: transparent; }
-  .obras[data-vista="lista"] .obra__link:hover .obra__flecha { transform: rotate(-45deg); color: var(--azul); }
+  .obras[data-vista="lista"] .obra__link:hover .obra__flecha { color: var(--azul); }
+  .obras[data-vista="lista"] .obra.is-abierta .obra__link { opacity: 1; }
 }
-/* En lista la captura solo aparece en tactil, dentro de la fila (ver nvy.js) */
+/* Vista lista: cada fila se despliega hacia abajo con una vista corta del proyecto
+   (captura, una frase y "ver proyecto"). Clic o toque abre, otro clic cierra (nvy.js). */
+.obra__foto { display: block; }
 .obras[data-vista="lista"] .obra__media {
   display: grid; grid-template-rows: 0fr;
-  transition: grid-template-rows .3s var(--sale);
+  transition: grid-template-rows .5s var(--sale);
 }
-.obras[data-vista="lista"] .obra__media-in { min-height: 0; overflow: hidden; }
 .obras[data-vista="lista"] .obra.is-abierta .obra__media { grid-template-rows: 1fr; }
-.obras[data-vista="lista"] .obra__foto { aspect-ratio: 16 / 10; background: var(--bg-2); overflow: hidden; }
-/* Con la fila cerrada la captura no existe para el navegador: no se descarga
-   hasta que se abre (una imagen lazy con display:none no se pide). */
-.obras[data-vista="lista"] .obra:not(.is-abierta) .obra__foto picture { display: none; }
-.obras[data-vista="lista"] .obra__foto img { width: 100%; height: 100%; object-fit: cover; }
-.obra__ver { display: inline-flex; align-items: center; gap: 8px; padding: 14px 0 22px; font-size: 15px; font-weight: 500; color: var(--azul); }
-@media (hover: hover) and (pointer: fine) {
-  .obras[data-vista="lista"] .obra__media { display: none; }
+.obras[data-vista="lista"] .obra__media-in {
+  min-height: 0; overflow: hidden;
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: start;
 }
+.obras[data-vista="lista"] .obra__foto {
+  grid-column: 1 / 5; margin: 6px 0 clamp(22px, 2.4vw, 32px);
+  aspect-ratio: 16 / 10; background: var(--bg-2); overflow: hidden;
+}
+.obras[data-vista="lista"] .obra__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--sale); }
+.obras[data-vista="lista"] .obra__foto:hover img { transform: scale(1.03); }
+/* Con la fila cerrada la captura no se dibuja (igual queda descargada de antes). */
+.obras[data-vista="lista"] .obra:not(.is-abierta) .obra__foto picture { display: none; }
+.obras[data-vista="lista"] .obra__info { grid-column: 7 / 13; padding: 4px 0 clamp(22px, 2.4vw, 32px); }
+.obra__resumen { max-width: 44ch; font-size: 15px; line-height: 1.55; color: var(--gris); }
+.obra__ver { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 15px; font-weight: 500; color: var(--azul); }
+.obra__ver .ico { transition: transform .45s var(--sale); }
+.obra__ver:hover .ico { transform: translateX(4px); }
+/* Al abrir, lo de adentro aparece suave detras del despliegue. */
+.obras[data-vista="lista"] .obra__media-in > * { opacity: 0; transform: translateY(-8px); transition: opacity .3s, transform .5s var(--sale); }
+.obras[data-vista="lista"] .obra.is-abierta .obra__media-in > * { opacity: 1; transform: none; transition-delay: .08s; }
 
 /* Vista grilla */
 .trabajos[data-vista="grilla"] .obras__cols { display: none; }
@@ -403,7 +419,7 @@ html.menu-abierto .cab__menu { color: #fff; }
 .obras[data-vista="grilla"] .obra__media { order: -1; }
 .obras[data-vista="grilla"] .obra__foto { aspect-ratio: 16 / 10; overflow: hidden; background: var(--bg-2); }
 .obras[data-vista="grilla"] .obra__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--sale); }
-.obras[data-vista="grilla"] .obra__ver { display: none; }
+.obras[data-vista="grilla"] .obra__info { display: none; }
 .obras[data-vista="grilla"] .obra__link { grid-template-columns: minmax(0, 1fr) auto; row-gap: 2px; align-items: baseline; padding: 16px 0 0; }
 .obras[data-vista="grilla"] .obra__link::after { content: ""; position: absolute; inset: 0; }
 .obras[data-vista="grilla"] .obra__nombre { grid-column: 1; grid-row: 1; font-size: clamp(20px, 1.8vw, 28px); }
@@ -416,20 +432,6 @@ html.menu-abierto .cab__menu { color: #fff; }
   .obras[data-vista="grilla"] .obra:hover .obra__nombre > span { color: var(--azul); }
   .obras[data-vista="grilla"] .obra:hover .obra__nombre.marca .tramo { color: transparent; }
 }
-
-/* Captura al pasar por una fila: siempre al centro de la pantalla. Al cambiar de fila
-   cambia al tiro, con un desenfoque cortisimo para que se note el cambio (nvy.js). */
-.vista-previa { position: fixed; left: 50%; top: 50%; z-index: 40; pointer-events: none; transform: translate(-50%, -50%); }
-.vista-previa__in {
-  position: relative; overflow: hidden; background: var(--bg-2);
-  width: clamp(300px, 30vw, 480px); aspect-ratio: 16 / 10;
-  clip-path: inset(50% 0 50% 0);
-  transition: clip-path .75s var(--cambia);
-}
-.vista-previa.is-activa .vista-previa__in { clip-path: inset(0); }
-.vista-previa picture { position: absolute; inset: 0; visibility: hidden; }
-.vista-previa picture.is-actual { visibility: visible; }
-.vista-previa img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- cinta de rubros ---------- */
 .cinta {
@@ -651,8 +653,10 @@ a.contacto__dato:hover { color: var(--azul); }
   .obras[data-vista="lista"] .obra__rubro { grid-column: 1; grid-row: 2; }
   .obras[data-vista="lista"] .obra__anio { display: none; }
   .obras[data-vista="lista"] .obra__estado { grid-column: 2; grid-row: 1; text-align: right; }
-  .obras[data-vista="lista"] .obra__flecha { grid-column: 2; grid-row: 2; font-size: 18px; transform: rotate(90deg); color: var(--gris-2); }
-  .obras[data-vista="lista"] .obra.is-abierta .obra__flecha { transform: rotate(-90deg); color: var(--azul); }
+  .obras[data-vista="lista"] .obra__flecha { grid-column: 2; grid-row: 2; font-size: 18px; color: var(--gris-2); }
+  .obras[data-vista="lista"] .obra.is-abierta .obra__flecha { color: var(--azul); }
+  .obras[data-vista="lista"] .obra__foto, .obras[data-vista="lista"] .obra__info { grid-column: 1 / -1; }
+  .obras[data-vista="lista"] .obra__foto { margin-bottom: 16px; }
   .obras[data-vista="grilla"] { grid-template-columns: 1fr; }
 
   .sobre__texto { grid-column: 1 / -1; }
