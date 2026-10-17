@@ -13,6 +13,7 @@ Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer pu
    - `colores`: los 4 tonos de la marca del cliente para pintar su nombre (oscuro, principal, claro, brillo), sacados de su logo o su sitio. Ej.: `["#8c223a", "#ad2d49", "#d9577a", "#f6dbe2"]`. Sin este campo el nombre va en el azul de NVY.
    - `colores2` + `corte`: para nombres de dos tonos como en el logo. `corte` = cuántas letras (sin espacios) llevan el primer color. Ej. Oncosur: `"corte": 4` (Onco amarillo, sur celeste).
    - `linea` (opcional): los 2 colores planos de la línea sobre su reseña (izquierda, derecha). Si no está, se usan el principal de `colores` y el de `colores2` (o el claro).
+   - `logo` (opcional): aparece en la cinta de clientes. Imagen en `assets/img/logos/` con `{ "imagen", "w", "h", "alto" }` (tamaño real y alto en pantalla), o el nombre con la letra de su web: `{ "texto", "fuente", "peso", "espaciado", "tam" }` (toma los colores de la marca).
 2. Capturas (escritorio y celular, 3 vistas cada uno):
    ```
    npm i --no-save sharp

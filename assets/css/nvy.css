@@ -433,19 +433,29 @@ html.menu-abierto .cab__menu { color: #fff; }
   .obras[data-vista="grilla"] .obra:hover .obra__nombre.marca .tramo { color: transparent; }
 }
 
-/* ---------- cinta de rubros ---------- */
+/* ---------- cinta de clientes ----------
+   Logos a color (o el nombre con la letra de su web, en los colores de su marca)
+   pasando lento. Con el mouse encima se detiene; cada uno lleva a su proyecto. */
 .cinta {
+  --escala: 1;
   overflow: hidden;
   border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea);
-  padding: clamp(18px, 2.4vw, 32px) 0;
+  padding: clamp(28px, 3.4vw, 48px) 0;
 }
 .cinta__pista { display: flex; align-items: center; width: max-content; animation: cinta 70s linear infinite; }
-.cinta__pista span {
-  font-family: var(--display); font-weight: 400; letter-spacing: -.04em; line-height: 1.1;
-  font-size: clamp(28px, 4vw, 64px); white-space: nowrap;
-  padding: 0 clamp(18px, 2.2vw, 36px);
+.cinta:hover .cinta__pista, .cinta:focus-within .cinta__pista { animation-play-state: paused; }
+.logo {
+  display: flex; align-items: center; flex: none;
+  padding: 0 clamp(30px, 3.8vw, 60px);
+  opacity: .88; transition: opacity .3s;
 }
-.cinta__pista i { width: 8px; height: 8px; border-radius: 50%; background: var(--azul); flex: none; }
+.logo:hover, .logo:focus-visible { opacity: 1; }
+.logo img { height: calc(var(--alto) * var(--escala) * 1px); width: auto; }
+.logo__txt {
+  font-size: calc(var(--tam) * var(--escala) * 1px); line-height: 1; white-space: nowrap;
+  font-feature-settings: normal; color: var(--c1);
+}
+.logo__txt .tramo--b { color: var(--c2); }
 @keyframes cinta { to { transform: translateX(-50%); } }
 
 /* ---------- sobre mi ---------- */
@@ -631,6 +641,7 @@ a.contacto__dato:hover { color: var(--azul); }
   .menu__panel { width: 100%; }
   html.menu-abierto .cab__logo { color: #fff; }
   .menu__pie { grid-template-columns: 1fr; }
+  .cinta { --escala: .7; }
   .portada { min-height: 72vh; min-height: 72svh; }
   /* Celular: menos aire entre secciones y botones a todo el ancho para el pulgar */
   .trabajos { padding-top: 72px; }
