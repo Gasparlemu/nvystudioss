@@ -346,16 +346,6 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
         </div>
 `;
 
-  // Cinta de clientes: dos vueltas iguales (la segunda solo visual) para que el loop no se corte.
-  const logo = (p, copia) => {
-    const l = p.logo;
-    const dentro = l.imagen
-      ? `<img src="/assets/img/logos/${l.imagen}" width="${l.w}" height="${l.h}" alt="" decoding="async" style="--alto:${l.alto}">`
-      : `<span class="logo__txt" style="font-family:'${l.fuente}',sans-serif;font-weight:${l.peso};letter-spacing:${l.espaciado}${l.mayusculas ? ';text-transform:uppercase' : ''};--tam:${l.tam};--c1:${p.colores ? p.colores[2] : 'var(--tinta)'};--c2:${p.colores2 ? p.colores2[2] : 'var(--c1)'}">${tramos(l.texto, p.corte)}</span>`;
-    return `<a class="logo" href="/trabajos/${p.slug}"${copia ? ' tabindex="-1" aria-hidden="true"' : ` aria-label="${esc(p.nombre)}"`}>${dentro}</a>`;
-  };
-  const conLogo = proyectos.filter((p) => p.logo);
-  const cinta = [false, true].map((copia) => conLogo.map((p) => logo(p, copia)).join('')).join('');
   const citas = testimoniosVisibles.map((t) => {
     const linea = coloresLinea(proyectos.find((p) => p.slug === t.proyecto));
     return `      <li class="cita${linea ? ' cita--marca' : ''}"${linea ? ` style="--l1:${linea[0]};--l2:${linea[1]}"` : ''}>
@@ -388,8 +378,6 @@ ${obras}
     </ol>
   </section>
 
-  <div class="cinta" role="region" aria-label="Clientes"><div class="cinta__pista">${cinta}</div></div>
-
   <section class="sobre" id="sobre-mi" aria-labelledby="sobre-titulo">
     <h2 class="titulo-seccion" id="sobre-titulo" aria-label="Sobre mí" data-reveal="letras">${letras('Sobre mí')}</h2>
     <div class="sobre__texto">
@@ -405,7 +393,6 @@ ${citas}
   </section>
 
   <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
-    <div class="rotulo" data-reveal="linea"><span>contacto</span></div>
     <h2 class="contacto__titulo" id="contacto-titulo" aria-label="¿Conversamos?" data-reveal="letras" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}">${letras('¿Conversamos?', { degradado: true })}</h2>
     <div class="contacto__fila">
       <a class="boton" href="${wa()}" ${externo}>escribir por whatsapp ${icono('diagonal')}</a>
