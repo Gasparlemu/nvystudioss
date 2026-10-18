@@ -1,12 +1,11 @@
 // Genera el favicon y los iconos de la marca desde un solo dibujo en SVG:
-// una "N" blanca sobre un cuadro de vidrio azul (del azul de la marca al marino).
+// el logo NVY · STUDIOS (assets/brand/logo-nvy.png, blanco) sobre un cuadro negro.
 //
 //   node _build/iconos.mjs
 //
 // Requiere sharp: `npm i --no-save sharp` en la raiz (node_modules queda fuera de git).
-// La N esta dibujada sobre una grilla de 16 px (unidades de 4 en el viewBox de 64),
-// asi los trazos verticales caen en pixeles enteros y se ve nitida en la pestaña.
-import { writeFileSync } from 'node:fs';
+// El logo va incrustado en el SVG, asi favicon.svg no depende de otro archivo.
+import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,21 +18,14 @@ try { sharp = require(process.env.NVY_SHARP || 'sharp'); } catch {
 }
 const MARCA = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'brand');
 
-const N = 'M16 12h8v40h-8zM40 12h8v40h-8zM16 12h9.5L48 52h-9.5z';
+const LOGO = `data:image/png;base64,${readFileSync(join(MARCA, 'logo-nvy.png')).toString('base64')}`;
+// El logo mide 540 x 195: a escala 1 ocupa 54 de los 64 de ancho, centrado.
 // redondo: favicon y apps; cuadrado: iOS y Android ya le ponen sus propias esquinas.
-const icono = ({ redondo = true, escalaN = 1 } = {}) => {
-  const rx = redondo ? 14 : 0;
-  const n = escalaN === 1 ? `<path fill="url(#n)" d="${N}"/>`
-    : `<path fill="url(#n)" transform="translate(32 32) scale(${escalaN}) translate(-32 -32)" d="${N}"/>`;
+const icono = ({ redondo = true, escala = 1 } = {}) => {
+  const w = 54 * escala, h = w * 195 / 540;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-<defs>
-<linearGradient id="f" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a55cc"/><stop offset=".55" stop-color="#11307f"/><stop offset="1" stop-color="#0a1f5c"/></linearGradient>
-<linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset=".28" stop-color="#fff" stop-opacity="0"/><stop offset=".42" stop-color="#fff" stop-opacity=".16"/><stop offset=".56" stop-color="#fff" stop-opacity="0"/></linearGradient>
-<linearGradient id="n" x1="0" y1="0" x2="0" y2="1"><stop offset=".35" stop-color="#fff"/><stop offset="1" stop-color="#c9d9fb"/></linearGradient>
-</defs>
-<rect width="64" height="64" rx="${rx}" fill="url(#f)"/>
-<rect width="64" height="64" rx="${rx}" fill="url(#b)"/>
-${redondo ? `<rect x=".75" y=".75" width="62.5" height="62.5" rx="13.25" fill="none" stroke="#a9c3f8" stroke-opacity=".35" stroke-width="1.5"/>\n` : ''}${n}
+<rect width="64" height="64" rx="${redondo ? 14 : 0}" fill="#000"/>
+<image href="${LOGO}" x="${(64 - w) / 2}" y="${(64 - h) / 2}" width="${w}" height="${h}"/>
 </svg>
 `;
 };
@@ -47,8 +39,8 @@ const salidas = [
   ['favicon-16.png', redondo, 16], ['favicon-32.png', redondo, 32], ['favicon-48.png', redondo, 48],
   ['icon-192.png', redondo, 192], ['icon-512.png', redondo, 512], ['logo-mark.png', redondo, 512],
   ['apple-touch-icon.png', icono({ redondo: false }), 180],
-  // maskable: Android recorta en circulo; la N queda dentro de la zona segura (80 %).
-  ['icon-512-maskable.png', icono({ redondo: false, escalaN: 0.78 }), 512],
+  // maskable: Android recorta en circulo; el logo queda dentro de la zona segura (80 %).
+  ['icon-512-maskable.png', icono({ redondo: false, escala: 0.74 }), 512],
 ];
 const hechos = {};
 for (const [nombre, svg, lado] of salidas) {
