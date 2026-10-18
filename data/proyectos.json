@@ -15,6 +15,8 @@
     "instagram": "https://www.instagram.com/nvy.studioss/",
     "linkedin": "https://www.linkedin.com/in/gasparnvy/",
     "sobreMi": "Soy Gaspar, diseñador independiente en Valdivia. Diseño y programo cada sitio a mano, sin plantillas. Trato directo: hablas conmigo desde la primera idea hasta el lanzamiento.",
+    "mostrarDemos": false,
+    "sobreMiExtra": "Tengo 19 años y soy de Valdivia. Trabajo solo, y emprender así tiene su ritmo: cada decisión pasa por mí, desde la primera idea hasta el último detalle.",
     "rubros": [
       "Clínicas dentales",
       "Psicólogos",
@@ -30,6 +32,12 @@
     ]
   },
 
+  "demos": [
+    { "nombre": "Tour operador", "rubro": "Turismo", "tono": 0, "url": "" },
+    { "nombre": "Cafetería", "rubro": "Gastronomía", "tono": 1, "url": "" },
+    { "nombre": "Gimnasio", "rubro": "Deporte", "tono": 2, "url": "" },
+    { "nombre": "Clínica dental", "rubro": "Salud", "tono": 3, "url": "" }
+  ],
   "proyectos": [
     {
       "slug": "i-max",

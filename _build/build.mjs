@@ -18,7 +18,7 @@ const escribir = (ruta, contenido) => {
   writeFileSync(join(RAIZ, ruta), contenido);
 };
 
-const { sitio, proyectos: todos, testimonios } = JSON.parse(leer('data/proyectos.json'));
+const { sitio, proyectos: todos, testimonios, demos = [] } = JSON.parse(leer('data/proyectos.json'));
 const BASE = sitio.url.replace(/\/$/, '');
 const HOY = new Date().toISOString().slice(0, 10);
 const ANIO = new Date().getFullYear();
@@ -188,7 +188,7 @@ const JS_V = version('assets/js/nvy.js');
 
 function cabecera() {
   return `<header class="cab" data-cab>
-  <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio">Nvy Studios</a>
+  <a class="cab__logo" href="/" aria-label="Nvy Studios, inicio"><img src="/assets/brand/logo-nvy.png" width="540" height="195" alt=""></a>
   <button class="cab__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-boton><span data-menu-txt>menú</span></button>
 </header>`;
 }
@@ -206,7 +206,7 @@ ${links.map(([href, txt], i) => `      <li class="menu__item" style="--i:${i}"><
   </nav>
   <div class="menu__pie">
 ${redes.length ? `    <div class="menu__col"><span class="menu__lbl">redes</span>${redes.map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</div>\n` : ''}    <div class="menu__col"><span class="menu__lbl">escribir</span><a href="mailto:${sitio.correo}">${sitio.correo}</a><a href="${wa()}" ${externo}>whatsapp ${icono('diagonal')}</a></div>
-    <div class="menu__col"><span class="menu__lbl">estudio</span><span>${esc(sitio.ciudad)}</span></div>
+    <div class="menu__col"><span class="menu__lbl">estudio</span><span>${esc(sitio.ciudad)}</span><a href="/terminos.html">términos y condiciones</a></div>
   </div>
   </div>
 </div>`;
@@ -339,6 +339,35 @@ function paginaHome() {
       </li>`;
   }).join('\n');
 
+  // Vista previa fija a la derecha de la lista (escritorio): cambia al pasar el mouse por una fila.
+  const vistasPrevias = proyectos.map((p, i) => {
+    const portada = vistas(p.slug).e[0];
+    return `      <figure class="pv${i === 0 ? ' is-activo' : ''}">
+        <div class="pv__img">${portada ? picture(portada, { sizes: '(min-width: 900px) 40vw, 1px', alt: '' }) : sinCaptura(p)}</div>
+        <figcaption>${esc(p.rubro)} · ${p.anio} · ${ESTADOS[p.estado]}</figcaption>
+      </figure>`;
+  }).join('\n');
+
+  // Demos (pendiente: se muestra con sitio.mostrarDemos = true en el JSON): lista de nombres a la izquierda y vista previa fija a la derecha. Si la demo tiene
+  // "url" el nombre es un link; las capturas son maquetas de colores hasta tener las reales.
+  const demosHtml = !(sitio.mostrarDemos && demos.length) ? '' : `
+  <section class="demos" id="demos" aria-labelledby="demos-titulo">
+    <h2 class="titulo-seccion" id="demos-titulo" aria-label="Demos" data-reveal="letras">${letras('Demos')}</h2>
+    <p class="demos__sub">Ideas de cómo se vería tu web.</p>
+    <div class="demos__wrap">
+      <ul class="demos__lista">
+${demos.map((m, i) => {
+    const dentro = `<span class="demo__nombre">${esc(m.nombre)}</span><span class="demo__rubro">${esc(m.rubro)}</span>`;
+    return `        <li class="demo${i === 0 ? ' is-activo' : ''}">${m.url ? `<a href="${esc(m.url)}" ${externo}>${dentro}</a>` : `<div tabindex="0">${dentro}</div>`}</li>`;
+  }).join('\n')}
+      </ul>
+      <div class="demos__pv" aria-hidden="true">
+${demos.map((m, i) => `        <div class="dshot dshot--${m.tono % 4}${i === 0 ? ' is-activo' : ''}"><div class="dshot__nv"><i></i><i></i><i></i><b></b></div><h3>${esc(m.nombre)}</h3><em></em><u></u></div>`).join('\n')}
+      </div>
+    </div>
+  </section>
+`;
+
   // Los filtros solo aparecen si hay mas de un estado publicado.
   const estados = new Set(proyectos.map((p) => p.estado));
   const filtros = estados.size < 2 ? '' : `        <div class="filtros" role="group" aria-label="Filtrar por estado">
@@ -346,6 +375,17 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
         </div>
 `;
 
+  const PASOS = [
+    ['Análisis', 'yo', 'Parto entendiendo tu negocio: qué necesitas que haga tu web, a quién le habla y qué tiene que contar.'],
+    ['Tu parte', 'tú', 'Respondes unas preguntas y me envías todo el material que la web necesite: logo, fotos, videos y textos. Mientras más claro y completo, mejor sale.'],
+    ['Diseño', 'yo', 'Diseño la web a medida, sin plantillas, con la identidad de tu marca.'],
+    ['Desarrollo', 'yo', 'La programo completa y la dejo funcionando en todos los dispositivos. Me encargo yo de todo.'],
+  ];
+  const pasos = PASOS.map(([t, quien, d], k) => `      <li class="paso${quien === 'tú' ? ' paso--tu' : ''}${k === 0 ? ' is-activo' : ''}">
+        <button class="paso__abre" type="button" aria-expanded="${k === 0}" aria-label="${t}"></button>
+        <span class="paso__quien">${quien === 'tú' ? 'de tu parte' : 'de mi parte'}</span>
+        <div class="paso__cu"><h3 class="paso__t">${t}</h3><p class="paso__d">${d}</p></div>
+      </li>`).join('\n');
   const citas = testimoniosVisibles.map((t) => {
     const linea = coloresLinea(proyectos.find((p) => p.slug === t.proyecto));
     return `      <li class="cita${linea ? ' cita--marca' : ''}"${linea ? ` style="--l1:${linea[0]};--l2:${linea[1]}"` : ''}>
@@ -362,7 +402,7 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
     </h1>
   </section>
 
-  <section class="trabajos" id="trabajos" aria-labelledby="trabajos-titulo">
+  <section class="trabajos" id="trabajos" data-vista="lista" aria-labelledby="trabajos-titulo">
     <div class="trabajos__cab">
       <h2 class="titulo-seccion" id="trabajos-titulo" aria-label="Trabajos" data-reveal="letras">${letras('Trabajos')}</h2>
       <div class="trabajos__ctrl">
@@ -373,16 +413,30 @@ ${filtros}        <div class="vistas" role="group" aria-label="Cambiar vista">
     </div>
     <p class="solo-lector" aria-live="polite" data-anuncio></p>
     <div class="obras__cols" aria-hidden="true"><span>proyecto</span><span>rubro</span><span>año</span><span>estado</span></div>
+    <div class="obras__wrap">
     <ol class="obras" data-obras data-vista="lista">
 ${obras}
     </ol>
+    <div class="obras__pv" aria-hidden="true">
+${vistasPrevias}
+    </div>
+    </div>
   </section>
+${demosHtml}
 
   <section class="sobre" id="sobre-mi" aria-labelledby="sobre-titulo">
     <h2 class="titulo-seccion" id="sobre-titulo" aria-label="Sobre mí" data-reveal="letras">${letras('Sobre mí')}</h2>
     <div class="sobre__texto">
       <p class="sobre__lead" data-scroll-texto>${sitio.sobreMi.split(' ').map((w, i) => `<span style="--i:${i}">${esc(w)}</span>`).join(' ')}</p>
-${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>
+${sitio.sobreMiExtra ? `      <p class="sobre__extra" data-reveal="texto">${esc(sitio.sobreMiExtra)}</p>
+` : ''}${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>
+  </section>
+
+  <section class="proceso" id="proceso" aria-labelledby="proceso-titulo">
+    <h2 class="titulo-seccion" id="proceso-titulo" aria-label="Proceso" data-reveal="letras">${letras('Proceso')}</h2>
+    <ol class="pasos">
+${pasos}
+    </ol>
   </section>
 
   <section class="testimonios" aria-labelledby="testimonios-titulo">

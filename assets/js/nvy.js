@@ -29,12 +29,15 @@
   // En la portada de la home la marca chica se esconde (ya esta gigante) y aparece al bajar.
   const cab = $('[data-cab]');
   const portada = $('.portada');
+  const claras = $$('[data-tema="claro"]');
   let pendiente = false;
   const alScroll = () => {
     pendiente = false;
     const y = Math.max(0, scrollY);
     cab.classList.toggle('en-portada', portada ? y < portada.offsetHeight * 0.55 : false);
     cab.classList.toggle('is-solida', y > 24);
+    // Sobre una seccion clara (data-tema="claro") el logo y el menu pasan a negro.
+    cab.classList.toggle('es-claro', claras.some((s) => { const r = s.getBoundingClientRect(); return r.top <= 36 && r.bottom > 36; }));
   };
   addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }, { passive: true });
   alScroll();
@@ -232,7 +235,7 @@
     if (d.readyState === 'complete') libre();
     else addEventListener('load', libre, { once: true });
   };
-  alQuedarLibre(() => $$('img[loading="lazy"]', obras).forEach((img) => { img.loading = 'eager'; }));
+  alQuedarLibre(() => $$('img[loading="lazy"]', seccion).forEach((img) => { img.loading = 'eager'; }));
 
   for (const b of $$('[data-filtro]')) {
     b.addEventListener('click', () => {
@@ -247,6 +250,7 @@
         }
         anuncio.textContent = `${n} ${n === 1 ? 'proyecto' : 'proyectos'}`;
       });
+      verPrevia(items.findIndex((li) => !li.hidden));
     });
   }
 
@@ -262,6 +266,15 @@
     });
   }
 
+  // Escritorio con mouse: la vista previa fija de la derecha sigue a la fila bajo el cursor
+  // (o con foco), y un clic entra al proyecto. Sin mouse, las filas se despliegan (abajo).
+  const soloPrevia = matchMedia('(hover: hover) and (min-width: 901px)');
+  const previas = $$('.pv', seccion);
+  const verPrevia = (i) => { if (i >= 0) previas.forEach((p, k) => p.classList.toggle('is-activo', k === i)); };
+  for (const ev of ['mouseover', 'focusin']) {
+    obras.addEventListener(ev, (e) => { const li = e.target.closest('.obra'); if (li) verPrevia(items.indexOf(li)); });
+  }
+
   // Lista: un clic o toque en la fila la despliega con una vista corta del proyecto y
   // otro clic la cierra (una abierta a la vez). Se entra con "ver proyecto" o la captura.
   // Ctrl/cmd + clic sigue abriendo el proyecto en otra pestaña.
@@ -274,7 +287,7 @@
   items.forEach((li) => linkDe(li).setAttribute('aria-expanded', 'false'));
   obras.addEventListener('click', (e) => {
     const link = e.target.closest('.obra__link');
-    if (!link || obras.dataset.vista !== 'lista' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    if (!link || soloPrevia.matches || obras.dataset.vista !== 'lista' || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
     const li = link.closest('.obra');
     const abrir = !li.classList.contains('is-abierta');
@@ -291,5 +304,27 @@
         else scrollBy({ top: sobra, behavior: reducido ? 'auto' : 'smooth' });
       }
     }, 520);
+  });
+
+  /* ---------- proceso: paneles que se expanden ---------- */
+  const paneles = $$('.paso');
+  const activar = (p) => paneles.forEach((o) => {
+    const on = o === p;
+    o.classList.toggle('is-activo', on);
+    $('.paso__abre', o).setAttribute('aria-expanded', String(on));
+  });
+  paneles.forEach((p) => {
+    $('.paso__abre', p).addEventListener('click', () => activar(p));
+    p.addEventListener('mouseenter', () => { if (matchMedia('(hover: hover)').matches) activar(p); });
+  });
+
+  /* ---------- demos: la vista previa sigue al nombre bajo el cursor ---------- */
+  const demos = $$('.demo');
+  const dshots = $$('.dshot');
+  const verDemo = (i) => { demos.forEach((x, n) => x.classList.toggle('is-activo', n === i)); dshots.forEach((x, n) => x.classList.toggle('is-activo', n === i)); };
+  demos.forEach((x, i) => {
+    x.addEventListener('mouseenter', () => verDemo(i));
+    x.addEventListener('focusin', () => verDemo(i));
+    x.addEventListener('click', () => verDemo(i));
   });
 })();
