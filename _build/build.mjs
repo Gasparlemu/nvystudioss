@@ -108,8 +108,11 @@ function vistas(slug) {
 
 function picture(v, { sizes, alt, carga = 'lazy' }) {
   const [w, h] = v.movil ? [780, 1688] : [1600, 1000];
-  const set = (lista, ext) => lista.map((a) => `${v.base}-${a}.${ext} ${a}w`).join(', ');
-  const respaldo = v.webp.length ? `${v.base}-${v.webp.at(-1)}.webp` : `${v.base}-${v.avif.at(-1)}.avif`;
+  // ?v= con el hash del archivo: si una captura cambia, el navegador no muestra la vieja
+  // que tenia guardada (las imagenes se guardan 7 dias, ver vercel.json).
+  const url = (a, ext) => `${v.base}-${a}.${ext}?v=${version(`${v.base}-${a}.${ext}`.slice(1))}`;
+  const set = (lista, ext) => lista.map((a) => `${url(a, ext)} ${a}w`).join(', ');
+  const respaldo = v.webp.length ? url(v.webp.at(-1), 'webp') : url(v.avif.at(-1), 'avif');
   return '<picture>'
     + (v.avif.length ? `<source type="image/avif" srcset="${set(v.avif, 'avif')}" sizes="${sizes}">` : '')
     + (v.webp.length ? `<source type="image/webp" srcset="${set(v.webp, 'webp')}" sizes="${sizes}">` : '')
