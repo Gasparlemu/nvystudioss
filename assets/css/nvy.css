@@ -648,6 +648,9 @@ a.contacto__dato:hover { color: var(--azul); }
 .galeria { display: flex; flex-direction: column; gap: var(--gap); padding: 0 var(--pad); }
 .gal { background: var(--bg-2); padding: clamp(16px, 5vw, 80px); }
 .gal img { width: 100%; outline: 1px solid var(--linea); }
+/* La primera captura (escritorio) no llena la pantalla: queda centrada y mas chica. */
+.gal--ancha img { display: block; width: 100%; max-width: 960px; margin-inline: auto; }
+.gal--ancha figcaption { max-width: 960px; margin-inline: auto; }
 .gal figcaption { margin-top: clamp(12px, 1.6vw, 20px); font-size: 13px; color: var(--gris-2); }
 .gal__moviles {
   display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
