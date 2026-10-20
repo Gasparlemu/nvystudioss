@@ -2,9 +2,14 @@
   "sitio": {
     "nombre": "Nvy Studios",
     "url": "https://www.nvystudios.cl",
-    "titulo": "NVY Studios — Diseño web a medida en Valdivia",
-    "descripcion": "Estudio de diseño y desarrollo web en Valdivia. Sitios a medida sin plantillas, SEO local y sistemas de fidelización para pymes del sur de Chile.",
-    "ogDescripcion": "Sitios web diseñados y programados desde cero. Sin plantillas, atención directa con el diseñador, entrega en 5 a 14 días.",
+    "titulo": "Webs a medida y cartas digitales en Valdivia | NVY Studios",
+    "descripcion": "Webs a medida, rediseño de webs viejas y cartas digitales con QR para restaurantes. Hechas en Valdivia para negocios de todo Chile. Cotiza por WhatsApp.",
+    "ogDescripcion": "¿Tu negocio se ve en internet como se ve en persona? Webs a medida y cartas digitales con QR, desde Valdivia.",
+    "trabajos": {
+      "titulo": "Trabajos | NVY Studios, diseño web a medida en Valdivia",
+      "descripcion": "Webs diseñadas y programadas desde cero por NVY Studios para negocios del sur de Chile: I-MAX Valdivia, Fundación Oncosur, Zona Estética y más.",
+      "ogDescripcion": "Sitios web diseñados y programados desde cero. Sin plantillas, atención directa con el diseñador, entrega en 5 a 14 días."
+    },
     "bajada": "Diseño y desarrollo web a medida · Valdivia, Chile",
     "correo": "contacto@nvystudios.cl",
     "telefono": "+56940976219",
@@ -29,6 +34,108 @@
       "Joyerías",
       "Productoras audiovisuales",
       "Fundaciones"
+    ]
+  },
+
+  "inicio": {
+    "pregunta": "¿Tu negocio se ve en internet como se ve en persona?",
+    "bajada": "Webs a medida y cartas digitales · Valdivia, Chile",
+    "whatsappTexto": "Hola Gaspar, vi tu web y quiero conversar sobre un proyecto.",
+    "destacados": ["i-max", "oncosur", "zona-estetica"],
+    "problemas": [
+      {
+        "tipo": "webs",
+        "problema": "Mi web es vieja, lenta y no la puedo cambiar.",
+        "porque": "Si tu web tarda en cargar o se ve antigua, la gente cierra y busca otra opción. Y si cada cambio depende de alguien más, la información queda vieja.",
+        "solucion": "La rehacemos desde cero, rápida y con tus fotos. Sin WordPress ni plantillas.",
+        "caso": "I-MAX venía de un WordPress antiguo. Se rehizo desde cero en 5 páginas, con sus fotos propias.",
+        "antes": { "texto": "Un WordPress antiguo." },
+        "despues": ["i-max"]
+      },
+      {
+        "tipo": "webs",
+        "problema": "Mis clientes me preguntan lo mismo por WhatsApp todo el día.",
+        "porque": "Si tus servicios no están claros en internet, cada consulta te quita tiempo. Y quien espera mucho una respuesta, reserva en otro lado.",
+        "solucion": "Ordenamos tus servicios en la web para que la gente llegue sabiendo qué quiere.",
+        "caso": "Zona Estética tiene ahora su catálogo de servicios por especialidad y los perfiles del equipo. Las clientas llegan sabiendo qué quieren y reservan directo.",
+        "antes": { "texto": "No tenía web." },
+        "despues": ["zona-estetica"]
+      },
+      {
+        "tipo": "webs",
+        "problema": "Mi servicio es serio, pero en internet no transmito confianza.",
+        "porque": "Antes de contratar, la gente te busca en Google. Si no encuentra nada serio, duda.",
+        "solucion": "Una web institucional y clara, que muestre quién eres y cómo trabajas.",
+        "caso": "Oncosur y Gestión Sur tienen ahora una identidad digital institucional. Los clientes de Gestión Sur dicen que la web les da credibilidad antes de contratar.",
+        "antes": { "texto": "Ninguna de las dos tenía web." },
+        "despues": ["oncosur", "gestion-sur"]
+      },
+      {
+        "tipo": "webs",
+        "problema": "Solo tengo Instagram y mi trabajo no se luce ahí.",
+        "porque": "En Instagram tu trabajo se pierde entre publicaciones y no se explica solo. Cuesta mandarle a alguien algo puntual.",
+        "solucion": "Una vitrina propia, con espacio para cada pieza, que compartes con un link.",
+        "caso": "Metales Nobles tiene ahora una vitrina propia para sus piezas artesanales. Manda un link y la pieza se explica sola.",
+        "antes": { "texto": "Solo Instagram." },
+        "despues": ["metales-nobles"]
+      },
+      {
+        "tipo": "webs",
+        "problema": "Mi página se ve mal en el celular.",
+        "porque": "Mucha gente te va a ver desde el teléfono. Si tiene que hacer zoom para leer, se va.",
+        "solucion": "Todas nuestras webs se diseñan primero para celular y después para computador.",
+        "caso": "Así se ven en el celular dos de nuestras webs publicadas.",
+        "moviles": ["zona-estetica", "i-max"]
+      },
+      {
+        "tipo": "webs",
+        "problema": "Mi negocio se ve mejor en persona que en internet.",
+        "porque": "Si en internet no se ve lo bueno de tu local, nadie tiene una razón para ir a conocerlo.",
+        "solucion": "Una web a medida que muestre tu local y tu equipo tal como son.",
+        "caso": "Todavía no tenemos un caso real de gimnasio o clínica. Estas son demos para que veas cómo se vería la tuya.",
+        "demos": [{ "slug": "fit-valdivia", "vista": "e1" }, { "slug": "clinica-salud", "vista": "e1" }]
+      },
+      {
+        "tipo": "cartas",
+        "problema": "Mi carta está en PDF o en Canva.",
+        "porque": "Google y ChatGPT no pueden leer una carta en imagen. En el celular se ve chica, y cambiar un precio es rehacerla entera.",
+        "solucion": "Una carta digital con QR, escrita en texto real, que Google y la IA sí pueden leer.",
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo muestra una carta en texto real, no en imagen.",
+        "demos": [{ "slug": "niebla-cafeteria", "vista": "e2" }]
+      },
+      {
+        "tipo": "cartas",
+        "problema": "Cuando alguien le pregunta a ChatGPT dónde comer, no aparezco.",
+        "porque": "La IA recomienda lugares con información que puede leer. Una carta en foto o en PDF le dice muy poco.",
+        "solucion": "Tu carta en texto real queda indexada en Google y la IA puede encontrarla.",
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo muestra una carta en texto real, no en imagen.",
+        "demos": [{ "slug": "niebla-cafeteria", "vista": "m2" }]
+      },
+      {
+        "tipo": "cartas",
+        "problema": "Los turistas no entienden mi carta.",
+        "porque": "Un turista que no entiende la carta pide lo seguro, o se va a otro local.",
+        "solucion": "Tu carta en español, inglés, portugués y alemán, en el mismo QR.",
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo está en español y muestra cómo se ve la carta en texto real; los idiomas se suman en la tuya.",
+        "demos": [{ "slug": "niebla-cafeteria", "vista": "e2" }]
+      },
+      {
+        "tipo": "cartas",
+        "problema": "Siempre hay platos agotados o precios desactualizados.",
+        "porque": "Pedir algo que no hay, o ver otro precio al pagar, deja una mala impresión.",
+        "solucion": "Cambias precios y marcas agotados en segundos desde tu celular. Lo demás lo hacemos nosotros.",
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo muestra cómo se ve la carta; la edición desde el celular viene con la tuya.",
+        "demos": [{ "slug": "niebla-cafeteria", "vista": "m2" }]
+      }
+    ],
+    "preguntas": [
+      ["¿Cuánto se demora?", "Entre 5 y 14 días hábiles, según el tamaño."],
+      ["¿Cómo se paga?", "50% al inicio y 50% al entregar la web publicada, por transferencia."],
+      ["¿Qué necesito para empezar?", "Tu logo si tienes, la información de tus servicios, fotos y tus datos de contacto."],
+      ["¿Puedo cambiar cosas después?", "Sí, por WhatsApp. Con la mantención mensual los cambios van incluidos."],
+      ["¿La carta digital la puedo editar yo?", "Sí, los precios y los platos agotados. El resto lo hacemos nosotros."],
+      ["¿Trabajan fuera de Valdivia?", "Sí, en todo Chile, por WhatsApp y videollamada."],
+      ["¿El dominio queda a mi nombre?", "Sí, siempre queda a nombre del cliente."]
     ]
   },
 

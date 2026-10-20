@@ -1,5 +1,5 @@
-// Genera el sitio desde data/proyectos.json: home, una pagina por proyecto,
-// paginas legales, 404 y sitemap. Sin dependencias, solo Node.
+// Genera el sitio desde data/proyectos.json: inicio (problemas), portafolio en
+// /trabajos, una pagina por proyecto, paginas legales, 404 y sitemap. Sin dependencias, solo Node.
 //
 //   node _build/build.mjs
 //
@@ -18,7 +18,7 @@ const escribir = (ruta, contenido) => {
   writeFileSync(join(RAIZ, ruta), contenido);
 };
 
-const { sitio, proyectos: todos, testimonios, demos = [] } = JSON.parse(leer('data/proyectos.json'));
+const { sitio, inicio, proyectos: todos, testimonios, demos = [] } = JSON.parse(leer('data/proyectos.json'));
 const BASE = sitio.url.replace(/\/$/, '');
 const HOY = new Date().toISOString().slice(0, 10);
 const ANIO = new Date().getFullYear();
@@ -62,6 +62,26 @@ const proyectos = todos.filter((p) => VISIBLES.includes(p.estado));
 const publicados = new Set(proyectos.map((p) => p.slug));
 const testimoniosVisibles = testimonios.filter((t) => !t.proyecto || publicados.has(t.proyecto));
 
+// Tarjetas del inicio: los casos tienen que ser proyectos publicados, las demos tienen
+// que estar marcadas como demo y toda captura que se nombre tiene que existir.
+const TIPOS_PROBLEMA = { webs: 'web', cartas: 'carta digital' };
+const porSlug = (slug) => todos.find((p) => p.slug === slug);
+const vistaDe = (slug, cual = 'e1') => vistas(slug)[cual[0]]?.[Number(cual.slice(1)) - 1];
+for (const [i, pr] of inicio.problemas.entries()) {
+  const ref = `inicio.problemas[${i}]`;
+  for (const k of ['tipo', 'problema', 'porque', 'solucion']) if (!pr[k]) throw new Error(`${ref}: falta el campo "${k}"`);
+  if (!TIPOS_PROBLEMA[pr.tipo]) throw new Error(`${ref}: el tipo "${pr.tipo}" no existe (usa webs o cartas)`);
+  for (const s of [...(pr.despues || []), ...(pr.moviles || [])]) {
+    if (!publicados.has(s)) throw new Error(`${ref}: "${s}" no es un proyecto publicado`);
+  }
+  for (const m of pr.demos || []) {
+    if (porSlug(m.slug)?.estado !== 'demo') throw new Error(`${ref}: "${m.slug}" no es una demo del JSON`);
+    if (!vistaDe(m.slug, m.vista)) throw new Error(`${ref}: falta la captura ${m.vista} de "${m.slug}" (corre _build/capturas.mjs)`);
+  }
+  if (pr.antes?.captura && !vistaDe(pr.antes.captura)) throw new Error(`${ref}: falta la captura de "${pr.antes.captura}"`);
+}
+for (const s of inicio.destacados) if (!publicados.has(s)) throw new Error(`inicio.destacados: "${s}" no es un proyecto publicado`);
+
 // ---------- utilidades ----------
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const num = (i) => String(i + 1).padStart(2, '0');
@@ -80,6 +100,7 @@ const TRAZOS = {
   instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.2" cy="6.8" r=".5" fill="currentColor"/>',
   linkedin: '<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 10.5V16m0-8.2v.1m3.6 8.1v-5.5m0 2.6c0-1.6 1-2.7 2.3-2.7s2.2 1 2.2 2.7V16"/>',
   whatsapp: '<path d="M4.6 19.4l1.1-3.5a8 8 0 1 1 3 2.9z"/><path d="M9.3 8.9c.1 2.4 2.3 4.7 4.9 5l.9-1.2-1.6-.9-.8.6c-.8-.4-1.5-1.1-1.9-1.9l.6-.8-.9-1.6z"/>',
+  mas: '<path d="M12 5v14M5 12h14"/>',
 };
 const icono = (nombre) => `<svg class="ico ico--${nombre}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" focusable="false">${TRAZOS[nombre]}</svg>`;
 
@@ -196,8 +217,10 @@ function cabecera() {
 </header>`;
 }
 
-function menu() {
-  const links = [['/#trabajos', 'trabajos'], ['/#sobre-mi', 'sobre mí'], ['/#contacto', 'contacto']];
+// "contacto" baja a la seccion de la misma pagina si la tiene (inicio y trabajos);
+// desde un proyecto o una legal, lleva a la del inicio.
+function menu({ contacto = '/#contacto', waTexto } = {}) {
+  const links = [['/', 'inicio'], ['/trabajos', 'trabajos'], [contacto, 'contacto']];
   const redes = [['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u);
   return `<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" data-menu inert>
   <button class="menu__velo" type="button" tabindex="-1" aria-label="Cerrar menú" data-menu-cerrar></button>
@@ -208,7 +231,7 @@ ${links.map(([href, txt], i) => `      <li class="menu__item" style="--i:${i}"><
     </ol>
   </nav>
   <div class="menu__pie">
-${redes.length ? `    <div class="menu__col"><span class="menu__lbl">redes</span>${redes.map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</div>\n` : ''}    <div class="menu__col"><span class="menu__lbl">escribir</span><a href="mailto:${sitio.correo}">${sitio.correo}</a><a href="${wa()}" ${externo}>whatsapp ${icono('diagonal')}</a></div>
+${redes.length ? `    <div class="menu__col"><span class="menu__lbl">redes</span>${redes.map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</div>\n` : ''}    <div class="menu__col"><span class="menu__lbl">escribir</span><a href="mailto:${sitio.correo}">${sitio.correo}</a><a href="${wa(waTexto)}" ${externo}>whatsapp ${icono('diagonal')}</a></div>
     <div class="menu__col"><span class="menu__lbl">estudio</span><span>${esc(sitio.ciudad)}</span><a href="/terminos.html">términos y condiciones</a></div>
   </div>
   </div>
@@ -223,7 +246,7 @@ function pie() {
 </footer>`;
 }
 
-function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '', cortina = '' }) {
+function layout({ titulo, descripcion, ruta, cuerpo, ld, og = {}, verificacion = false, indexar = true, aviso = '', claseBody = '', cortina = '', claro = false, contacto, waTexto, previo = '' }) {
   const canonical = BASE + ruta;
   const ogImagen = og.imagen || `${BASE}/assets/brand/og-nvy.png`;
   const ogTitulo = esc(og.titulo || titulo);
@@ -238,7 +261,7 @@ ${MARCA}${aviso ? `\n${aviso}` : ''}
 <meta name="description" content="${esc(descripcion)}">
 <link rel="canonical" href="${canonical}">
 <meta name="robots" content="${indexar ? 'index, follow, max-image-preview:large' : 'noindex, follow'}">
-<meta name="theme-color" content="#0B0B0C">
+${previo}<meta name="theme-color" content="${claro ? '#FFFFFF' : '#0B0B0C'}">
 <meta name="author" content="Gaspar Quijada">
 ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
      No quitar: si desaparece, Google revoca la verificacion del dominio. -->
@@ -272,7 +295,7 @@ ${ld ? `<script type="application/ld+json">${jsonLd(ld)}</script>\n` : ''}</head
 <body id="top"${claseBody ? ` class="${claseBody}"` : ''}>
 <a class="saltar" href="#contenido">saltar al contenido</a>
 ${cabecera()}
-${menu()}
+${menu({ contacto, waTexto })}
 ${cuerpo}
 ${pie()}
 </body>
@@ -307,20 +330,197 @@ const NEGOCIO = {
     '@type': 'OfferCatalog',
     name: 'Servicios de NVY Studios',
     itemListElement: [
-      ['Landing Page', 'Página única de alta conversión, diseñada y programada desde cero, con integración de WhatsApp y SEO técnico básico. Entrega en 5 días hábiles. Precio a cotizar según el proyecto.'],
-      ['Web Profesional', 'Sitio de hasta 5 secciones con animaciones, formulario de contacto, integración de WhatsApp y SEO on-page completo. Entrega en 7 días hábiles. Precio a cotizar según el proyecto.'],
-      ['Experiencia Premium', 'Plataforma de hasta 10 páginas con SEO técnico avanzado, sistema de reservas, blog opcional y estrategia de visibilidad local. Entrega en 10 a 14 días hábiles. Precio a cotizar según el proyecto.'],
-      ['Crecimiento y Recurrencia', 'SEO local, base de datos de clientes y automatización de fidelización, para negocios que ya tienen su web lista. Precio a cotizar según el proyecto.'],
+      ['Web a medida', 'Sitio web diseñado y programado desde cero, sin plantillas, pensado primero para celular. Entrega en 5 a 14 días hábiles. Precio a cotizar por WhatsApp.'],
+      ['Rediseño de webs', 'Se rehace desde cero una web vieja, lenta o difícil de cambiar, con las fotos y la información del negocio. Precio a cotizar por WhatsApp.'],
+      ['Carta digital con QR para restaurantes', 'Carta en texto real que Google y la IA pueden leer, en varios idiomas en el mismo QR, con precios y platos agotados editables desde el celular. Precio a cotizar por WhatsApp.'],
     ].map(([name, description]) => ({ '@type': 'Offer', availability: 'https://schema.org/InStock', itemOffered: { '@type': 'Service', name, description } })),
   },
 };
 
-// ---------- home ----------
+// ---------- secciones que comparten el inicio y trabajos ----------
+const PASOS = [
+  ['Análisis', 'yo', 'Parto entendiendo tu negocio: qué necesitas que haga tu web, a quién le habla y qué tiene que contar.'],
+  ['Tu parte', 'tú', 'Respondes unas preguntas y me envías todo el material que la web necesite: logo, fotos, videos y textos. Mientras más claro y completo, mejor sale.'],
+  ['Diseño', 'yo', 'Diseño la web a medida, sin plantillas, con la identidad de tu marca.'],
+  ['Desarrollo', 'yo', 'La programo completa y la dejo funcionando en todos los dispositivos. Me encargo yo de todo.'],
+];
+function seccionProceso() {
+  const pasos = PASOS.map(([t, quien, d], k) => `      <li class="paso${quien === 'tú' ? ' paso--tu' : ''}${k === 0 ? ' is-activo' : ''}">
+        <button class="paso__abre" type="button" aria-expanded="${k === 0}" aria-label="${t}"></button>
+        <span class="paso__quien">${quien === 'tú' ? 'de tu parte' : 'de mi parte'}</span>
+        <div class="paso__cu"><h3 class="paso__t">${t}</h3><p class="paso__d">${d}</p></div>
+      </li>`).join('\n');
+  return `  <section class="proceso" id="proceso" aria-labelledby="proceso-titulo">
+    <h2 class="titulo-seccion" id="proceso-titulo" aria-label="Proceso" data-reveal="letras">${letras('Proceso')}</h2>
+    <ol class="pasos">
+${pasos}
+    </ol>
+  </section>`;
+}
+
+function seccionContacto(texto) {
+  return `  <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
+    <h2 class="contacto__titulo" id="contacto-titulo" aria-label="¿Conversamos?" data-reveal="letras" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}">${letras('¿Conversamos?', { degradado: true })}</h2>
+    <div class="contacto__fila">
+      <a class="boton" href="${wa(texto)}" ${externo}>escribir por whatsapp ${icono('diagonal')}</a>
+      <a class="contacto__dato" href="mailto:${sitio.correo}">${sitio.correo}</a>
+      <span class="contacto__dato">${esc(sitio.ciudad)}</span>
+    </div>
+  </section>`;
+}
+
+// ---------- inicio: los problemas del cliente y como se resuelven ----------
+// Las palabras suben cada una en su mascara (en una pregunta larga, letra por letra
+// seria un desfile de casi 50 letras).
+const palabras = (texto) => texto.split(' ').map((w, i) => `<span class="palabra" aria-hidden="true"><span class="letra" style="--n:${i * 2}">${esc(w)}</span></span>`).join(' ');
+
+function paginaInicio() {
+  const fotoCaso = (v, alt, sizes) => `<div class="ba__img">${picture(v, { sizes, alt })}</div>`;
+  const figura = (lbl, media, pie, clase = '') => `<figure class="ba${clase}"><span class="ba__lbl">${lbl}</span>${media}${pie ? `<figcaption>${pie}</figcaption>` : ''}</figure>`;
+  const verProyecto = (p) => `<span>${esc(p.nombre)}</span><a href="/trabajos/${p.slug}">ver proyecto ${icono('derecha')}</a>`;
+
+  const tarjetas = inicio.problemas.map((pr, i) => {
+    const id = `problema-${i + 1}`;
+    const figs = [];
+    if (pr.antes) {
+      const caso = porSlug(pr.despues[0]);
+      figs.push(pr.antes.captura
+        ? figura('antes', fotoCaso(vistaDe(pr.antes.captura), `Sitio anterior de ${caso.cliente || caso.nombre}`, '(min-width: 1100px) 30vw, 92vw'), esc(pr.antes.nota || ''))
+        : figura('antes', `<div class="ba__vacio"><p>${esc(pr.antes.texto)}</p></div>`, ''));
+    }
+    for (const s of pr.despues || []) {
+      const p = porSlug(s);
+      figs.push(figura(pr.antes ? 'después' : 'caso real', fotoCaso(vistas(s).e[0], `Sitio de ${p.cliente || p.nombre} hecho por NVY Studios`, '(min-width: 1100px) 30vw, 92vw'), verProyecto(p)));
+    }
+    for (const s of pr.moviles || []) {
+      const p = porSlug(s);
+      figs.push(figura('celular', fotoCaso(vistas(s).m[0], `Sitio de ${p.cliente || p.nombre} en celular`, '(min-width: 1100px) 16vw, 44vw'), verProyecto(p), ' ba--movil'));
+    }
+    for (const m of pr.demos || []) {
+      const p = porSlug(m.slug);
+      const v = vistaDe(m.slug, m.vista);
+      figs.push(figura('demo', fotoCaso(v, `Demo de NVY Studios: ${p.nombre}, ${p.rubro}`, v.movil ? '(min-width: 1100px) 16vw, 44vw' : '(min-width: 1100px) 30vw, 92vw'),
+        `<span>${esc(p.nombre)} · demo</span><a href="${esc(p.url)}" ${externo}>ver demo ${icono('diagonal')}</a>`, v.movil ? ' ba--movil' : ''));
+    }
+    const mensaje = `Hola Gaspar, vi tu web. Tengo este problema: "${pr.problema}" ¿Me puedes cotizar ${pr.tipo === 'cartas' ? 'una carta digital' : 'una web'}?`;
+    return `      <article class="prob" data-tipo="${pr.tipo}" style="--o:${i * 2}">
+        <p class="prob__tipo">${TIPOS_PROBLEMA[pr.tipo]}</p>
+        <h3 class="prob__t"><button class="prob__abre" type="button" id="${id}-t" aria-expanded="false" aria-controls="${id}">“${esc(pr.problema)}”</button></h3>
+        <span class="prob__mas" aria-hidden="true">${icono('mas')}</span>
+      </article>
+      <div class="prob__panel" id="${id}" role="region" aria-labelledby="${id}-t" data-tipo="${pr.tipo}" style="--o:${i * 2 + 1}">
+        <div class="prob__in"><div class="prob__cuerpo">
+          <div class="prob__texto">
+            <p class="prob__lbl">por qué te cuesta clientes</p>
+            <p class="prob__p">${esc(pr.porque)}</p>
+            <p class="prob__lbl">cómo lo resolvemos</p>
+            <p class="prob__p">${esc(pr.solucion)}</p>
+            ${pr.caso ? `<p class="prob__caso">${esc(pr.caso)}</p>` : ''}
+            <a class="boton" href="${wa(mensaje)}" ${externo}>cotizar por whatsapp ${icono('diagonal')}</a>
+          </div>
+          <div class="prob__figs${figs.every((f) => f.includes('ba--movil')) ? ' prob__figs--moviles' : ''}" style="--n:${figs.length}">${figs.join('')}</div>
+        </div></div>
+      </div>`;
+  }).join('\n');
+
+  const filtros = [['todos', 'todos'], ['webs', 'webs'], ['cartas', 'cartas']]
+    .map(([valor, txt]) => `<button class="ctrl" type="button" data-filtro-prob="${valor}" aria-pressed="${valor === 'todos'}">${txt}</button>`).join('');
+
+  const destacados = inicio.destacados.map((s) => {
+    const p = porSlug(s);
+    return `      <li class="dest"><a href="/trabajos/${p.slug}">
+        <div class="dest__foto">${picture(vistas(s).e[0], { sizes: '(min-width: 721px) 31vw, 92vw', alt: `Portada del sitio de ${p.cliente || p.nombre}` })}</div>
+        <p class="dest__nombre">${esc(p.nombre)}</p>
+        <p class="dest__rubro">${esc(p.rubro)}</p>
+      </a></li>`;
+  }).join('\n');
+
+  const preguntas = inicio.preguntas.map(([q, r]) => `      <details class="faq__item">
+        <summary><span>${esc(q)}</span><span class="faq__mas" aria-hidden="true">${icono('mas')}</span></summary>
+        <div class="faq__r"><p>${esc(r)}</p></div>
+      </details>`).join('\n');
+
+  const cuerpo = `<main id="contenido">
+  <section class="pregunta" aria-labelledby="pregunta-titulo">
+    <h1 class="pregunta__h1" id="pregunta-titulo" aria-label="${esc(inicio.pregunta)}" data-reveal="letras">${palabras(inicio.pregunta)}</h1>
+    <div class="pregunta__pie">
+      <p class="pregunta__bajada">${esc(inicio.bajada)}</p>
+      <div class="pregunta__acciones">
+        <a class="boton" href="#problemas">ver problemas que resolvemos ${icono('abajo')}</a>
+        <a class="enlace" href="/trabajos">ver trabajos ${icono('derecha')}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="problemas" id="problemas" aria-labelledby="problemas-titulo">
+    <div class="problemas__cab">
+      <h2 class="titulo-seccion" id="problemas-titulo" aria-label="Problemas" data-reveal="letras">${letras('Problemas')}</h2>
+      <div class="filtros" role="group" aria-label="Filtrar problemas">${filtros}</div>
+    </div>
+    <p class="problemas__sub">Toca el que se parezca al tuyo.</p>
+    <div class="probs" data-probs>
+${tarjetas}
+    </div>
+  </section>
+
+${seccionProceso()}
+
+  <section class="destacados" aria-labelledby="destacados-titulo">
+    <h2 class="titulo-seccion" id="destacados-titulo" aria-label="Trabajos" data-reveal="letras">${letras('Trabajos')}</h2>
+    <ul class="dests">
+${destacados}
+    </ul>
+    <a class="boton destacados__boton" href="/trabajos">ver todos los trabajos ${icono('derecha')}</a>
+  </section>
+
+  <section class="faq" id="preguntas" aria-labelledby="faq-titulo">
+    <h2 class="titulo-seccion" id="faq-titulo" aria-label="Preguntas frecuentes" data-reveal="letras">${letras('Preguntas')}</h2>
+    <div class="faq__lista">
+${preguntas}
+    </div>
+  </section>
+
+${seccionContacto(inicio.whatsappTexto)}
+</main>`;
+
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      NEGOCIO,
+      { '@type': 'WebSite', '@id': `${BASE}/#website`, url: `${BASE}/`, name: 'NVY Studios', inLanguage: 'es-CL', publisher: { '@id': `${BASE}/#business` } },
+      {
+        '@type': 'FAQPage', '@id': `${BASE}/#preguntas`, inLanguage: 'es-CL',
+        mainEntity: inicio.preguntas.map(([q, r]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: r } })),
+      },
+    ],
+  };
+
+  // Los links viejos a /#trabajos o /#sobre-mi (esas secciones ahora viven en /trabajos).
+  // El servidor nunca ve lo que va despues del #, asi que lo resuelve el navegador.
+  const previo = '<script>if(/^#(trabajos|sobre-mi|demos)$/.test(location.hash))location.replace(\'/trabajos\'+location.hash)</script>\n';
+
+  return layout({
+    titulo: sitio.titulo,
+    descripcion: sitio.descripcion,
+    ruta: '/',
+    og: { titulo: sitio.titulo, descripcion: sitio.ogDescripcion, alt: 'NVY Studios: webs a medida y cartas digitales, Valdivia, Chile' },
+    verificacion: true,
+    ld,
+    cuerpo,
+    claseBody: 'pag-inicio',
+    claro: true,
+    contacto: '#contacto',
+    waTexto: inicio.whatsappTexto,
+    previo,
+  });
+}
+
+// ---------- trabajos (el portafolio) ----------
 // La "S" y la "t" de Studios se tocan justo en el borde. Con el espaciado de la portada
 // la t se montaba 0.0035 em sobre la S (medido sobre el dibujo real de la fuente a 1000 px).
 const JUNTA_ST = 0.0035;
 
-function paginaHome() {
+function paginaTrabajos() {
   const obras = proyectos.map((p, i) => {
     const v = vistas(p.slug);
     const portada = v.e[0];
@@ -378,17 +578,6 @@ ${FILTROS.filter(([valor]) => valor === 'todos' || estados.has(valor)).map(([val
         </div>
 `;
 
-  const PASOS = [
-    ['Análisis', 'yo', 'Parto entendiendo tu negocio: qué necesitas que haga tu web, a quién le habla y qué tiene que contar.'],
-    ['Tu parte', 'tú', 'Respondes unas preguntas y me envías todo el material que la web necesite: logo, fotos, videos y textos. Mientras más claro y completo, mejor sale.'],
-    ['Diseño', 'yo', 'Diseño la web a medida, sin plantillas, con la identidad de tu marca.'],
-    ['Desarrollo', 'yo', 'La programo completa y la dejo funcionando en todos los dispositivos. Me encargo yo de todo.'],
-  ];
-  const pasos = PASOS.map(([t, quien, d], k) => `      <li class="paso${quien === 'tú' ? ' paso--tu' : ''}${k === 0 ? ' is-activo' : ''}">
-        <button class="paso__abre" type="button" aria-expanded="${k === 0}" aria-label="${t}"></button>
-        <span class="paso__quien">${quien === 'tú' ? 'de tu parte' : 'de mi parte'}</span>
-        <div class="paso__cu"><h3 class="paso__t">${t}</h3><p class="paso__d">${d}</p></div>
-      </li>`).join('\n');
   const citas = testimoniosVisibles.map((t) => {
     const linea = coloresLinea(proyectos.find((p) => p.slug === t.proyecto));
     return `      <li class="cita${linea ? ' cita--marca' : ''}"${linea ? ` style="--l1:${linea[0]};--l2:${linea[1]}"` : ''}>
@@ -435,13 +624,6 @@ ${sitio.sobreMiExtra ? `      <p class="sobre__extra" data-reveal="texto">${esc(
 ` : ''}${sitio.linkedin || sitio.instagram ? `      <p class="sobre__redes">${[['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u).map(([n, u]) => `<a href="${esc(u)}" ${externo}>${n} ${icono('diagonal')}</a>`).join('')}</p>\n` : ''}    </div>
   </section>
 
-  <section class="proceso" id="proceso" aria-labelledby="proceso-titulo">
-    <h2 class="titulo-seccion" id="proceso-titulo" aria-label="Proceso" data-reveal="letras">${letras('Proceso')}</h2>
-    <ol class="pasos">
-${pasos}
-    </ol>
-  </section>
-
   <section class="testimonios" aria-labelledby="testimonios-titulo">
     <h2 class="titulo-seccion" id="testimonios-titulo" aria-label="Testimonios" data-reveal="letras">${letras('Testimonios')}</h2>
     <ol class="citas">
@@ -449,37 +631,40 @@ ${citas}
     </ol>
   </section>
 
-  <section class="contacto" id="contacto" aria-labelledby="contacto-titulo">
-    <h2 class="contacto__titulo" id="contacto-titulo" aria-label="¿Conversamos?" data-reveal="letras" style="--em:${anchoEm('¿Conversamos?').toFixed(3)}">${letras('¿Conversamos?', { degradado: true })}</h2>
-    <div class="contacto__fila">
-      <a class="boton" href="${wa()}" ${externo}>escribir por whatsapp ${icono('diagonal')}</a>
-      <a class="contacto__dato" href="mailto:${sitio.correo}">${sitio.correo}</a>
-      <span class="contacto__dato">${esc(sitio.ciudad)}</span>
-    </div>
-  </section>
+${seccionContacto()}
 </main>`;
 
+  const url = `${BASE}/trabajos`;
   const ld = {
     '@context': 'https://schema.org',
     '@graph': [
-      NEGOCIO,
-      { '@type': 'WebSite', '@id': `${BASE}/#website`, url: `${BASE}/`, name: 'NVY Studios', inLanguage: 'es-CL', publisher: { '@id': `${BASE}/#business` } },
       {
-        '@type': 'ItemList', '@id': `${BASE}/#trabajos`, name: 'Trabajos de NVY Studios', numberOfItems: proyectos.length,
+        '@type': 'CollectionPage', '@id': `${url}#pagina`, url, name: sitio.trabajos.titulo, description: sitio.trabajos.descripcion,
+        inLanguage: 'es-CL', isPartOf: { '@id': `${BASE}/#website` }, about: { '@id': `${BASE}/#business` }, mainEntity: { '@id': `${url}#lista` },
+      },
+      {
+        '@type': 'ItemList', '@id': `${url}#lista`, name: 'Trabajos de NVY Studios', numberOfItems: proyectos.length,
         itemListElement: proyectos.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.nombre, url: `${BASE}/trabajos/${p.slug}` })),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
+          { '@type': 'ListItem', position: 2, name: 'Trabajos', item: url },
+        ],
       },
     ],
   };
 
   return layout({
-    titulo: sitio.titulo,
-    descripcion: sitio.descripcion,
-    ruta: '/',
-    og: { titulo: sitio.titulo, descripcion: sitio.ogDescripcion, alt: 'NVY Studios — diseño y desarrollo web, Valdivia, Chile' },
-    verificacion: true,
+    titulo: sitio.trabajos.titulo,
+    descripcion: sitio.trabajos.descripcion,
+    ruta: '/trabajos',
+    og: { descripcion: sitio.trabajos.ogDescripcion, alt: 'Trabajos de NVY Studios, diseño y desarrollo web en Valdivia, Chile' },
     ld,
     cuerpo,
-    claseBody: 'pag-home',
+    claseBody: 'pag-trabajos',
+    contacto: '#contacto',
   });
 }
 
@@ -509,7 +694,7 @@ function paginaProyecto(p, i) {
 
   const cuerpo = `<main id="contenido" class="proyecto">
   <header class="proyecto__cab">
-    <a class="volver" href="/#trabajos">${icono('izquierda')} trabajos</a>
+    <a class="volver" href="/trabajos">${icono('izquierda')} trabajos</a>
     <h1 class="proyecto__titulo${p.colores ? ' marca' : ''}" aria-label="${esc(p.nombre)}" data-reveal="letras" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}${p.colores ? `;${estiloMarca(p)}` : ''}">${letras(p.nombre, { degradado: true, corte: p.corte })}</h1>
     <dl class="ficha">
 ${ficha.map(([dt, dd]) => `      <div class="ficha__item"><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}
@@ -561,7 +746,8 @@ ${piezas.join('\n')}
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
-          { '@type': 'ListItem', position: 2, name: p.nombre, item: url },
+          { '@type': 'ListItem', position: 2, name: 'Trabajos', item: `${BASE}/trabajos` },
+          { '@type': 'ListItem', position: 3, name: p.nombre, item: url },
         ],
       },
     ],
@@ -636,7 +822,7 @@ function pagina404() {
   <p class="no-existe__lbl">error 404</p>
   <h1 class="no-existe__titulo" data-reveal="mascara"><span>Esta página no existe.</span></h1>
   <p class="no-existe__txt">Puede que el link esté mal escrito o que la página se haya movido.</p>
-  <a class="boton" href="/#trabajos">ver trabajos ${icono('derecha')}</a>
+  <a class="boton" href="/trabajos">ver trabajos ${icono('derecha')}</a>
 </main>`;
   return layout({ titulo: 'Página no encontrada — NVY Studios', descripcion: 'Esta página no existe.', ruta: '/404', indexar: false, cuerpo, claseBody: 'pag-404' });
 }
@@ -645,6 +831,7 @@ function pagina404() {
 function sitemap() {
   const urls = [
     [`${BASE}/`, HOY, '1.0'],
+    [`${BASE}/trabajos`, HOY, '0.9'],
     ...proyectos.map((p) => [`${BASE}/trabajos/${p.slug}`, HOY, '0.8']),
     ...LEGALES.map((l) => [`${BASE}/${l.archivo}.html`, l.lastmod, '0.3']),
   ];
@@ -660,7 +847,8 @@ ${urls.map(([loc, lastmod, prioridad]) => `  <url>
 }
 
 // ---------- escritura ----------
-escribir('index.html', paginaHome());
+escribir('index.html', paginaInicio());
+escribir('trabajos/index.html', paginaTrabajos());
 proyectos.forEach((p, i) => escribir(`trabajos/${p.slug}/index.html`, paginaProyecto(p, i)));
 for (const l of LEGALES) escribir(`${l.archivo}.html`, paginaLegal(l));
 escribir('404.html', pagina404());
@@ -677,5 +865,5 @@ for (const d of readdirSync(dirTrabajos)) {
 }
 
 const sinCapturas = proyectos.filter((p) => !vistas(p.slug).e.length).map((p) => p.slug);
-console.log(`Listo: home, ${proyectos.length} proyectos, ${LEGALES.length} legales, 404 y sitemap.`);
+console.log(`Listo: inicio, trabajos, ${proyectos.length} proyectos, ${LEGALES.length} legales, 404 y sitemap.`);
 if (sinCapturas.length) console.log(`  Sin capturas todavia: ${sinCapturas.join(', ')} (corre _build/capturas.mjs)`);

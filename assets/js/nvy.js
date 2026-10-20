@@ -190,6 +190,100 @@
   // Al volver con el boton atras (bfcache) la pagina puede quedar con el menu abierto.
   addEventListener('pageshow', (e) => { if (e.persisted && abierto()) cerrar(false); });
 
+  // Las capturas se descargan apenas la pagina queda libre: asi la grilla, la fila
+  // abierta en el celular y la captura del centro aparecen al tiro.
+  const alQuedarLibre = (fn) => {
+    const libre = () => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 300));
+    if (d.readyState === 'complete') libre();
+    else addEventListener('load', libre, { once: true });
+  };
+
+  /* ---------- proceso: paneles que se expanden ---------- */
+  const paneles = $$('.paso');
+  const activar = (p) => paneles.forEach((o) => {
+    const on = o === p;
+    o.classList.toggle('is-activo', on);
+    $('.paso__abre', o).setAttribute('aria-expanded', String(on));
+  });
+  paneles.forEach((p) => {
+    $('.paso__abre', p).addEventListener('click', () => activar(p));
+    p.addEventListener('mouseenter', () => { if (matchMedia('(hover: hover)').matches) activar(p); });
+  });
+
+  /* ---------- demos: la vista previa sigue al nombre bajo el cursor ---------- */
+  const demos = $$('.demo');
+  const dshots = $$('.dshot');
+  const verDemo = (i) => { demos.forEach((x, n) => x.classList.toggle('is-activo', n === i)); dshots.forEach((x, n) => x.classList.toggle('is-activo', n === i)); };
+  demos.forEach((x, i) => {
+    x.addEventListener('mouseenter', () => verDemo(i));
+    x.addEventListener('focusin', () => verDemo(i));
+    x.addEventListener('click', () => verDemo(i));
+  });
+
+  /* ---------- inicio: problemas que se abren dentro de la grilla ---------- */
+  // Cada tarjeta lleva su panel justo despues en el HTML. Cerrado, el panel queda al
+  // final de la grilla (order 999, alto 0); al abrirlo se ubica despues de la ultima
+  // tarjeta de su fila y ocupa todo el ancho. Una abierta a la vez.
+  const probs = $('[data-probs]');
+  if (probs) {
+    const tarjetas = $$('.prob', probs);
+    const botonDe = (t) => $('.prob__abre', t);
+    const panelDe = (t) => d.getElementById(botonDe(t).getAttribute('aria-controls'));
+    const ubicar = (t) => {
+      const fila = tarjetas.filter((x) => !x.hidden && x.offsetTop === t.offsetTop);
+      panelDe(t).style.order = Math.max(...fila.map((x) => Number(x.style.getPropertyValue('--o')))) + 1;
+    };
+    const marcarProb = (t, on) => {
+      t.classList.toggle('is-abierta', on);
+      botonDe(t).setAttribute('aria-expanded', String(on));
+      panelDe(t).classList.toggle('is-abierto', on);
+    };
+    // Al cambiar de tarjeta, la anterior se cierra al tiro (sin animar) para que la
+    // grilla no baile con dos paneles moviendose a la vez.
+    const cerrarProb = (t, animado = true) => {
+      const p = panelDe(t);
+      if (!animado) p.classList.add('sin-anim');
+      marcarProb(t, false);
+      if (!animado) { p.style.order = ''; void p.offsetWidth; p.classList.remove('sin-anim'); return; }
+      setTimeout(() => { if (!t.classList.contains('is-abierta')) p.style.order = ''; if (lenis) lenis.resize(); }, 600);
+    };
+    const abrirProb = (t) => {
+      tarjetas.forEach((x) => { if (x !== t && x.classList.contains('is-abierta')) cerrarProb(x, false); });
+      ubicar(t);
+      void panelDe(t).offsetWidth;
+      marcarProb(t, true);
+      // Al terminar de abrir: si la tarjeta quedo arriba de la pantalla o el panel
+      // cortado abajo, la pagina se mueve lo justo.
+      setTimeout(() => {
+        if (lenis) lenis.resize();
+        const r = t.getBoundingClientRect();
+        const abajo = panelDe(t).getBoundingClientRect().bottom - innerHeight + 24;
+        const mover = r.top < 88 ? r.top - 96 : Math.min(Math.max(0, abajo), r.top - 96);
+        if (Math.abs(mover) < 8) return;
+        if (lenis) lenis.scrollTo(scrollY + mover, { duration: 0.9 });
+        else scrollBy({ top: mover, behavior: reducido ? 'auto' : 'smooth' });
+      }, 600);
+    };
+    tarjetas.forEach((t) => botonDe(t).addEventListener('click', () => (t.classList.contains('is-abierta') ? cerrarProb(t) : abrirProb(t))));
+    // Si cambia el numero de columnas, el panel abierto vuelve a quedar bajo su fila.
+    addEventListener('resize', () => { const t = tarjetas.find((x) => x.classList.contains('is-abierta')); if (t) ubicar(t); });
+
+    for (const b of $$('[data-filtro-prob]')) {
+      b.addEventListener('click', () => {
+        if (b.getAttribute('aria-pressed') === 'true') return;
+        $$('[data-filtro-prob]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        const filtro = b.dataset.filtroProb;
+        for (const t of tarjetas) {
+          if (t.classList.contains('is-abierta')) cerrarProb(t, false);
+          t.hidden = !(filtro === 'todos' || t.dataset.tipo === filtro);
+          panelDe(t).hidden = t.hidden;
+        }
+        if (lenis) lenis.resize();
+      });
+    }
+    alQuedarLibre(() => $$('img[loading="lazy"]', probs).forEach((img) => { img.loading = 'eager'; }));
+  }
+
   /* ---------- trabajos: filtros, vista, filas que entran y captura al centro ---------- */
   const obras = $('[data-obras]');
   if (!obras) return;
@@ -228,13 +322,6 @@
     if (lenis) lenis.resize();
   };
 
-  // Las capturas se descargan apenas la pagina queda libre: asi la grilla, la fila
-  // abierta en el celular y la captura del centro aparecen al tiro.
-  const alQuedarLibre = (fn) => {
-    const libre = () => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 300));
-    if (d.readyState === 'complete') libre();
-    else addEventListener('load', libre, { once: true });
-  };
   alQuedarLibre(() => $$('img[loading="lazy"]', seccion).forEach((img) => { img.loading = 'eager'; }));
 
   for (const b of $$('[data-filtro]')) {
@@ -304,27 +391,5 @@
         else scrollBy({ top: sobra, behavior: reducido ? 'auto' : 'smooth' });
       }
     }, 520);
-  });
-
-  /* ---------- proceso: paneles que se expanden ---------- */
-  const paneles = $$('.paso');
-  const activar = (p) => paneles.forEach((o) => {
-    const on = o === p;
-    o.classList.toggle('is-activo', on);
-    $('.paso__abre', o).setAttribute('aria-expanded', String(on));
-  });
-  paneles.forEach((p) => {
-    $('.paso__abre', p).addEventListener('click', () => activar(p));
-    p.addEventListener('mouseenter', () => { if (matchMedia('(hover: hover)').matches) activar(p); });
-  });
-
-  /* ---------- demos: la vista previa sigue al nombre bajo el cursor ---------- */
-  const demos = $$('.demo');
-  const dshots = $$('.dshot');
-  const verDemo = (i) => { demos.forEach((x, n) => x.classList.toggle('is-activo', n === i)); dshots.forEach((x, n) => x.classList.toggle('is-activo', n === i)); };
-  demos.forEach((x, i) => {
-    x.addEventListener('mouseenter', () => verDemo(i));
-    x.addEventListener('focusin', () => verDemo(i));
-    x.addEventListener('click', () => verDemo(i));
   });
 })();

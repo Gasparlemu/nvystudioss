@@ -2,6 +2,19 @@
 
 Todo el contenido vive en `data/proyectos.json`. Las páginas (`index.html`, `trabajos/*`, legales, `404.html`, `sitemap.xml`) se generan con `_build/build.mjs`: **no se editan a mano**.
 
+- `/` es el inicio (fondo blanco): pregunta, problemas, proceso, 3 trabajos destacados, preguntas frecuentes y contacto. Su contenido está en `"inicio"` del JSON.
+- `/trabajos` es el portafolio (negro). Su title y description están en `sitio.trabajos`.
+
+## Tarjetas de problemas (`inicio.problemas`)
+
+- `tipo`: `webs` o `cartas` (filtros de arriba).
+- `problema`, `porque`, `solucion`, `caso`: textos. El mensaje de WhatsApp se arma solo con el `problema`.
+- `antes`: `{ "captura": "<carpeta en assets/img/trabajos>", "nota": "..." }` o `{ "texto": "No tenía web." }`.
+- `despues`: lista de slugs publicados (usa su captura e1 y su link "ver proyecto").
+- `moviles`: lista de slugs publicados (usa su captura de celular m1).
+- `demos`: `[{ "slug": "niebla-cafeteria", "vista": "e2" }]`. Tiene que ser un proyecto con `estado: demo` y la vista tiene que existir (`e1`, `m2`, etc.). Se marcan como demo en la página.
+- El build falla si un caso no está publicado o falta una captura.
+
 Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer push del JSON.
 
 ## Sumar un proyecto
