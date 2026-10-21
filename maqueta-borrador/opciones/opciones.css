@@ -1,0 +1,574 @@
+/* Opciones de diseño del inicio (maqueta, no se publica). Fondo liso en toda la web. */
+:root {
+  --m-azul: #0a1f5c;
+  --m-azul-medio: #2a55cc;
+  --m-celeste: #9dbaf7;
+  /* el degradado del panel del menu */
+  --m-grad: radial-gradient(90% 60% at 100% 0%, rgba(169,195,248,.34), rgba(169,195,248,0) 70%), linear-gradient(195deg, #1d44ad 0%, #0a1f5c 48%, #081849 100%);
+  --m-sombra-1: 0 1px 2px rgba(10,31,92,.06), 0 10px 24px -10px rgba(10,31,92,.16), 0 28px 56px -28px rgba(10,31,92,.22);
+  --m-sombra-2: 0 2px 4px rgba(10,31,92,.06), 0 18px 36px -12px rgba(10,31,92,.22), 0 48px 80px -32px rgba(29,68,173,.32);
+  --m-brillo: inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+/* ======================= panel de opciones ======================= */
+.op { position: fixed; left: 12px; bottom: 12px; z-index: 200; font: 500 12px/1.3 var(--texto); color: #0b0b0c; }
+.op__abre { padding: 9px 14px; border-radius: 99px; background: #0b0b0c; color: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+.op__cuerpo {
+  display: none; position: absolute; left: 0; bottom: 44px; width: min(600px, calc(100vw - 24px));
+  max-height: 72vh; overflow: auto; padding: 14px; border-radius: 16px;
+  background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.25);
+}
+.op.is-abierto .op__cuerpo { display: grid; gap: 12px; }
+.op__g > span { display: block; margin-bottom: 6px; color: #6e6f73; }
+.op__g > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.op__g button { padding: 6px 10px; border-radius: 99px; background: #f1f2f5; }
+.op__g button[aria-pressed="true"] { background: var(--m-azul); color: #fff; }
+
+/* ======================= portada: muro de fotos en todo el hero ======================= */
+.hero { display: none !important; position: relative; isolation: isolate; overflow: hidden; justify-content: flex-end; }
+html[data-hero^="7"] .hero--7 { display: flex !important; }
+.hero__txt { position: relative; }
+/* brillo blanco detras del titulo; va aqui y no como text-shadow, porque cada palabra
+   recorta su sombra (overflow hidden) y se veian lineas entre palabras */
+.hero__txt::before { content: ""; position: absolute; inset: -14% -10% -6% -6%; z-index: -1; pointer-events: none;
+  background: radial-gradient(farthest-side at 38% 58%, rgba(255,255,255,.5) 0%, rgba(255,255,255,.3) 55%, rgba(255,255,255,0) 100%); }
+
+.shot { overflow: hidden; background: #fff; aspect-ratio: 16 / 10; border-radius: 14px; box-shadow: 0 30px 50px -20px rgba(10,31,92,.35); }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+.muro { position: absolute; z-index: -2; top: -55%; left: -25%; width: 150%; display: grid; gap: 22px;
+  grid-template-columns: repeat(7, minmax(0, 1fr)); transform: rotateX(40deg) rotateZ(-24deg); }
+/* el padding de abajo iguala el hueco entre las dos copias: asi -50% calza exacto */
+.muro__col { display: flex; flex-direction: column; gap: 22px; padding-bottom: 22px; }
+.muro__col:nth-child(even) { margin-top: 14%; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.45) 0, rgba(255,255,255,0) 8%), linear-gradient(0deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,0) 15%), radial-gradient(62% 58% at 22% 70%, rgba(255,255,255,.94) 0%, rgba(255,255,255,.84) 48%, rgba(255,255,255,0) 100%); }
+
+/* 7 actual: el muro aparece y las columnas se mecen lento (quieto en celular) */
+.js:not(.estatico) .muro { opacity: 0; transition: opacity 1.4s; transition-delay: .3s; }
+.js.is-listo:not(.estatico) .muro { opacity: 1; }
+html[data-hero="7"].js:not(.estatico) .muro__col { animation: m-sube 30s ease-in-out infinite alternate; }
+html[data-hero="7"].js:not(.estatico) .muro__col:nth-child(even) { animation-name: m-baja; }
+@keyframes m-sube { to { transform: translateY(-3.5%); } }
+@keyframes m-baja { to { transform: translateY(3.5%); } }
+
+/* 7b a 7e: cinta que no para, una columna sube y la del lado baja. Tambien en celular. */
+html:not([data-hero="7"]).js .muro__col { will-change: transform; animation: m-cinta 46s linear infinite; }
+html:not([data-hero="7"]).js .muro__col:nth-child(even) { animation-duration: 58s; animation-direction: reverse; }
+html:not([data-hero="7"]).js .muro__col:nth-child(3n) { animation-duration: 52s; }
+@keyframes m-cinta { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+
+/* 7c: al bajar, el muro se endereza y se acerca (--s va de 0 a 1, lo pone opciones.js) */
+html[data-hero="7c"] .muro { transform: rotateX(calc(40deg - 40deg * var(--s, 0))) rotateZ(calc(-24deg + 24deg * var(--s, 0))) scale(calc(1 + .3 * var(--s, 0))); will-change: transform; }
+
+/* 7d: el muro se corre con el mouse; las columnas pares se mueven mas, como si estuvieran mas cerca */
+html[data-hero="7d"] .muro { translate: calc(var(--mx, 0) * -30px) calc(var(--my, 0) * -22px); }
+html[data-hero="7d"] .muro__col { translate: calc(var(--mx, 0) * -14px) calc(var(--my, 0) * -10px); }
+html[data-hero="7d"] .muro__col:nth-child(even) { translate: calc(var(--mx, 0) * -40px) calc(var(--my, 0) * -30px); }
+
+/* 7e: las fotos llegan una por una desde abajo y despues sigue la cinta */
+html[data-hero="7e"].js .muro { opacity: 1; transition: none; }
+html[data-hero="7e"].js .shot { opacity: 0; transform: translateY(90px) scale(.82); }
+html[data-hero="7e"].js.is-listo .shot { opacity: 1; transform: none;
+  transition: opacity .9s calc(.15s + var(--i) * 70ms), transform 1.3s var(--sale) calc(.15s + var(--i) * 70ms); }
+
+@media (max-width: 900px) {
+  .muro { width: 320%; left: -110%; top: -25%; }
+  /* en celular el muro se ve limpio arriba y el blanco empieza recien sobre el titulo */
+  .hero::after { background: linear-gradient(180deg, rgba(255,255,255,.55) 0, rgba(255,255,255,0) 8%), linear-gradient(0deg, #fff 0%, #fff 27%, rgba(255,255,255,.75) 37%, rgba(255,255,255,0) 52%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .muro__col { animation: none !important; }
+  .shot { opacity: 1 !important; transform: none !important; }
+}
+
+/* las opciones de color del titulo van al final del archivo; las letras las arma opciones.js */
+
+/* ======================= problemas ======================= */
+.prob__foto { display: none; pointer-events: none; }
+.prob__foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.prob__demo { position: absolute; top: 8px; right: 8px; padding: 3px 9px; border-radius: 99px; background: rgba(255,255,255,.94); color: #0b0b0c; font-size: 11px; font-weight: 500; }
+/* el detalle abierto va en una hoja con sombra; el margen es para que la sombra no se corte */
+.prob__in { margin-inline: -48px; padding-inline: 48px; }
+.prob__cuerpo { margin: 2px 0 44px; padding: clamp(24px, 3vw, 48px); border-radius: 26px;
+  background: linear-gradient(180deg, #f7f9ff, #edf2fe); box-shadow: inset 0 0 0 1px rgba(42,85,204,.12), 0 30px 60px -30px rgba(29,68,173,.4); }
+.prob { transition: background-color .45s, color .45s, transform .6s var(--sale), box-shadow .6s var(--sale); }
+@media (hover: hover) { html:not([data-prob="4"]) .prob:not(.is-abierta):hover { transform: translateY(-4px); } }
+
+/* 2 tonos azules (la elegida) */
+html[data-prob="2"] .prob, html[data-prob="5"] .prob { --t1: #f5f8ff; --t2: #dfe8fd;
+  background: radial-gradient(70% 90% at 100% 0%, rgba(255,255,255,.9), rgba(255,255,255,0) 60%), linear-gradient(155deg, var(--t1), var(--t2));
+  color: var(--m-azul); box-shadow: inset 0 0 0 1px rgba(42,85,204,.14), var(--m-brillo), 0 20px 40px -24px rgba(29,68,173,.5); }
+html[data-prob="2"] article.prob:nth-of-type(4n+2), html[data-prob="5"] article.prob:nth-of-type(4n+2) { --t1: #eef4ff; --t2: #cddbfb; }
+html[data-prob="2"] article.prob:nth-of-type(4n+3), html[data-prob="5"] article.prob:nth-of-type(4n+3) { --t1: #e9f0ff; --t2: #c2d3f9; }
+html[data-prob="2"] article.prob:nth-of-type(4n+4), html[data-prob="5"] article.prob:nth-of-type(4n+4) { --t1: #f1f6ff; --t2: #d6e2fc; }
+html[data-prob="2"] .prob__tipo, html[data-prob="5"] .prob__tipo, html[data-prob^="7"] .prob__tipo, html[data-prob="8"] .prob__tipo {
+  display: inline-flex; align-self: flex-start; padding: 4px 10px; border-radius: 99px; background: rgba(255,255,255,.75); color: var(--m-azul-medio); box-shadow: 0 0 0 1px rgba(42,85,204,.12); }
+html[data-prob="2"] .prob__mas, html[data-prob="5"] .prob__mas { background: #fff; color: var(--m-azul); box-shadow: 0 6px 16px -6px rgba(10,31,92,.4); }
+html[data-prob="2"] .prob.is-abierta, html[data-prob="5"] .prob.is-abierta { color: #fff; background: radial-gradient(70% 90% at 100% 0%, rgba(157,186,247,.45), rgba(157,186,247,0) 60%), linear-gradient(155deg, #2a55cc, #0a1f5c 70%);
+  box-shadow: 0 30px 60px -22px rgba(42,85,204,.7); }
+html[data-prob="2"] .prob.is-abierta .prob__tipo, html[data-prob="5"] .prob.is-abierta .prob__tipo { background: rgba(255,255,255,.14); color: #fff; box-shadow: none; }
+
+/* 4 lista grande: una fila por problema, como la lista de trabajos */
+html[data-prob="4"] .probs { grid-template-columns: 1fr; border-top: 1px solid var(--linea); }
+html[data-prob="4"] .prob { flex-direction: row; align-items: center; gap: clamp(16px, 3vw, 48px); min-height: 0; margin: 0;
+  padding: clamp(22px, 2.4vw, 36px) clamp(14px, 1.8vw, 28px); border-radius: 0; background: transparent; border-bottom: 1px solid var(--linea); isolation: isolate; overflow: hidden; }
+html[data-prob="4"] .prob::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #eef3ff, #dde7fd); opacity: 0; transition: opacity .5s; }
+html[data-prob="4"] .prob:hover { background: transparent; }
+html[data-prob="4"] .prob:hover::before { opacity: 1; }
+html[data-prob="4"] .prob.is-abierta { background: transparent; color: #fff; border-radius: 22px; border-bottom-color: transparent; }
+html[data-prob="4"] .prob.is-abierta::before { opacity: 1; background: var(--m-grad); }
+html[data-prob="4"] .prob__tipo { flex: none; width: 7.5em; color: var(--m-azul-medio); }
+html[data-prob="4"] .prob.is-abierta .prob__tipo { color: rgba(255,255,255,.7); }
+html[data-prob="4"] .prob__t { flex: 1; padding-right: 0; font-size: clamp(24px, 3vw, 46px); }
+html[data-prob="4"] .prob__foto { display: block; flex: none; width: 0; height: 84px; overflow: hidden; border-radius: 10px; opacity: 0;
+  box-shadow: 0 16px 30px -14px rgba(10,31,92,.45); transition: width .6s var(--sale), opacity .4s; }
+html[data-prob="4"] .prob:hover .prob__foto, html[data-prob="4"] .prob.is-abierta .prob__foto { width: 134px; opacity: 1; }
+html[data-prob="4"] .prob__foto--movil { height: 110px; }
+html[data-prob="4"] .prob:hover .prob__foto--movil, html[data-prob="4"] .prob.is-abierta .prob__foto--movil { width: 52px; }
+html[data-prob="4"] .prob__demo { display: none; }
+html[data-prob="4"] .prob__mas { position: static; flex: none; width: 52px; height: 52px; background: var(--m-azul); color: #fff; }
+html[data-prob="4"] .prob.is-abierta .prob__mas { background: #fff; color: var(--m-azul); }
+html[data-prob="4"] .prob__cuerpo { margin-top: 16px; }
+
+/* 5 con foto: la captura del caso asoma inclinada en la esquina */
+html[data-prob="5"] .prob { min-height: clamp(250px, 20vw, 320px); overflow: hidden; }
+html[data-prob="5"] .prob__t { max-width: 60%; padding-right: 0; }
+html[data-prob="5"] .prob__foto { display: block; position: absolute; right: -5%; bottom: -16%; width: 44%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 12px; rotate: -5deg;
+  box-shadow: 0 24px 40px -16px rgba(10,31,92,.5); transition: rotate .7s var(--sale), translate .7s var(--sale); }
+html[data-prob="5"] .prob__foto--movil { width: 22%; aspect-ratio: 390 / 844; right: 9%; bottom: -34%; border-radius: 18px; border: 4px solid #0b0b0c; }
+html[data-prob="5"] .prob:hover .prob__foto, html[data-prob="5"] .prob.is-abierta .prob__foto { rotate: -2deg; translate: 0 -10px; }
+html[data-prob="5"] .prob__mas { top: clamp(16px, 1.6vw, 24px); bottom: auto; z-index: 2; }
+html[data-prob="5"] .prob__demo { right: auto; left: 8px; }
+
+/* 6 azul con brillo que sigue al mouse */
+html[data-prob="6"] .prob { color: #fff; background-color: #0b1c4f;
+  background-image: radial-gradient(280px circle at var(--mx, -400px) var(--my, -400px), rgba(157,186,247,.3), rgba(157,186,247,0) 70%), linear-gradient(160deg, #13308a 0%, #0a1f5c 55%, #081849 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), inset 0 1px 0 rgba(255,255,255,.14), 0 24px 44px -24px rgba(10,31,92,.7); }
+html[data-prob="6"] .prob:hover { background-color: #0b1c4f; }
+html[data-prob="6"] .prob__tipo { color: rgba(255,255,255,.62); }
+html[data-prob="6"] .prob__mas { background: rgba(255,255,255,.12); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+html[data-prob="6"] .prob.is-abierta { background-image: radial-gradient(280px circle at var(--mx, -400px) var(--my, -400px), rgba(255,255,255,.22), rgba(255,255,255,0) 70%), linear-gradient(160deg, #3a63d6 0%, #1d44ad 55%, #0a1f5c 100%);
+  box-shadow: 0 30px 60px -22px rgba(42,85,204,.75); }
+html[data-prob="6"] .prob.is-abierta .prob__mas { background: #fff; color: var(--m-azul); }
+
+/* 7 mosaico: tarjetas de distinto ancho y tres tonos (azul, celeste y blanco) */
+html[data-prob^="7"] .probs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+html[data-prob^="7"] article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8)) { grid-column: span 2; }
+html[data-prob^="7"] article.prob:nth-of-type(10) { grid-column: span 3; }
+html[data-prob^="7"] article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(10)) .prob__t { font-size: clamp(28px, 2.8vw, 44px); max-width: 22ch; }
+html[data-prob^="7"] .prob { color: var(--m-azul); background: linear-gradient(155deg, #f2f6ff, #d5e1fc); box-shadow: inset 0 0 0 1px rgba(42,85,204,.14), var(--m-brillo), 0 20px 40px -24px rgba(29,68,173,.5); }
+html[data-prob^="7"] article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)) { color: #fff; background: var(--m-grad); box-shadow: 0 24px 44px -24px rgba(10,31,92,.7); }
+html[data-prob^="7"] article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)) .prob__tipo { background: rgba(255,255,255,.14); color: #fff; box-shadow: none; }
+html[data-prob^="7"] article.prob:is(:nth-of-type(3), :nth-of-type(5), :nth-of-type(8)) { background: #fff; box-shadow: 0 0 0 1px rgba(10,31,92,.06), var(--m-sombra-1); }
+html[data-prob^="7"] .prob__mas { background: var(--m-azul); color: #fff; }
+html[data-prob^="7"] article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)) .prob__mas { background: #fff; color: var(--m-azul); }
+html[data-prob^="7"] article.prob.is-abierta { color: #fff; background: linear-gradient(155deg, #3a63d6, #1d44ad 55%, #0a1f5c); box-shadow: 0 30px 60px -22px rgba(42,85,204,.75); }
+html[data-prob^="7"] article.prob.is-abierta .prob__tipo { background: rgba(255,255,255,.14); color: #fff; box-shadow: none; }
+html[data-prob^="7"] article.prob.is-abierta .prob__mas { background: #fff; color: var(--m-azul); }
+
+/* 7b y 7c: el mosaico con la foto del caso */
+html:is([data-prob="7b"], [data-prob="7c"]) .prob { overflow: hidden; isolation: isolate; min-height: clamp(270px, 21vw, 330px); }
+
+/* 7b foto asomando: las capturas de escritorio van en un MacBook (como en Trabajos) y las de celular en un telefono entero */
+html[data-prob="7b"] .prob__t { max-width: 58%; padding-right: 0; }
+html[data-prob="7b"] .prob__foto { display: flex; flex-direction: column; position: absolute; z-index: -1; right: -9%; top: 30%; width: 46%; rotate: -5deg;
+  filter: drop-shadow(0 18px 22px rgba(10,31,92,.35)); transition: rotate .7s var(--sale), translate .7s var(--sale); }
+html[data-prob="7b"] .prob__foto img { aspect-ratio: 16 / 10; height: auto; border: 6px solid #0b0b0c; border-bottom-width: 8px; border-radius: 9px 9px 2px 2px; background: #0b0b0c; }
+html[data-prob="7b"] .prob__foto:not(.prob__foto--movil)::after { content: ""; display: block; height: 7px; margin: 0 -8%; border-radius: 1px 1px 8px 8px;
+  background: linear-gradient(#a9abb1, #a9abb1) 50% 0 / 16% 3px no-repeat, linear-gradient(180deg, #eceef1 0%, #d2d4d9 45%, #a3a5ab 100%); }
+html[data-prob="7b"] .prob__foto--movil { overflow: hidden; top: auto; bottom: 18px; right: 10%; width: 20%; border-radius: 20px; border: 4px solid #0b0b0c; background: #0b0b0c; rotate: -4deg; filter: none; box-shadow: 0 24px 40px -16px rgba(10,31,92,.5); }
+html[data-prob="7b"] .prob__foto--movil img { border: 0; }
+html[data-prob="7b"] .prob__foto--movil img { aspect-ratio: 390 / 844; border-radius: 15px; }
+html[data-prob="7b"] .prob:hover .prob__foto, html[data-prob="7b"] .prob.is-abierta .prob__foto { rotate: -2deg; translate: 0 -10px; }
+html[data-prob="7b"] .prob__mas { top: clamp(16px, 1.6vw, 24px); bottom: auto; }
+html[data-prob="7b"] .prob__demo { top: 26px; right: auto; left: 8px; }
+html[data-prob="7b"] .prob__foto--movil .prob__demo { top: 8px; }
+@media (min-width: 1101px) {
+  html[data-prob="7b"] article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8)) .prob__foto:not(.prob__foto--movil) { width: 36%; right: 4%; top: auto; bottom: -14%; }
+  html[data-prob="7b"] article.prob:is(:nth-of-type(4), :nth-of-type(8)) .prob__foto:not(.prob__foto--movil) { bottom: -4%; }
+  html[data-prob="7b"] article.prob:nth-of-type(10) .prob__foto:not(.prob__foto--movil) { width: 27%; right: 6%; top: auto; bottom: -16%; }
+  html[data-prob="7b"] article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8)) .prob__foto--movil { width: 11%; right: 12%; }
+  html[data-prob="7b"] article.prob:nth-of-type(10) .prob__foto--movil { width: 8%; right: 14%; }
+}
+
+/* 7c foto de fondo: la captura llena la tarjeta y un velo de su mismo tono la tapa a la izquierda */
+html[data-prob="7c"] .prob { --v: 228, 236, 253; }
+html[data-prob="7c"] article.prob:is(:nth-of-type(3), :nth-of-type(5), :nth-of-type(8)) { --v: 255, 255, 255; }
+html[data-prob="7c"] article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)) { --v: 10, 31, 92; }
+html[data-prob="7c"] article.prob.is-abierta { --v: 29, 68, 173; }
+html[data-prob="7c"] .prob__foto { display: block; position: absolute; inset: 0; z-index: -2; }
+html[data-prob="7c"] .prob__foto img { transition: scale 1.2s var(--sale); }
+html[data-prob="7c"] .prob:hover .prob__foto img { scale: 1.05; }
+html[data-prob="7c"] .prob::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; transition: background .45s;
+  background: linear-gradient(105deg, rgb(var(--v)) 0%, rgb(var(--v)) 34%, rgba(var(--v), .9) 55%, rgba(var(--v), .4) 100%); }
+/* las capturas de celular no se estiran: asoman como telefono, igual que en 7b */
+html[data-prob="7c"] .prob__foto--movil { inset: auto 9% -40% auto; z-index: -1; width: 21%; aspect-ratio: 390 / 844; overflow: hidden; border-radius: 18px; border: 4px solid #0b0b0c; rotate: -6deg;
+  box-shadow: 0 24px 40px -16px rgba(10,31,92,.5); transition: rotate .7s var(--sale), translate .7s var(--sale); }
+html[data-prob="7c"] .prob:hover .prob__foto--movil, html[data-prob="7c"] .prob.is-abierta .prob__foto--movil { rotate: -2deg; translate: 0 -12px; }
+html[data-prob="7c"] .prob:has(.prob__foto--movil)::before { background: rgb(var(--v)); }
+@media (min-width: 1101px) {
+  html[data-prob="7c"] article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8)) .prob__foto--movil { width: 12%; right: 12%; }
+  html[data-prob="7c"] article.prob:nth-of-type(10) .prob__foto--movil { width: 8%; right: 14%; }
+}
+html[data-prob="7c"] .prob__t { max-width: 70%; padding-right: 0; }
+@media (max-width: 720px) {
+  html[data-prob="7b"] article.prob:nth-of-type(n) .prob__t { max-width: 60%; font-size: 23px; }
+  html[data-prob="7c"] .prob::before { background: linear-gradient(105deg, rgb(var(--v)) 0%, rgb(var(--v)) 40%, rgba(var(--v), .88) 62%, rgba(var(--v), .35) 100%); }
+  html[data-prob="7c"] .prob__t { max-width: 80%; }
+}
+
+/* 8 foto de fondo: la captura del caso cubre la tarjeta bajo un velo azul */
+html[data-prob="8"] .prob { min-height: clamp(260px, 21vw, 340px); overflow: hidden; isolation: isolate; color: #fff; background: var(--m-azul); box-shadow: 0 24px 44px -24px rgba(10,31,92,.7); }
+html[data-prob="8"] .prob:hover { background: var(--m-azul); }
+html[data-prob="8"] .prob__foto { display: block; position: absolute; inset: 0; z-index: -2; }
+html[data-prob="8"] .prob__foto img { transition: scale 1.2s var(--sale); }
+html[data-prob="8"] .prob:hover .prob__foto img { scale: 1.05; }
+html[data-prob="8"] .prob::before { content: ""; position: absolute; inset: 0; z-index: -1; transition: opacity .5s;
+  background: linear-gradient(0deg, rgba(8,24,73,.97) 0%, rgba(10,31,92,.86) 42%, rgba(10,31,92,.42) 100%); }
+html[data-prob="8"] .prob.is-abierta::before { background: linear-gradient(0deg, rgba(29,68,173,.97) 0%, rgba(42,85,204,.85) 50%, rgba(42,85,204,.5) 100%); }
+html[data-prob="8"] .prob.is-abierta { background: var(--m-azul); box-shadow: 0 30px 60px -22px rgba(42,85,204,.75); }
+html[data-prob="8"] .prob__tipo { background: rgba(255,255,255,.16); color: #fff; box-shadow: none; }
+html[data-prob="8"] .prob__mas { background: #fff; color: var(--m-azul); }
+html[data-prob="8"] .prob__demo { top: auto; bottom: auto; top: clamp(18px, 1.8vw, 26px); right: clamp(18px, 1.8vw, 26px); }
+
+@media (max-width: 1100px) {
+  html[data-prob^="7"] .probs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  html[data-prob^="7"] article.prob:nth-of-type(n) { grid-column: auto; }
+  html[data-prob^="7"] article.prob:is(:nth-of-type(1), :nth-of-type(10)) { grid-column: span 2; }
+}
+@media (max-width: 720px) {
+  .prob__in { margin-inline: -16px; padding-inline: 16px; }
+  .prob__cuerpo { padding: 20px; }
+  html[data-prob^="7"] .probs { grid-template-columns: 1fr; }
+  html[data-prob^="7"] article.prob:nth-of-type(n) { grid-column: auto; }
+  html[data-prob="4"] .prob { flex-wrap: wrap; gap: 12px 16px; }
+  html[data-prob="4"] .prob__tipo { width: 100%; }
+  html[data-prob="4"] .prob__t { font-size: 24px; }
+  html[data-prob="4"] .prob__foto { display: none; }
+  html[data-prob="5"] .prob__t { max-width: 64%; }
+}
+
+/* ======================= proceso: panel azul ======================= */
+.paso { transition: flex .9s var(--sale), background-color .5s, color .5s, box-shadow .6s var(--sale); }
+.paso::before { content: ""; position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .6s; pointer-events: none;
+  background: radial-gradient(80% 70% at 100% 0%, rgba(157,186,247,.4), rgba(157,186,247,0) 70%); }
+.paso.is-activo::before { opacity: 1; }
+.paso > :not(.paso__abre) { position: relative; pointer-events: none; }
+.paso__abre { z-index: 2; }
+.pasos { padding: 12px; height: calc(min(44vh, 400px) + 24px); border-radius: 32px; background-color: var(--m-azul); background-image: var(--m-grad); box-shadow: 0 50px 100px -50px rgba(10,31,92,.7); }
+.pag-inicio .paso:nth-child(n) { --fondo: rgba(255,255,255,.06); --fondo-on: rgba(255,255,255,.12); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), inset 0 1px 0 rgba(255,255,255,.12); }
+.paso .paso__quien, .paso .paso__d { color: rgba(255,255,255,.72); }
+
+/* 4 y 5: con guias (quien hace cada paso, un + en los cerrados y una barra de avance) */
+.proceso__guia { display: none; }
+html:is([data-proc="4"], [data-proc="5"]) #proceso .titulo-seccion { margin-bottom: 18px; }
+html:is([data-proc="4"], [data-proc="5"]) .proceso__guia { display: block; margin-bottom: clamp(28px, 3.4vw, 48px); font-size: 16px; color: var(--gris-2); }
+@media (hover: hover) { .g-toque { display: none; } }
+@media (hover: none) { .g-mouse { display: none; } }
+html:is([data-proc="4"], [data-proc="5"]) .paso__quien { display: inline-flex; align-self: flex-start; padding: 5px 11px; border-radius: 99px; background: rgba(255,255,255,.12); color: #fff; }
+html:is([data-proc="4"], [data-proc="5"]) .paso--tu .paso__quien { background: var(--m-celeste); color: var(--m-azul); }
+html:is([data-proc="4"], [data-proc="5"]) .paso::after {
+  content: "+"; position: absolute; top: clamp(14px, 1.6vw, 22px); right: clamp(14px, 1.6vw, 22px); display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.14); font-size: 20px; line-height: 1; pointer-events: none; transition: opacity .4s, scale .5s var(--sale);
+}
+html:is([data-proc="4"], [data-proc="5"]) .paso.is-activo::after { opacity: 0; scale: .6; }
+@property --p { syntax: "<percentage>"; inherits: false; initial-value: 25%; }
+html:is([data-proc="4"], [data-proc="5"]) .pasos { position: relative; padding-bottom: 32px; height: calc(min(44vh, 400px) + 44px); --p: 25%; transition: --p .8s var(--sale); }
+html:is([data-proc="4"], [data-proc="5"]) .pasos:has(> .paso:nth-child(2).is-activo) { --p: 50%; }
+html:is([data-proc="4"], [data-proc="5"]) .pasos:has(> .paso:nth-child(3).is-activo) { --p: 75%; }
+html:is([data-proc="4"], [data-proc="5"]) .pasos:has(> .paso:nth-child(4).is-activo) { --p: 100%; }
+html:is([data-proc="4"], [data-proc="5"]) .pasos::after { content: ""; position: absolute; left: 24px; right: 24px; bottom: 13px; height: 4px; border-radius: 4px;
+  background: linear-gradient(90deg, #fff var(--p), rgba(255,255,255,.18) var(--p)); }
+@media (max-width: 720px) {
+  .pasos, html:is([data-proc="4"], [data-proc="5"]) .pasos { height: auto; padding-bottom: 12px; }
+  html:is([data-proc="4"], [data-proc="5"]) .pasos::after { display: none; }
+}
+
+/* ======================= preguntas ======================= */
+.faq__aside, .faq__visor, .chat__cab, .chat__escribe { display: none; }
+.faq__item { transition: background-color .4s, color .4s, box-shadow .5s var(--sale); }
+.faq__mas { display: grid; place-items: center; width: 38px; height: 38px; flex: none; border-radius: 50%; font-size: 18px; }
+
+/* tarjetas blancas con sombra (2, 4 y 5 en celular) */
+html:is([data-faq="2"], [data-faq="4"], [data-faq="5"]) .faq__item { background: #fff; box-shadow: 0 0 0 1px rgba(10,31,92,.06), var(--m-sombra-1); }
+html:is([data-faq="2"], [data-faq="4"], [data-faq="5"]) .faq__item:hover { background: #fff; box-shadow: 0 0 0 1px rgba(10,31,92,.08), var(--m-sombra-2); }
+html:is([data-faq="2"], [data-faq="4"], [data-faq="5"]) .faq__item[open] { background: #fff; box-shadow: 0 0 0 1px rgba(42,85,204,.22), var(--m-sombra-2); }
+html:is([data-faq="2"], [data-faq="4"], [data-faq="5"]) .faq__mas { background: #eef2fc; color: var(--m-azul); }
+html:is([data-faq="2"], [data-faq="4"], [data-faq="5"]) .faq__item[open] .faq__mas { background: var(--m-azul); color: #fff; }
+html:is([data-faq="2"], [data-faq="4"], [data-faq="5"]) .faq__lista { gap: 14px; }
+
+/* 2 con tarjeta azul al lado (la elegida) */
+html[data-faq="2"] .faq__aside {
+  display: flex; flex-direction: column; justify-content: space-between; gap: 32px; align-self: start; position: sticky; top: 96px;
+  grid-column: 1 / 5; min-height: 340px; padding: clamp(24px, 2.4vw, 36px); border-radius: 26px; color: #fff;
+  background-color: var(--m-azul); background-image: var(--m-grad); box-shadow: 0 40px 70px -34px rgba(10,31,92,.7);
+}
+html[data-faq="2"] .faq__lista { grid-column: 5 / 13; }
+.faq__aside-t { font-family: var(--display); font-weight: 500; letter-spacing: -.035em; line-height: 1.05; font-size: clamp(28px, 2.6vw, 42px); }
+.faq__aside-p { margin-top: 12px; color: rgba(255,255,255,.74); }
+html[data-faq="2"] .faq__aside .boton { align-self: flex-start; color: var(--m-azul); background: #fff; }
+
+/* 4 dos columnas de tarjetas */
+html[data-faq="4"] .faq__lista { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+
+/* 5 pregunta a la izquierda, respuesta grande en una tarjeta azul a la derecha */
+@media (min-width: 1101px) {
+  html[data-faq="5"] .faq__lista { grid-column: 1 / 7; grid-row: 2; gap: 0; border-top: 1px solid var(--linea); }
+  html[data-faq="5"] .faq__item, html[data-faq="5"] .faq__item:hover, html[data-faq="5"] .faq__item[open] { background: none; box-shadow: none; border-radius: 0; border-bottom: 1px solid var(--linea); }
+  html[data-faq="5"] .faq__item summary { padding-inline: 4px; transition: color .3s, padding .5s var(--sale); }
+  html[data-faq="5"] .faq__item:hover summary { color: var(--m-azul-medio); }
+  html[data-faq="5"] .faq__item.is-sel summary { color: var(--m-azul-medio); padding-left: 14px; }
+  html[data-faq="5"] .faq__item.is-sel .faq__mas { background: var(--m-azul); color: #fff; rotate: -45deg; }
+  html[data-faq="5"] .faq__mas { transition: rotate .5s var(--sale), background-color .3s, color .3s; }
+  html[data-faq="5"] .faq__visor {
+    display: flex; flex-direction: column; gap: 28px; grid-column: 7 / 13; grid-row: 2; align-self: start; position: sticky; top: 96px;
+    min-height: 420px; padding: clamp(28px, 3vw, 48px); border-radius: 28px; color: #fff;
+    background-color: var(--m-azul); background-image: var(--m-grad); box-shadow: 0 50px 90px -40px rgba(10,31,92,.75);
+  }
+  .faq__visor-q { font-size: 15px; color: rgba(255,255,255,.7); }
+  .faq__visor-r { flex: 1; font-family: var(--display); font-weight: 500; letter-spacing: -.03em; line-height: 1.12; font-size: clamp(28px, 2.8vw, 46px); }
+  html[data-faq="5"] .faq__visor .boton { align-self: flex-start; color: var(--m-azul); background: #fff; }
+  .faq__visor.is-entra :is(.faq__visor-q, .faq__visor-r) { animation: m-entra .6s var(--sale); }
+  @keyframes m-entra { from { opacity: 0; translate: 0 10px; } }
+}
+
+/* 6 chat: las preguntas como mensajes del cliente y las respuestas como las de NVY */
+html[data-faq="6"] .faq__lista { grid-column: 3 / 11; gap: 12px; padding: 0 clamp(16px, 2vw, 28px) clamp(16px, 2vw, 24px); border-radius: 30px; overflow: hidden;
+  background: #f2f5fc; box-shadow: inset 0 0 0 1px rgba(10,31,92,.06), var(--m-sombra-2); }
+html[data-faq="6"] .chat__cab { display: flex; align-items: center; gap: 12px; margin: 0 calc(-1 * clamp(16px, 2vw, 28px)) 12px; padding: 14px clamp(16px, 2vw, 28px);
+  color: #fff; background-color: var(--m-azul); background-image: var(--m-grad); }
+.chat__avatar { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.14); }
+.chat__avatar img { width: 32px; height: auto; }
+.chat__cab b { display: block; font-weight: 600; }
+.chat__cab small { display: block; font-size: 13px; color: rgba(255,255,255,.7); }
+html[data-faq="6"] .faq__item, html[data-faq="6"] .faq__item:hover, html[data-faq="6"] .faq__item[open] { background: none; display: flex; flex-direction: column; }
+html[data-faq="6"] .faq__item summary { display: block; width: fit-content; max-width: 78%; margin-left: auto; padding: 12px 18px; cursor: default;
+  border-radius: 20px 20px 6px 20px; color: #fff; background: linear-gradient(160deg, #2a55cc, #0a1f5c); box-shadow: 0 10px 20px -12px rgba(10,31,92,.6);
+  font-family: var(--texto); font-weight: 500; letter-spacing: 0; font-size: clamp(15px, 1.15vw, 17px); }
+html[data-faq="6"] .faq__mas { display: none; }
+html[data-faq="6"] .faq__r { width: fit-content; max-width: 78%; margin-top: 8px; padding: 12px 18px; border-radius: 20px 20px 20px 6px; background: #fff; color: #0b0b0c;
+  box-shadow: 0 0 0 1px rgba(10,31,92,.05), 0 10px 20px -14px rgba(10,31,92,.4); font-size: clamp(15px, 1.15vw, 17px); }
+html[data-faq="6"] .chat__escribe { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; padding: 8px 8px 8px 22px;
+  border-radius: 99px; background: #fff; color: var(--gris-2); box-shadow: inset 0 0 0 1px rgba(10,31,92,.08); transition: color .3s, box-shadow .3s; }
+html[data-faq="6"] .chat__escribe:hover { color: var(--m-azul); box-shadow: inset 0 0 0 1px rgba(42,85,204,.4); }
+.chat__enviar { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--m-azul); color: #fff; font-size: 18px; }
+
+/* 7 panel azul como proceso */
+html[data-faq="7"] .faq__lista { grid-column: 1 / -1; gap: 8px; padding: 12px; border-radius: 32px; background-color: var(--m-azul); background-image: var(--m-grad); box-shadow: 0 50px 100px -50px rgba(10,31,92,.7); }
+html[data-faq="7"] .faq__item { color: #fff; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), inset 0 1px 0 rgba(255,255,255,.12); }
+html[data-faq="7"] .faq__item:hover { background: rgba(255,255,255,.12); }
+html[data-faq="7"] .faq__item[open] { color: var(--m-azul); background: #fff; box-shadow: 0 24px 50px -20px rgba(0,0,0,.45); }
+html[data-faq="7"] .faq__mas { background: rgba(255,255,255,.14); }
+html[data-faq="7"] .faq__item[open] .faq__mas { background: var(--m-azul); color: #fff; }
+
+@media (max-width: 1100px) {
+  html[data-faq="2"] .faq__aside { grid-column: 1 / -1; position: static; min-height: 0; order: 2; margin-top: 24px; }
+  html:is([data-faq="2"], [data-faq="6"]) .faq__lista { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  html[data-faq="4"] .faq__lista { grid-template-columns: 1fr; }
+  html[data-faq="6"] .faq__item summary, html[data-faq="6"] .faq__r { max-width: 88%; }
+}
+
+/* ======================= trabajos del inicio: cada captura en un MacBook ======================= */
+.dest__foto { position: relative; aspect-ratio: auto; overflow: visible; border-radius: 0; background: none; padding: 0 7.5%; }
+/* pantalla con su marco negro y la camara arriba */
+.dest__foto picture { position: relative; height: auto; aspect-ratio: 16 / 10; overflow: hidden; border: 9px solid #0b0b0c; border-bottom-width: 12px; border-radius: 14px 14px 3px 3px;
+  background: #0b0b0c; box-shadow: 0 0 0 1px #34353a; }
+.dest__foto::before { content: ""; position: absolute; z-index: 1; top: 3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #2a2b30; }
+/* la base de aluminio, mas ancha que la pantalla, con la muesca para abrirlo */
+.dest__foto::after { content: ""; display: block; height: 12px; margin: 0 -7.5%; border-radius: 2px 2px 12px 12px;
+  background: linear-gradient(#a9abb1, #a9abb1) 50% 0 / 16% 4px no-repeat, linear-gradient(180deg, #eceef1 0%, #d2d4d9 45%, #a3a5ab 100%);
+  box-shadow: 0 22px 30px -16px rgba(10,31,92,.45); }
+.dest__foto picture img { border-radius: 0; }
+@media (max-width: 720px) {
+  .dest__foto picture { border-width: 6px; border-bottom-width: 9px; border-radius: 10px 10px 2px 2px; }
+  .dest__foto::after { height: 9px; }
+}
+
+/* ======================= portada: 7 opciones para el texto ======================= */
+/* claras (negro, azul, marino, destacado): mucho menos blanco, solo una luz baja detras del titulo */
+.hero::after { background: linear-gradient(0deg, rgba(255,255,255,.78) 0%, rgba(255,255,255,0) 11%), radial-gradient(56% 50% at 22% 72%, rgba(255,255,255,.8) 0%, rgba(255,255,255,.6) 46%, rgba(255,255,255,0) 100%); }
+.hero__txt::before { background: radial-gradient(farthest-side at 38% 58%, rgba(255,255,255,.34) 0%, rgba(255,255,255,.18) 55%, rgba(255,255,255,0) 100%); }
+html[data-tit="marino"] .hero .pregunta__h1 { color: #0a1f5c; }
+/* degradados por letra: azul (2), las dos ultimas palabras (4) y blanco a celeste (6) */
+html:is([data-tit="azul"], [data-tit="celeste"], [data-tit="mixto"]) .hero .letra, html[data-tit="destacado"] .hero .palabra:nth-last-child(-n+2) .letra {
+  background-image: var(--brillo), linear-gradient(176deg, #0a1f5c 14%, #1d44ad 48%, #3a6ae0 76%, #86a8f4 100%); background-repeat: no-repeat;
+  background-size: calc(var(--w) * 1em + .3em) 100%; background-position: calc(.04em - var(--x) * 1em) 0;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  padding: .06em .1em .26em .04em; margin: -.06em -.1em -.26em -.04em;
+}
+html[data-tit="celeste"] .hero .letra { background-image: linear-gradient(176deg, #fff 18%, #e3ecff 52%, #a9c3f8 100%); }
+/* 8 mixto: el degradado azul de "Nvy Studios" en /trabajos (hecho para fondo oscuro), sobre la sombra oscura */
+html[data-tit="mixto"] .hero .letra { background-image: var(--brillo), linear-gradient(176deg, #3a63d6 6%, #5f86ee 38%, #9dbaf7 70%, #e6eeff 100%); }
+
+/* oscuras (blanco, celeste, noche): el velo es azul del menu o casi negro en vez de blanco */
+html:is([data-tit="blanco"], [data-tit="celeste"], [data-tit="noche"], [data-tit="mixto"]) .hero { color: #fff; }
+html:is([data-tit="blanco"], [data-tit="celeste"]) .hero::after { background: linear-gradient(0deg, rgba(8,24,73,.82) 0%, rgba(8,24,73,0) 16%), radial-gradient(60% 55% at 22% 72%, rgba(8,24,73,.86) 0%, rgba(10,31,92,.66) 46%, rgba(10,31,92,0) 100%); }
+/* la sombra se apaga antes del borde de abajo: si llega oscura, se corta en seco contra el blanco de Problemas */
+html:is([data-tit="noche"], [data-tit="mixto"]) .hero::after { background: radial-gradient(64% 60% at 22% 66%, rgba(8,8,12,.82) 0%, rgba(8,8,12,.62) 46%, rgba(8,8,12,0) 100%), radial-gradient(40% 30% at 80% 92%, rgba(8,8,12,.5) 0%, rgba(8,8,12,0) 100%); }
+html:is([data-tit="blanco"], [data-tit="celeste"], [data-tit="noche"], [data-tit="mixto"]) .hero__txt::before { display: none; }
+html:is([data-tit="blanco"], [data-tit="celeste"], [data-tit="noche"], [data-tit="mixto"]) .hero .pregunta__bajada { color: rgba(255,255,255,.78); }
+html:is([data-tit="blanco"], [data-tit="celeste"], [data-tit="noche"], [data-tit="mixto"]) .hero .enlace { color: #fff; }
+html:is([data-tit="blanco"], [data-tit="celeste"], [data-tit="noche"], [data-tit="mixto"]) .hero .boton { background: #fff; color: var(--m-azul); }
+
+@media (max-width: 900px) {
+  .hero::after { background: linear-gradient(0deg, #fff 0%, #fff 19%, rgba(255,255,255,.62) 31%, rgba(255,255,255,0) 46%); }
+  html:is([data-tit="blanco"], [data-tit="celeste"]) .hero::after { background: linear-gradient(0deg, #0a1f5c 0%, #0a1f5c 19%, rgba(10,31,92,.7) 33%, rgba(10,31,92,0) 50%); }
+  html:is([data-tit="noche"], [data-tit="mixto"]) .hero::after { background: linear-gradient(0deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.86) 9%, rgba(11,11,12,.86) 40%, rgba(11,11,12,.6) 50%, rgba(11,11,12,0) 64%); }
+}
+
+/* ======================= paneles de problemas: que quepan en una pantalla de notebook al 100% ======================= */
+@media (min-width: 721px) {
+  .prob__figs--moviles { grid-template-columns: repeat(var(--n), minmax(0, 168px)); }
+  .prob__figs:has(> .ba--movil:only-child) { grid-template-columns: minmax(0, 190px); }
+  .prob__figs:has(> .ba:only-child:not(.ba--movil)) { grid-template-columns: minmax(0, 600px); }
+  .ba--movil .ba__img { border-radius: 18px; }
+  .prob__figs--moviles .ba figcaption { flex-direction: column; align-items: flex-start; }
+}
+
+/* ======================= portada: 12 opciones mas para el titulo (9 a 20) ======================= */
+/* Sin text-shadow: cada palabra recorta su sombra y se ven lineas. Los brillos van con
+   filter: drop-shadow sobre el titulo entero, que sigue la forma de las letras. */
+html:is([data-tit="centro"], [data-tit="arriba"], [data-tit="bloque"], [data-tit="sombra-azul"], [data-tit="contorno"], [data-tit="gigante"],
+  [data-tit="derecha"], [data-tit="neon"], [data-tit="recorre"], [data-tit="clave"]) .hero {
+  --velo: rgba(8,8,12,.8); --velo-2: rgba(8,8,12,.58); color: #fff;
+}
+html:is([data-tit="centro"], [data-tit="arriba"], [data-tit="bloque"], [data-tit="sombra-azul"], [data-tit="contorno"], [data-tit="gigante"],
+  [data-tit="derecha"], [data-tit="neon"], [data-tit="recorre"], [data-tit="clave"]) .hero :is(.pregunta__bajada, .enlace) { color: rgba(255,255,255,.86); }
+html:is([data-tit="centro"], [data-tit="arriba"], [data-tit="bloque"], [data-tit="sombra-azul"], [data-tit="contorno"], [data-tit="gigante"],
+  [data-tit="derecha"], [data-tit="neon"], [data-tit="recorre"], [data-tit="clave"]) .hero .boton { background: #fff; color: var(--m-azul); }
+html:is([data-tit="centro"], [data-tit="arriba"], [data-tit="bloque"], [data-tit="sombra-azul"], [data-tit="contorno"], [data-tit="gigante"],
+  [data-tit="derecha"], [data-tit="neon"], [data-tit="recorre"], [data-tit="clave"], [data-tit="etiquetas"], [data-tit="marino-brillo"]) .hero__txt::before { display: none; }
+/* sombra oscura de este grupo: abajo a la izquierda, apagada antes del borde */
+html:is([data-tit="gigante"], [data-tit="contorno"], [data-tit="recorre"], [data-tit="clave"], [data-tit="neon"]) .hero::after {
+  background: radial-gradient(70% 62% at 24% 66%, var(--velo) 0%, var(--velo-2) 48%, rgba(8,8,12,0) 100%), radial-gradient(40% 30% at 80% 92%, rgba(8,8,12,.5) 0%, rgba(8,8,12,0) 100%); }
+
+/* letras con degradado: base comun */
+html:is([data-tit="centro"], [data-tit="derecha"], [data-tit="recorre"], [data-tit="gigante"]) .hero .letra,
+html:is([data-tit="clave"], [data-tit="contorno"], [data-tit="bloque"]) .hero .palabra:nth-last-child(-n+2) .letra {
+  background-image: var(--brillo), linear-gradient(176deg, #3a63d6 6%, #5f86ee 38%, #9dbaf7 70%, #e6eeff 100%); background-repeat: no-repeat;
+  background-size: calc(var(--w) * 1em + .3em) 100%; background-position: calc(.04em - var(--x) * 1em) 0;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  padding: .06em .1em .26em .04em; margin: -.06em -.1em -.26em -.04em;
+}
+
+/* 9 centro: el titulo al medio, la sombra detras */
+html[data-tit="centro"] .hero { justify-content: center; text-align: center; }
+html[data-tit="centro"] .hero .pregunta__h1 { margin-inline: auto; max-width: 15ch; }
+html[data-tit="centro"] .hero .pregunta__pie { flex-direction: column; justify-content: center; }
+html[data-tit="centro"] .hero::after { background: radial-gradient(52% 54% at 50% 52%, rgba(8,8,12,.84) 0%, rgba(8,8,12,.62) 50%, rgba(8,8,12,0) 100%); }
+
+/* 10 arriba: el titulo arriba a la izquierda, blanco */
+html[data-tit="arriba"] .hero { justify-content: flex-start; padding-top: clamp(120px, 14vh, 170px); }
+html[data-tit="arriba"] .hero::after { background: radial-gradient(64% 60% at 24% 34%, rgba(8,8,12,.82) 0%, rgba(8,8,12,.6) 48%, rgba(8,8,12,0) 100%); }
+
+/* 11 bloque: el titulo dentro de un bloque azul solido, como el panel del menu */
+html[data-tit="bloque"] .hero::after { background: none; }
+html[data-tit="bloque"] .hero__txt { align-self: flex-start; max-width: min(100%, 1040px); padding: clamp(28px, 3.4vw, 56px); border-radius: clamp(22px, 2.4vw, 36px);
+  background-color: var(--m-azul); background-image: var(--m-grad); box-shadow: 0 50px 100px -40px rgba(10,31,92,.75); }
+html[data-tit="bloque"] .hero .pregunta__h1 { font-size: clamp(40px, 6.6vw, 118px); }
+
+/* 12 etiquetas: cada palabra en un recorte blanco, sin sombra encima del muro */
+html[data-tit="etiquetas"] .hero::after { background: none; }
+html[data-tit="etiquetas"] .hero .pregunta__h1 { line-height: 1.12; max-width: 16ch; }
+html[data-tit="etiquetas"] .hero .palabra { margin: 0 0 .06em; padding: .02em .16em .1em .12em; border-radius: .14em; background: #fff; box-shadow: 0 18px 30px -16px rgba(10,31,92,.45); }
+html[data-tit="etiquetas"] .hero .pregunta__bajada { display: inline-block; padding: 6px 12px; border-radius: 99px; background: #fff; color: #0b0b0c; }
+html[data-tit="etiquetas"] .hero .enlace { padding: 6px 12px; border-radius: 99px; background: #fff; }
+
+/* 13 sombra azul: letra blanca con su propia sombra azul, casi sin velo */
+html[data-tit="sombra-azul"] .hero::after { background: radial-gradient(60% 50% at 22% 70%, rgba(10,31,92,.38) 0%, rgba(10,31,92,0) 100%); }
+html[data-tit="sombra-azul"] .hero .pregunta__h1 { filter: drop-shadow(0 4px 10px rgba(10,31,92,.7)) drop-shadow(0 14px 40px rgba(10,31,92,.85)); }
+html[data-tit="sombra-azul"] .hero .pregunta__pie { filter: drop-shadow(0 2px 10px rgba(10,31,92,.9)); }
+
+/* 14 contorno: letras huecas con borde blanco y "en persona?" llena en azul */
+html[data-tit="contorno"] .hero .palabra:not(:nth-last-child(-n+2)) .letra { color: transparent; -webkit-text-fill-color: transparent; -webkit-text-stroke: 2px #fff; }
+
+/* 15 gigante: el titulo mas grande, a todo el ancho, de blanco a celeste */
+html[data-tit="gigante"] .hero .pregunta__h1 { max-width: none; font-size: clamp(52px, 10.6vw, 196px); }
+html[data-tit="gigante"] .hero .letra { background-image: linear-gradient(176deg, #fff 18%, #e3ecff 52%, #a9c3f8 100%); }
+
+/* 16 marino con brillo: azul marino, con una luz blanca pegada a cada letra y sin velo */
+html[data-tit="marino-brillo"] .hero::after { background: linear-gradient(0deg, rgba(255,255,255,.7) 0%, rgba(255,255,255,0) 12%); }
+html[data-tit="marino-brillo"] .hero .pregunta__h1 { color: #0a1f5c; filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 14px rgba(255,255,255,.95)) drop-shadow(0 0 30px rgba(255,255,255,.7)); }
+
+/* 17 derecha: el titulo abajo a la derecha */
+html[data-tit="derecha"] .hero__txt { text-align: right; }
+html[data-tit="derecha"] .hero .pregunta__h1 { margin-left: auto; }
+html[data-tit="derecha"] .hero .pregunta__pie { flex-direction: row-reverse; }
+html[data-tit="derecha"] .hero::after { background: radial-gradient(64% 60% at 76% 66%, rgba(8,8,12,.82) 0%, rgba(8,8,12,.6) 48%, rgba(8,8,12,0) 100%), radial-gradient(40% 30% at 20% 92%, rgba(8,8,12,.5) 0%, rgba(8,8,12,0) 100%); }
+
+/* 18 neon: blanco con un brillo azul del acento */
+html[data-tit="neon"] .hero .pregunta__h1 { filter: drop-shadow(0 0 6px rgba(74,116,232,.9)) drop-shadow(0 0 26px rgba(74,116,232,.75)); }
+
+/* 19 destello que recorre: el degradado azul con una luz que pasa cada pocos segundos */
+@property --b { syntax: "<length>"; inherits: true; initial-value: -6em; }
+html[data-tit="recorre"] .hero .letra {
+  background-image: linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.95) 50%, rgba(255,255,255,0) 60%), linear-gradient(176deg, #3a63d6 6%, #5f86ee 38%, #9dbaf7 70%, #e6eeff 100%);
+  background-size: 6em 100%, calc(var(--w) * 1em + .3em) 100%; background-position: calc(var(--b) - var(--x) * 1em) 0, calc(.04em - var(--x) * 1em) 0; }
+html[data-tit="recorre"] .hero .pregunta__h1 { animation: m-recorre 5s cubic-bezier(.45, 0, .2, 1) 1.2s infinite; }
+@keyframes m-recorre { 0% { --b: -6em; } 45%, 100% { --b: 14em; } }
+
+/* 20 palabra clave: blanco y "en persona?" en azul (solo usa las reglas comunes de arriba) */
+
+@media (max-width: 900px) {
+  html:is([data-tit="centro"], [data-tit="arriba"], [data-tit="contorno"], [data-tit="gigante"], [data-tit="derecha"],
+    [data-tit="neon"], [data-tit="recorre"], [data-tit="clave"]) .hero::after { background: linear-gradient(0deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.86) 9%, rgba(11,11,12,.86) 40%, rgba(11,11,12,.6) 50%, rgba(11,11,12,0) 64%); }
+  html[data-tit="sombra-azul"] .hero::after { background: linear-gradient(0deg, rgba(10,31,92,0) 0%, rgba(10,31,92,.45) 30%, rgba(10,31,92,0) 60%); }
+  html[data-tit="arriba"] .hero::after { background: linear-gradient(180deg, rgba(11,11,12,0) 6%, rgba(11,11,12,.86) 18%, rgba(11,11,12,.86) 55%, rgba(11,11,12,0) 72%); }
+  html[data-tit="centro"] .hero::after { background: linear-gradient(0deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.86) 14%, rgba(11,11,12,.86) 62%, rgba(11,11,12,0) 80%); }
+  html[data-tit="marino-brillo"] .hero::after { background: linear-gradient(0deg, #fff 0%, #fff 19%, rgba(255,255,255,.62) 31%, rgba(255,255,255,0) 46%); }
+  html[data-tit="derecha"] .hero__txt { text-align: left; }
+  html[data-tit="derecha"] .hero .pregunta__pie { flex-direction: column; }
+  html[data-tit="bloque"] .hero__txt { padding: 22px; }
+  html[data-tit="gigante"] .hero .pregunta__h1 { font-size: clamp(46px, 13vw, 90px); }
+}
+@media (prefers-reduced-motion: reduce) { html[data-tit="recorre"] .hero .pregunta__h1 { animation: none; } }
+
+/* ======================= portada: 5 versiones de la 9 (titulo al centro) ======================= */
+/* comun: al centro, blanco, botones blancos */
+html[data-tit^="centro-"] .hero { justify-content: center; text-align: center; color: #fff; }
+html[data-tit^="centro-"] .hero .pregunta__h1 { margin-inline: auto; max-width: 15ch; }
+html[data-tit^="centro-"] .hero .pregunta__pie { flex-direction: column; justify-content: center; }
+html[data-tit^="centro-"] .hero :is(.pregunta__bajada, .enlace) { color: rgba(255,255,255,.86); }
+html[data-tit^="centro-"] .hero .boton { background: #fff; color: var(--m-azul); }
+html[data-tit^="centro-"] .hero__txt::before { display: none; }
+/* degradado por letra (lo usan 9b y 9c, y "en persona?" en 9e) */
+html:is([data-tit="centro-b"], [data-tit="centro-c"]) .hero .letra, html[data-tit="centro-e"] .hero .palabra:nth-last-child(-n+2) .letra {
+  background-image: var(--brillo), linear-gradient(176deg, #3a63d6 6%, #5f86ee 38%, #9dbaf7 70%, #e6eeff 100%); background-repeat: no-repeat;
+  background-size: calc(var(--w) * 1em + .3em) 100%; background-position: calc(.04em - var(--x) * 1em) 0;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  padding: .06em .1em .26em .04em; margin: -.06em -.1em -.26em -.04em;
+}
+
+/* 9a Instrument Serif (serif editorial), "en persona?" en cursiva. Sombra: negra, mas ancha y suave */
+html[data-tit="centro-a"] .hero .pregunta__h1 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -.02em; line-height: .98; max-width: 13ch; font-size: clamp(50px, 9.2vw, 168px); }
+html[data-tit="centro-a"] .hero .palabra:nth-last-child(-n+2) { font-style: italic; }
+html[data-tit="centro-a"] .hero::after { background: radial-gradient(70% 72% at 50% 52%, rgba(8,8,12,.78) 0%, rgba(8,8,12,.5) 52%, rgba(8,8,12,0) 100%); }
+
+/* 9b Inter Tight gruesa (700), mas apretada, en degradado azul. Sombra: azul marino del menu */
+html[data-tit="centro-b"] .hero .pregunta__h1 { font-weight: 700; letter-spacing: -.065em; }
+html[data-tit="centro-b"] .hero::after { background: radial-gradient(56% 58% at 50% 52%, rgba(8,24,73,.9) 0%, rgba(10,31,92,.68) 50%, rgba(10,31,92,0) 100%); }
+
+/* 9c Fraunces (serif suave y redonda), de blanco a celeste. Sombra: un tinte parejo en todo el muro y mas oscuro al centro */
+html[data-tit="centro-c"] .hero .pregunta__h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-optical-sizing: auto; letter-spacing: -.035em; line-height: 1; }
+html[data-tit="centro-c"] .hero .letra { background-image: linear-gradient(176deg, #fff 18%, #e3ecff 52%, #a9c3f8 100%); }
+html[data-tit="centro-c"] .hero::after { background: radial-gradient(50% 50% at 50% 52%, rgba(8,8,12,.5) 0%, rgba(8,8,12,0) 100%), rgba(8,8,12,.4); }
+
+/* 9d Bricolage Grotesque angosta y gruesa. Sombra: una franja suave a todo el ancho */
+html[data-tit="centro-d"] .hero .pregunta__h1 { font-family: "Bricolage Grotesque", "Inter Tight", sans-serif; font-weight: 700; font-stretch: 75%; font-variation-settings: "wdth" 75; letter-spacing: -.03em; line-height: .92; max-width: 16ch; font-size: clamp(50px, 9.6vw, 176px); }
+html[data-tit="centro-d"] .hero::after { background: linear-gradient(180deg, rgba(8,8,12,0) 14%, rgba(8,8,12,.62) 32%, rgba(8,8,12,.74) 52%, rgba(8,8,12,.62) 72%, rgba(8,8,12,0) 90%); }
+
+/* 9e mezcla: Inter Tight blanca y "en persona?" en Playfair cursiva azul. Sombra: pegada a las letras, casi sin oscurecer el muro */
+html[data-tit="centro-e"] .hero .palabra:nth-last-child(-n+2) { font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 500; letter-spacing: -.02em; }
+html[data-tit="centro-e"] .hero .pregunta__h1 { filter: drop-shadow(0 2px 6px rgba(8,8,12,.55)) drop-shadow(0 12px 36px rgba(8,8,12,.75)); }
+html[data-tit="centro-e"] .hero .pregunta__pie { filter: drop-shadow(0 2px 10px rgba(8,8,12,.8)); }
+html[data-tit="centro-e"] .hero::after { background: radial-gradient(56% 56% at 50% 52%, rgba(8,8,12,.34) 0%, rgba(8,8,12,0) 100%); }
+
+@media (max-width: 900px) {
+  html:is([data-tit="centro-a"], [data-tit="centro-c"]) .hero::after { background: linear-gradient(0deg, rgba(11,11,12,0) 0%, rgba(11,11,12,.8) 14%, rgba(11,11,12,.8) 62%, rgba(11,11,12,0) 82%); }
+  html[data-tit="centro-b"] .hero::after { background: linear-gradient(0deg, rgba(10,31,92,0) 0%, rgba(10,31,92,.88) 14%, rgba(10,31,92,.88) 62%, rgba(10,31,92,0) 82%); }
+  html[data-tit="centro-d"] .hero::after { background: linear-gradient(0deg, rgba(8,8,12,0) 4%, rgba(8,8,12,.74) 18%, rgba(8,8,12,.74) 62%, rgba(8,8,12,0) 80%); }
+  html[data-tit="centro-e"] .hero::after { background: linear-gradient(0deg, rgba(8,8,12,0) 4%, rgba(8,8,12,.4) 30%, rgba(8,8,12,0) 70%); }
+}
