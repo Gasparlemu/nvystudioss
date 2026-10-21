@@ -284,6 +284,27 @@
     alQuedarLibre(() => $$('img[loading="lazy"]', probs).forEach((img) => { img.loading = 'eager'; }));
   }
 
+  /* ---------- preguntas: en escritorio la respuesta sale en la tarjeta azul ---------- */
+  // Con pantalla ancha la pregunta no se despliega: su respuesta pasa a la tarjeta de la
+  // derecha. En pantallas mas chicas cada pregunta se abre en su lugar, como siempre.
+  const visor = $('.faq__visor');
+  if (visor) {
+    const preguntas = $$('.faq__item');
+    const ancho = matchMedia('(min-width: 1101px)');
+    const ver = (item) => {
+      preguntas.forEach((x) => x.classList.toggle('is-sel', x === item));
+      visor.classList.remove('is-entra'); void visor.offsetWidth; visor.classList.add('is-entra');
+      $('.faq__visor-q', visor).textContent = $('summary', item).textContent.trim();
+      $('.faq__visor-r', visor).textContent = $('.faq__r', item).textContent.trim();
+    };
+    preguntas.forEach((item) => $('summary', item).addEventListener('click', (e) => {
+      if (!ancho.matches) return;
+      e.preventDefault();
+      ver(item);
+    }));
+    ver(preguntas[0]);
+  }
+
   /* ---------- trabajos: filtros, vista, filas que entran y captura al centro ---------- */
   const obras = $('[data-obras]');
   if (!obras) return;

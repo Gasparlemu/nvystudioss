@@ -46,6 +46,7 @@
       {
         "tipo": "webs",
         "problema": "Mi web es vieja, lenta y no la puedo cambiar.",
+        "foto": { "slug": "i-max", "vista": "e1" },
         "porque": "Si tu web tarda en cargar o se ve antigua, la gente cierra y busca otra opción. Y si cada cambio depende de alguien más, la información queda vieja.",
         "solucion": "La rehacemos desde cero, rápida y con tus fotos. Sin WordPress ni plantillas.",
         "caso": "I-MAX venía de un WordPress antiguo. Se rehizo desde cero en 5 páginas, con sus fotos propias.",
@@ -55,6 +56,7 @@
       {
         "tipo": "webs",
         "problema": "Mis clientes me preguntan lo mismo por WhatsApp todo el día.",
+        "foto": { "slug": "zona-estetica", "vista": "e1" },
         "porque": "Si tus servicios no están claros en internet, cada consulta te quita tiempo. Y quien espera mucho una respuesta, reserva en otro lado.",
         "solucion": "Ordenamos tus servicios en la web para que la gente llegue sabiendo qué quiere.",
         "caso": "Zona Estética tiene ahora su catálogo de servicios por especialidad y los perfiles del equipo. Las clientas llegan sabiendo qué quieren y reservan directo.",
@@ -64,6 +66,7 @@
       {
         "tipo": "webs",
         "problema": "Mi servicio es serio, pero en internet no transmito confianza.",
+        "foto": { "slug": "gestion-sur", "vista": "e1" },
         "porque": "Antes de contratar, la gente te busca en Google. Si no encuentra nada serio, duda.",
         "solucion": "Una web institucional y clara, que muestre quién eres y cómo trabajas.",
         "caso": "Oncosur y Gestión Sur tienen ahora una identidad digital institucional. Los clientes de Gestión Sur dicen que la web les da credibilidad antes de contratar.",
@@ -73,6 +76,7 @@
       {
         "tipo": "webs",
         "problema": "Solo tengo Instagram y mi trabajo no se luce ahí.",
+        "foto": { "slug": "metales-nobles", "vista": "e1" },
         "porque": "En Instagram tu trabajo se pierde entre publicaciones y no se explica solo. Cuesta mandarle a alguien algo puntual.",
         "solucion": "Una vitrina propia, con espacio para cada pieza, que compartes con un link.",
         "caso": "Metales Nobles tiene ahora una vitrina propia para sus piezas artesanales. Manda un link y la pieza se explica sola.",
@@ -82,50 +86,57 @@
       {
         "tipo": "webs",
         "problema": "Mi página se ve mal en el celular.",
+        "foto": { "slug": "i-max", "vista": "m1" },
         "porque": "Mucha gente te va a ver desde el teléfono. Si tiene que hacer zoom para leer, se va.",
         "solucion": "Todas nuestras webs se diseñan primero para celular y después para computador.",
-        "caso": "Así se ven en el celular dos de nuestras webs publicadas.",
-        "moviles": ["zona-estetica", "i-max"]
+        "caso": "Así se ven en el celular cuatro de nuestras webs.",
+        "moviles": ["zona-estetica", "i-max", "ainilebu-films", "oncosur"]
       },
       {
         "tipo": "webs",
         "problema": "Mi negocio se ve mejor en persona que en internet.",
+        "foto": { "slug": "inka-trewa", "vista": "e1" },
         "porque": "Si en internet no se ve lo bueno de tu local, nadie tiene una razón para ir a conocerlo.",
         "solucion": "Una web a medida que muestre tu local y tu equipo tal como son.",
-        "caso": "Todavía no tenemos un caso real de gimnasio o clínica. Estas son demos para que veas cómo se vería la tuya.",
-        "demos": [{ "slug": "fit-valdivia", "vista": "e1" }, { "slug": "clinica-salud", "vista": "e1" }]
+        "caso": "La web de Inka Trewa muestra a su equipo canino y sus sesiones con fotos reales, tal como son en persona.",
+        "despues": ["inka-trewa"],
+        "vistas": ["e1", "e2"]
       },
       {
         "tipo": "cartas",
         "problema": "Mi carta está en PDF o en Canva.",
+        "foto": { "slug": "trattoria-fiume", "vista": "m1" },
         "porque": "Google y ChatGPT no pueden leer una carta en imagen. En el celular se ve chica, y cambiar un precio es rehacerla entera.",
         "solucion": "Una carta digital con QR, escrita en texto real, que Google y la IA sí pueden leer.",
-        "caso": "Todavía no tenemos un caso real de carta. Esta demo muestra una carta en texto real, no en imagen.",
-        "demos": [{ "slug": "niebla-cafeteria", "vista": "e2" }]
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo de Trattoria Fiume muestra una carta en texto real, no en imagen.",
+        "demos": [{ "slug": "trattoria-fiume", "vista": "m1" }, { "slug": "trattoria-fiume", "vista": "m2" }, { "slug": "trattoria-fiume", "vista": "m3" }, { "slug": "trattoria-fiume", "vista": "m4" }]
       },
       {
         "tipo": "cartas",
         "problema": "Cuando alguien le pregunta a ChatGPT dónde comer, no aparezco.",
+        "foto": { "slug": "smash", "vista": "m1" },
         "porque": "La IA recomienda lugares con información que puede leer. Una carta en foto o en PDF le dice muy poco.",
         "solucion": "Tu carta en texto real queda indexada en Google y la IA puede encontrarla.",
-        "caso": "Todavía no tenemos un caso real de carta. Esta demo muestra una carta en texto real, no en imagen.",
-        "demos": [{ "slug": "niebla-cafeteria", "vista": "m2" }]
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo de Smash es una carta en texto real, que Google y la IA pueden leer.",
+        "demos": [{ "slug": "smash", "vista": "m1" }, { "slug": "smash", "vista": "m2" }, { "slug": "smash", "vista": "m3" }, { "slug": "smash", "vista": "m4" }]
       },
       {
         "tipo": "cartas",
         "problema": "Los turistas no entienden mi carta.",
+        "foto": { "slug": "cafe-lluvia", "vista": "m1" },
         "porque": "Un turista que no entiende la carta pide lo seguro, o se va a otro local.",
         "solucion": "Tu carta en español, inglés, portugués y alemán, en el mismo QR.",
-        "caso": "Todavía no tenemos un caso real de carta. Esta demo está en español y muestra cómo se ve la carta en texto real; los idiomas se suman en la tuya.",
-        "demos": [{ "slug": "niebla-cafeteria", "vista": "e2" }]
+        "caso": "Todavía no tenemos un caso real de carta. Esta demo de Café Lluvia tiene el selector de idioma arriba; los idiomas se suman en la tuya.",
+        "demos": [{ "slug": "cafe-lluvia", "vista": "m1" }, { "slug": "cafe-lluvia", "vista": "m2" }, { "slug": "cafe-lluvia", "vista": "m3" }, { "slug": "cafe-lluvia", "vista": "m4" }]
       },
       {
         "tipo": "cartas",
         "problema": "Siempre hay platos agotados o precios desactualizados.",
+        "foto": { "slug": "alerce", "vista": "m1" },
         "porque": "Pedir algo que no hay, o ver otro precio al pagar, deja una mala impresión.",
         "solucion": "Cambias precios y marcas agotados en segundos desde tu celular. Lo demás lo hacemos nosotros.",
-        "caso": "Todavía no tenemos un caso real de carta. Esta demo muestra cómo se ve la carta; la edición desde el celular viene con la tuya.",
-        "demos": [{ "slug": "niebla-cafeteria", "vista": "m2" }]
+        "caso": "Todavía no tenemos un caso real de carta. En estas demos se ven los platos agotados marcados; la edición desde el celular viene con la tuya.",
+        "demos": [{ "slug": "alerce", "vista": "m1" }, { "slug": "alerce", "vista": "m4" }, { "slug": "trattoria-fiume", "vista": "m4" }, { "slug": "cafe-lluvia", "vista": "m4" }]
       }
     ],
     "preguntas": [
@@ -290,6 +301,54 @@
       "url": "https://democafe-lime.vercel.app",
       "resumen": "Maqueta para una cafetería de especialidad. Menú interactivo, historia de la casa, galería y reservas por WhatsApp.",
       "descripcion": "Maqueta de sitio web para una cafetería de especialidad: menú interactivo, historia, galería y reservas por WhatsApp. Diseño de NVY Studios."
+    },
+    {
+      "slug": "trattoria-fiume",
+      "nombre": "Trattoria Fiume",
+      "cliente": "Trattoria Fiume",
+      "rubro": "pizzería",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://cartas-nvy.vercel.app/carta/fiume",
+      "resumen": "Carta digital de ejemplo para una pizzería de masa madre. Carta en texto real, destacados con foto y platos agotados marcados.",
+      "descripcion": "Carta digital de ejemplo para una pizzería de masa madre. Diseño de NVY Studios."
+    },
+    {
+      "slug": "smash",
+      "nombre": "Smash",
+      "cliente": "Smash",
+      "rubro": "hamburguesería",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://cartas-nvy.vercel.app/carta/smash",
+      "resumen": "Carta digital de ejemplo para una hamburguesería. Carta en texto real, destacados con foto y categorías.",
+      "descripcion": "Carta digital de ejemplo para una hamburguesería. Diseño de NVY Studios."
+    },
+    {
+      "slug": "cafe-lluvia",
+      "nombre": "Café Lluvia",
+      "cliente": "Café Lluvia",
+      "rubro": "cafetería",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://cartas-nvy.vercel.app/carta/cafe-lluvia",
+      "resumen": "Carta digital de ejemplo para una cafetería de especialidad. Carta en texto real, selector de idioma y agotados marcados.",
+      "descripcion": "Carta digital de ejemplo para una cafetería de especialidad. Diseño de NVY Studios."
+    },
+    {
+      "slug": "alerce",
+      "nombre": "Alerce",
+      "cliente": "Alerce",
+      "rubro": "bar de cócteles",
+      "anio": 2026,
+      "estado": "demo",
+      "plan": "",
+      "url": "https://cartas-nvy.vercel.app/carta/alerce",
+      "resumen": "Carta digital de ejemplo para un bar de cócteles de autor. Carta en texto real, destacados con foto y agotados marcados.",
+      "descripcion": "Carta digital de ejemplo para un bar de cócteles de autor. Diseño de NVY Studios."
     },
     {
       "slug": "fit-valdivia",

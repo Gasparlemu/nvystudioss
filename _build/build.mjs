@@ -74,13 +74,16 @@ for (const [i, pr] of inicio.problemas.entries()) {
   for (const s of [...(pr.despues || []), ...(pr.moviles || [])]) {
     if (!publicados.has(s)) throw new Error(`${ref}: "${s}" no es un proyecto publicado`);
   }
+  for (const s of pr.despues || []) for (const v of pr.vistas || []) {
+    if (!vistaDe(s, v)) throw new Error(`${ref}: falta la captura ${v} de "${s}"`);
+  }
   for (const m of pr.demos || []) {
     if (porSlug(m.slug)?.estado !== 'demo') throw new Error(`${ref}: "${m.slug}" no es una demo del JSON`);
     if (!vistaDe(m.slug, m.vista)) throw new Error(`${ref}: falta la captura ${m.vista} de "${m.slug}" (corre _build/capturas.mjs)`);
   }
   if (pr.antes?.captura && !vistaDe(pr.antes.captura)) throw new Error(`${ref}: falta la captura de "${pr.antes.captura}"`);
-}
-for (const s of inicio.destacados) if (!publicados.has(s)) throw new Error(`inicio.destacados: "${s}" no es un proyecto publicado`);
+  if (!pr.foto || !vistaDe(pr.foto.slug, pr.foto.vista)) throw new Error(`${ref}: falta "foto" (la captura de la tarjeta) o no existe`);
+}for (const s of inicio.destacados) if (!publicados.has(s)) throw new Error(`inicio.destacados: "${s}" no es un proyecto publicado`);
 
 // ---------- utilidades ----------
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -376,7 +379,7 @@ const palabras = (texto) => texto.split(' ').map((w, i) => `<span class="palabra
 
 function paginaInicio() {
   const fotoCaso = (v, alt, sizes) => `<div class="ba__img">${picture(v, { sizes, alt })}</div>`;
-  const figura = (lbl, media, pie, clase = '') => `<figure class="ba${clase}"><span class="ba__lbl">${lbl}</span>${media}${pie ? `<figcaption>${pie}</figcaption>` : ''}</figure>`;
+  const figura = (lbl, media, pie, clase = '') => `<figure class="ba${clase}">${lbl ? `<span class="ba__lbl">${lbl}</span>` : ''}${media}${pie ? `<figcaption>${pie}</figcaption>` : ''}</figure>`;
   const verProyecto = (p) => `<span>${esc(p.nombre)}</span><a href="/trabajos/${p.slug}">ver proyecto ${icono('derecha')}</a>`;
 
   const tarjetas = inicio.problemas.map((pr, i) => {
@@ -388,25 +391,34 @@ function paginaInicio() {
         ? figura('antes', fotoCaso(vistaDe(pr.antes.captura), `Sitio anterior de ${caso.cliente || caso.nombre}`, '(min-width: 1100px) 30vw, 92vw'), esc(pr.antes.nota || ''))
         : figura('antes', `<div class="ba__vacio"><p>${esc(pr.antes.texto)}</p></div>`, ''));
     }
+    // "vistas" (opcional) muestra varias capturas del caso; la etiqueta y el link van solo en la primera.
     for (const s of pr.despues || []) {
       const p = porSlug(s);
-      figs.push(figura(pr.antes ? 'después' : 'caso real', fotoCaso(vistas(s).e[0], `Sitio de ${p.cliente || p.nombre} hecho por NVY Studios`, '(min-width: 1100px) 30vw, 92vw'), verProyecto(p)));
+      (pr.vistas || ['e1']).forEach((v, k) => {
+        figs.push(figura(k ? '' : pr.antes ? 'después' : 'caso real', fotoCaso(vistaDe(s, v), `Sitio de ${p.cliente || p.nombre} hecho por NVY Studios`, '(min-width: 1100px) 30vw, 92vw'), k ? '' : verProyecto(p)));
+      });
     }
     for (const s of pr.moviles || []) {
       const p = porSlug(s);
       figs.push(figura('celular', fotoCaso(vistas(s).m[0], `Sitio de ${p.cliente || p.nombre} en celular`, '(min-width: 1100px) 16vw, 44vw'), verProyecto(p), ' ba--movil'));
     }
-    for (const m of pr.demos || []) {
+    // Varias vistas seguidas de la misma demo: la etiqueta y el link van solo en la primera.
+    (pr.demos || []).forEach((m, k) => {
       const p = porSlug(m.slug);
       const v = vistaDe(m.slug, m.vista);
-      figs.push(figura('demo', fotoCaso(v, `Demo de NVY Studios: ${p.nombre}, ${p.rubro}`, v.movil ? '(min-width: 1100px) 16vw, 44vw' : '(min-width: 1100px) 30vw, 92vw'),
-        `<span>${esc(p.nombre)} · demo</span><a href="${esc(p.url)}" ${externo}>ver demo ${icono('diagonal')}</a>`, v.movil ? ' ba--movil' : ''));
-    }
+      const repetida = k > 0 && pr.demos[k - 1].slug === m.slug;
+      figs.push(figura(repetida ? '' : 'demo', fotoCaso(v, `Demo de NVY Studios: ${p.nombre}, ${p.rubro}`, v.movil ? '(min-width: 1100px) 12vw, 44vw' : '(min-width: 1100px) 30vw, 92vw'),
+        repetida ? '' : `<span>${esc(p.nombre)} · demo</span><a href="${esc(p.url)}" ${externo}>ver demo ${icono('diagonal')}</a>`, v.movil ? ' ba--movil' : ''));
+    });
     const mensaje = `Hola Gaspar, vi tu web. Tengo este problema: "${pr.problema}" ¿Me puedes cotizar ${pr.tipo === 'cartas' ? 'una carta digital' : 'una web'}?`;
+    // La captura de la tarjeta: en un MacBook si es de escritorio, en un telefono si es de celular.
+    const vf = vistaDe(pr.foto.slug, pr.foto.vista);
+    const demo = porSlug(pr.foto.slug).estado === 'demo' ? '<span class="prob__demo">demo</span>' : '';
     return `      <article class="prob" data-tipo="${pr.tipo}" style="--o:${i * 2}">
         <p class="prob__tipo">${TIPOS_PROBLEMA[pr.tipo]}</p>
         <h3 class="prob__t"><button class="prob__abre" type="button" id="${id}-t" aria-expanded="false" aria-controls="${id}">“${esc(pr.problema)}”</button></h3>
         <span class="prob__mas" aria-hidden="true">${icono('mas')}</span>
+        <span class="prob__foto${vf.movil ? ' prob__foto--movil' : ''}" aria-hidden="true">${picture(vf, { sizes: vf.movil ? '(min-width: 1100px) 9vw, 22vw' : '(min-width: 1100px) 22vw, 46vw', alt: '' })}${demo}</span>
       </article>
       <div class="prob__panel" id="${id}" role="region" aria-labelledby="${id}-t" data-tipo="${pr.tipo}" style="--o:${i * 2 + 1}">
         <div class="prob__in"><div class="prob__cuerpo">
@@ -478,6 +490,7 @@ ${destacados}
     <div class="faq__lista">
 ${preguntas}
     </div>
+    <div class="faq__visor" aria-live="polite"><p class="faq__visor-q"></p><p class="faq__visor-r"></p><a class="boton" href="${wa(inicio.whatsappTexto)}" ${externo}>preguntar otra cosa ${icono('diagonal')}</a></div>
   </section>
 
 ${seccionContacto(inicio.whatsappTexto)}
