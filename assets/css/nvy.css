@@ -647,16 +647,40 @@ a.contacto__dato:hover { color: var(--azul); }
 
 .galeria { display: flex; flex-direction: column; gap: var(--gap); padding: 0 var(--pad); }
 .gal { background: var(--bg-2); padding: clamp(16px, 5vw, 80px); }
-.gal img { width: 100%; outline: 1px solid var(--linea); }
+.gal img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 /* La primera captura (escritorio) no llena la pantalla: queda centrada y mas chica. */
-.gal--ancha img { display: block; width: 100%; max-width: 960px; margin-inline: auto; }
-.gal--ancha figcaption { max-width: 960px; margin-inline: auto; }
+.gal--ancha .mac, .gal--ancha figcaption { max-width: 960px; margin-inline: auto; }
+
+/* Capturas de escritorio en un MacBook: pantalla con marco negro y camara, y la base de
+   aluminio mas ancha que la pantalla, con la muesca para abrirlo. */
+.mac { position: relative; padding: 0 7%; }
+.mac picture {
+  display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #0b0b0c;
+  border: clamp(6px, .9vw, 12px) solid #0b0b0c; border-bottom-width: clamp(9px, 1.25vw, 17px);
+  border-radius: clamp(10px, 1.4vw, 20px) clamp(10px, 1.4vw, 20px) 3px 3px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .14);
+}
+.mac::before { content: ""; position: absolute; z-index: 1; top: clamp(2px, .35vw, 5px); left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #2a2b30; }
+.mac::after {
+  content: ""; display: block; height: clamp(8px, 1.1vw, 16px); margin: 0 -7.5%; border-radius: 2px 2px 14px 14px;
+  background: linear-gradient(#a9abb1, #a9abb1) 50% 0 / 16% 30% no-repeat, linear-gradient(180deg, #eceef1 0%, #d2d4d9 45%, #a3a5ab 100%);
+  box-shadow: 0 24px 36px -18px rgba(0, 0, 0, .7);
+}
+
+/* Capturas de celular en un iPhone 15: borde negro fino, marco de titanio e isla dinamica. */
+.iphone {
+  position: relative; padding: 3.4%; border-radius: 15.5% / 7.2%; background: #0b0b0c;
+  box-shadow: 0 0 0 2px #46474c, 0 0 0 3px #1c1d20, 0 30px 60px -30px rgba(0, 0, 0, .8);
+}
+/* la franja negra de arriba hace de barra de estado: la isla queda sobre ella y no tapa el sitio */
+.iphone picture { display: block; overflow: hidden; padding-top: 11%; border-radius: 12.5% / 5.8%; background: #1c1d21; }
+.iphone img { height: auto; aspect-ratio: 390 / 790; }
+.iphone::after { content: ""; position: absolute; z-index: 1; top: 2.5%; left: 50%; width: 31%; height: 2.7%; translate: -50% 0; border-radius: 99px; background: #000; }
 .gal figcaption { margin-top: clamp(12px, 1.6vw, 20px); font-size: 13px; color: var(--gris-2); }
 .gal__moviles {
   display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr));
   gap: clamp(12px, 3vw, 48px); max-width: 1080px; margin: 0 auto;
 }
-.gal--moviles img { border-radius: clamp(10px, 1.6vw, 24px); }
 .gal--moviles figcaption { text-align: center; }
 .gal--dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap); background: none; padding: 0; }
 .gal--dos figure { background: var(--bg-2); padding: clamp(12px, 3vw, 48px); }
@@ -763,7 +787,7 @@ a.contacto__dato:hover { color: var(--azul); }
   .proyecto__titulo, .siguiente__nombre { white-space: normal; line-height: .94; font-size: min(calc(var(--ancho) / var(--em-max) * .99), 24vw); }
   .ficha { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gal__moviles { --n: 2 !important; }
-  .gal__moviles picture:nth-child(n + 3) { display: none; }
+  .gal__moviles > :nth-child(n + 3) { display: none; }
   .gal--dos { grid-template-columns: 1fr; }
 }
 
@@ -819,6 +843,35 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
   max-width: 14ch;
   font-family: var(--display); font-weight: 500; letter-spacing: -.05em; line-height: .94;
   font-size: clamp(46px, 8.4vw, 150px);
+}
+/* Fondo: un muro de capturas de los trabajos en diagonal. Sube y baja sin parar (cada
+   columna en su sentido) y sigue al mouse. Una luz blanca detras del titulo y abajo lo
+   deja leer, y se apaga antes del borde para no dejar una linea contra Problemas. */
+.pregunta { position: relative; isolation: isolate; overflow: hidden; }
+.pregunta__h1, .pregunta__pie { position: relative; }
+.muro {
+  position: absolute; z-index: -2; top: -55%; left: -25%; width: 150%; display: grid; gap: 22px;
+  grid-template-columns: repeat(7, minmax(0, 1fr)); transform: rotateX(40deg) rotateZ(-24deg);
+  translate: calc(var(--mx, 0) * -30px) calc(var(--my, 0) * -22px);
+}
+/* el padding de abajo iguala el hueco entre las dos copias: asi -50% calza justo */
+.muro__col {
+  display: flex; flex-direction: column; gap: 22px; padding-bottom: 22px;
+  translate: calc(var(--mx, 0) * -14px) calc(var(--my, 0) * -10px);
+  will-change: transform; animation: cinta 46s linear infinite;
+}
+.muro__col:nth-child(even) { margin-top: 14%; animation-duration: 58s; animation-direction: reverse; translate: calc(var(--mx, 0) * -40px) calc(var(--my, 0) * -30px); }
+.muro__col:nth-child(3n) { animation-duration: 52s; }
+@keyframes cinta { to { transform: translateY(-50%); } }
+.muro__foto { aspect-ratio: 16 / 10; overflow: hidden; border-radius: 14px; background: #fff; box-shadow: 0 30px 50px -20px rgba(10, 31, 92, .35); }
+.muro__foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.js:not(.estatico) .muro { opacity: 0; transition: opacity 1.4s .3s; }
+.js.is-listo:not(.estatico) .muro { opacity: 1; }
+.pregunta::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .45) 0, rgba(255, 255, 255, 0) 8%),
+    linear-gradient(0deg, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, .8) 9%, rgba(255, 255, 255, 0) 20%),
+    radial-gradient(62% 58% at 22% 70%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, .85) 48%, rgba(255, 255, 255, 0) 100%);
 }
 .pregunta__pie {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px;
@@ -1067,6 +1120,12 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
   @keyframes entra-respuesta { from { opacity: 0; translate: 0 10px; } }
 }
 
+@media (max-width: 900px) {
+  /* en celular el muro se ve limpio arriba y la luz blanca empieza recien sobre el titulo */
+  .muro { width: 320%; left: -110%; top: -25%; }
+  .pregunta::after { background: linear-gradient(180deg, rgba(255, 255, 255, .85) 0, rgba(255, 255, 255, .6) 7%, rgba(255, 255, 255, 0) 14%), linear-gradient(0deg, #fff 0%, #fff 27%, rgba(255, 255, 255, .75) 37%, rgba(255, 255, 255, 0) 52%); }
+}
+@media (prefers-reduced-motion: reduce) { .muro__col { animation: none !important; } }
 @media (max-width: 1100px) {
   .probs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   article.prob:nth-of-type(n) { grid-column: auto; }

@@ -83,7 +83,8 @@ for (const [i, pr] of inicio.problemas.entries()) {
   }
   if (pr.antes?.captura && !vistaDe(pr.antes.captura)) throw new Error(`${ref}: falta la captura de "${pr.antes.captura}"`);
   if (!pr.foto || !vistaDe(pr.foto.slug, pr.foto.vista)) throw new Error(`${ref}: falta "foto" (la captura de la tarjeta) o no existe`);
-}for (const s of inicio.destacados) if (!publicados.has(s)) throw new Error(`inicio.destacados: "${s}" no es un proyecto publicado`);
+}for (const f of inicio.muro) if (!existsSync(join(RAIZ, 'assets', 'img', 'portada', `${f}.webp`))) throw new Error(`inicio.muro: falta assets/img/portada/${f}.webp`);
+for (const s of inicio.destacados) if (!publicados.has(s)) throw new Error(`inicio.destacados: "${s}" no es un proyecto publicado`);
 
 // ---------- utilidades ----------
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -452,8 +453,18 @@ function paginaInicio() {
         <div class="faq__r"><p>${esc(r)}</p></div>
       </details>`).join('\n');
 
+  // Muro de la portada: 7 columnas de 6 capturas de los trabajos, en diagonal. Cada
+  // columna lleva sus fotos dos veces seguidas: la cinta sube media columna (CSS) y
+  // vuelve al inicio sin que se note el salto.
+  const urlMuro = (f) => `/assets/img/portada/${f}.webp?v=${version(`assets/img/portada/${f}.webp`)}`;
+  const muro = Array.from({ length: 7 }, (_, c) => {
+    const fotos = Array.from({ length: 6 }, (_, f) => inicio.muro[(2 + c * 6 + f * 3 + c) % inicio.muro.length]);
+    return `<div class="muro__col">${[...fotos, ...fotos].map((f) => `<div class="muro__foto"><img src="${urlMuro(f)}" alt="" width="640" height="400" decoding="async" fetchpriority="low"></div>`).join('')}</div>`;
+  }).join('');
+
   const cuerpo = `<main id="contenido">
   <section class="pregunta" aria-labelledby="pregunta-titulo">
+    <div class="muro" aria-hidden="true" data-muro>${muro}</div>
     <h1 class="pregunta__h1" id="pregunta-titulo" aria-label="${esc(inicio.pregunta)}" data-reveal="letras">${palabras(inicio.pregunta)}</h1>
     <div class="pregunta__pie">
       <p class="pregunta__bajada">${esc(inicio.bajada)}</p>
@@ -700,9 +711,9 @@ function paginaProyecto(p, i) {
         </div>` : '';
 
   const piezas = [];
-  if (v.e[0]) piezas.push(`    <figure class="gal gal--ancha">${picture(v.e[0], { sizes: '(min-width: 1400px) 1320px, 94vw', alt: `Portada del sitio de ${nombre} en escritorio`, carga: 'eager' })}<figcaption>escritorio</figcaption></figure>`);
-  if (v.m.length) piezas.push(`    <figure class="gal gal--moviles"><div class="gal__moviles" style="--n:${v.m.length}">${v.m.map((m, k) => picture(m, { sizes: '(min-width: 900px) 24vw, 42vw', alt: `Vista ${k + 1} del sitio de ${nombre} en celular` })).join('')}</div><figcaption>celular</figcaption></figure>`);
-  if (v.e.length > 1) piezas.push(`    <div class="gal gal--dos">${v.e.slice(1).map((e, k) => `<figure>${picture(e, { sizes: '(min-width: 900px) 46vw, 94vw', alt: `Sección ${k + 2} del sitio de ${nombre} en escritorio` })}</figure>`).join('')}</div>`);
+  if (v.e[0]) piezas.push(`    <figure class="gal gal--ancha"><div class="mac">${picture(v.e[0], { sizes: '(min-width: 1400px) 1320px, 94vw', alt: `Portada del sitio de ${nombre} en escritorio`, carga: 'eager' })}</div><figcaption>escritorio</figcaption></figure>`);
+  if (v.m.length) piezas.push(`    <figure class="gal gal--moviles"><div class="gal__moviles" style="--n:${v.m.length}">${v.m.map((m, k) => `<div class="iphone">${picture(m, { sizes: '(min-width: 900px) 24vw, 42vw', alt: `Vista ${k + 1} del sitio de ${nombre} en celular` })}</div>`).join('')}</div><figcaption>celular</figcaption></figure>`);
+  if (v.e.length > 1) piezas.push(`    <div class="gal gal--dos">${v.e.slice(1).map((e, k) => `<figure><div class="mac">${picture(e, { sizes: '(min-width: 900px) 46vw, 94vw', alt: `Sección ${k + 2} del sitio de ${nombre} en escritorio` })}</div></figure>`).join('')}</div>`);
   if (!piezas.length) piezas.push(`    <figure class="gal gal--ancha">${sinCaptura(p)}</figure>`);
 
   const cuerpo = `<main id="contenido" class="proyecto">
