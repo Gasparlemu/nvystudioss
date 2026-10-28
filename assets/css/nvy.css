@@ -849,6 +849,9 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
    deja leer, y se apaga antes del borde para no dejar una linea contra Problemas. */
 .pregunta { position: relative; isolation: isolate; overflow: hidden; }
 .pregunta__h1, .pregunta__pie { position: relative; }
+/* Sombra muy suave pegada a las letras: les da cuerpo sobre las fotos sin que se note.
+   Va con drop-shadow y no con text-shadow, porque cada palabra recorta su sombra. */
+.pregunta__h1 { filter: drop-shadow(0 0 1px rgba(255, 255, 255, .7)) drop-shadow(0 6px 16px rgba(10, 31, 92, .22)); }
 .muro {
   position: absolute; z-index: -2; top: -55%; left: -25%; width: 150%; display: grid; gap: 22px;
   grid-template-columns: repeat(7, minmax(0, 1fr)); transform: rotateX(40deg) rotateZ(-24deg);
