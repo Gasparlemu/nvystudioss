@@ -557,7 +557,7 @@ function paginaTrabajos() {
           <span class="obra__flecha">${icono('derecha')}</span>
         </a>
         <div class="obra__media"><div class="obra__media-in">
-          <a class="obra__foto" href="/trabajos/${p.slug}" tabindex="-1">${portada ? picture(portada, { sizes: '(min-width: 900px) 48vw, 92vw', alt: `Portada del sitio de ${p.cliente || p.nombre}` }) : sinCaptura(p)}</a>
+          <a class="obra__foto" href="/trabajos/${p.slug}" tabindex="-1">${portada ? `<div class="mac">${picture(portada, { sizes: '(min-width: 900px) 48vw, 92vw', alt: `Portada del sitio de ${p.cliente || p.nombre}` })}</div>` : sinCaptura(p)}</a>
           <div class="obra__info">
             <p class="obra__resumen">${esc(p.resumen.split(/(?<=\.)\s/)[0])}</p>
             <a class="obra__ver" href="/trabajos/${p.slug}" tabindex="-1">ver proyecto ${icono('derecha')}</a>
@@ -570,7 +570,7 @@ function paginaTrabajos() {
   const vistasPrevias = proyectos.map((p, i) => {
     const portada = vistas(p.slug).e[0];
     return `      <figure class="pv${i === 0 ? ' is-activo' : ''}">
-        <div class="pv__img">${portada ? picture(portada, { sizes: '(min-width: 900px) 40vw, 1px', alt: '' }) : sinCaptura(p)}</div>
+        <div class="pv__img">${portada ? `<div class="mac">${picture(portada, { sizes: '(min-width: 900px) 40vw, 1px', alt: '' })}</div>` : sinCaptura(p)}</div>
         <figcaption>${esc(p.rubro)} · ${p.anio} · ${ESTADOS[p.estado]}</figcaption>
       </figure>`;
   }).join('\n');
