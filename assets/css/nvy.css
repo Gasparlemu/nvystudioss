@@ -316,7 +316,7 @@ html.menu-abierto .cab__menu { color: #fff; }
 .js.is-listo:not(.estatico) .portada__bajada { opacity: 1; transform: none; }
 
 /* ---------- trabajos ---------- */
-.trabajos { position: relative; padding: clamp(96px, 14vw, 200px) var(--pad) clamp(64px, 8vw, 120px); }
+.trabajos { position: relative; padding: clamp(96px, 14vw, 200px) var(--pad) clamp(24px, 3vw, 48px); }
 .trabajos__cab {
   display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px 32px;
   margin-bottom: clamp(32px, 5vw, 64px);
@@ -644,23 +644,18 @@ a.contacto__dato:hover { color: var(--azul); }
 .gal { background: var(--bg-2); padding: clamp(16px, 5vw, 80px); }
 .gal img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 /* La primera captura (escritorio) no llena la pantalla: queda centrada y mas chica. */
-.gal--ancha .mac, .gal--ancha figcaption { max-width: 960px; margin-inline: auto; }
+.gal--ancha .mac, .gal--ancha figcaption { max-width: 1040px; margin-inline: auto; }
 
-/* Capturas de escritorio en un MacBook: pantalla con marco negro y camara, y la base de
-   aluminio mas ancha que la pantalla, con la muesca para abrirlo. */
-.mac { position: relative; padding: 0 7%; }
-.mac picture {
-  display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #0b0b0c;
-  border: clamp(6px, .9vw, 12px) solid #0b0b0c; border-bottom-width: clamp(9px, 1.25vw, 17px);
-  border-radius: clamp(10px, 1.4vw, 20px) clamp(10px, 1.4vw, 20px) 3px 3px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .14);
-}
+/* Capturas de escritorio en un MacBook Pro: la captura va debajo de la imagen del equipo
+   (assets/brand/macbook.webp, con la pantalla transparente), calzada en el hueco de la
+   pantalla. Los porcentajes salen de medir la imagen: 554 x 361 px, pantalla de 65,43 a 488,317. */
+.mac { position: relative; aspect-ratio: 554 / 361; }
+.mac picture { position: absolute; left: 11.733%; top: 11.911%; width: 76.534%; height: 76.177%; overflow: hidden; background: #0b0b0c; }
 .mac img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.mac::before { content: ""; position: absolute; z-index: 1; top: clamp(2px, .35vw, 5px); left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #2a2b30; }
-.mac::after {
-  content: ""; display: block; height: clamp(8px, 1.1vw, 16px); margin: 0 -7.5%; border-radius: 2px 2px 14px 14px;
-  background: linear-gradient(#a9abb1, #a9abb1) 50% 0 / 16% 30% no-repeat, linear-gradient(180deg, #eceef1 0%, #d2d4d9 45%, #a3a5ab 100%);
-  box-shadow: 0 24px 36px -18px rgba(0, 0, 0, .7);
+.mac::after, .prob__foto:not(.prob__foto--movil)::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: url("/assets/brand/macbook.webp") center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 .6px rgba(255, 255, 255, .28));
 }
 
 /* Capturas de celular en un iPhone 15: borde negro fino, marco de titanio e isla dinamica. */
@@ -750,8 +745,8 @@ a.contacto__dato:hover { color: var(--azul); }
   .titulo-seccion { margin-bottom: 40px; }
   .contacto .boton, .proyecto__acciones .boton, .no-existe .boton { width: 100%; justify-content: center; }
   .proyecto__acciones { max-width: none; }
-  .portada__marca { white-space: normal; font-size: calc(var(--ancho) / var(--em-max) * .99); line-height: .9; }
-  .portada__marca .palabra { display: block; width: fit-content; }
+  .portada__marca, .portafolio__marca { white-space: normal; font-size: calc(var(--ancho) / var(--em-max) * .99); line-height: .9; }
+  .portada__marca .palabra, .portafolio__marca .palabra { display: block; width: fit-content; }
 
   .demos__lista { grid-column: 1 / -1; }
   .demos__pv { display: none; }
@@ -828,6 +823,68 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 .enlace:hover { color: var(--azul); }
 .enlace:hover .ico { transform: translateX(3px); }
 
+/* ---------- la parte negra del inicio (portafolio) ----------
+   Al llegar a ella toda la pantalla pasa de blanco a negro (nvy.js pone .es-noche en el
+   body): cambia el fondo de la pagina, el header y el pie. Adentro vuelven los colores de
+   la version negra, los mismos de /trabajos. Sin JS la zona lleva su propio fondo negro. */
+.zona-negra {
+  --bg: #0b0b0c;
+  --bg-2: #151517;
+  --tinta: #f3f3ef;
+  --gris: #a6a7ab;
+  --gris-2: #8b8c91;
+  --linea: rgba(243, 243, 239, .14);
+  --azul: #4a74e8;
+  --azul-2: #6d8ff0;
+  --grad-azul: var(--brillo), linear-gradient(176deg, #123182 12%, #2f5ad0 46%, #9dbaf7 74%, #e6eeff 100%);
+  --cab-fondo: rgba(11, 11, 12, .72);
+}
+/* El paso a negro es una capa fija detras de todo. Donde el navegador lo permite, su opacidad
+   va atada al scroll (animation-timeline) y corre en el compositor, sin JavaScript ni
+   repintar textos: sube mientras se acerca la marca gigante y baja despues de Trabajos. En
+   los demas, aparece con una transicion corta al activarse .es-noche (nvy.js). */
+.pag-inicio::before { content: ""; position: fixed; inset: 0; z-index: -1; background: #0b0b0c; opacity: 0; pointer-events: none; will-change: opacity; transition: opacity .6s var(--cambia); }
+.pag-inicio.es-noche::before { opacity: 1; }
+@supports (animation-timeline: view()) {
+  .pag-inicio { timeline-scope: --zn-in, --zn-out; }
+  .portafolio { view-timeline: --zn-in block; }
+  .zn-cola { view-timeline: --zn-out block; }
+  .pag-inicio::before, .pag-inicio.es-noche::before {
+    transition: none; opacity: 0;
+    animation: noche-sube linear both, noche-baja linear forwards;
+    animation-timeline: --zn-in, --zn-out;
+    animation-range: entry 0% entry 55%, contain 0% contain 100%;
+  }
+  @keyframes noche-sube { to { opacity: 1; } }
+  @keyframes noche-baja { from { opacity: 1; } to { opacity: 0; } }
+}
+.zona-negra { color: var(--tinta); background: var(--bg); }
+.js .zona-negra { background: none; }
+/* Solo el header cambia de color; el resto de la pagina no se vuelve a calcular. */
+.pag-inicio.es-noche .cab { color: #f3f3ef; --cab-fondo: rgba(11, 11, 12, .72); }
+.pag-inicio.es-noche .cab__logo img { filter: none; }
+.pag-inicio.es-noche .cab.is-solida { box-shadow: 0 1px 0 rgba(243, 243, 239, .14); }
+.pag-inicio .zona-negra .boton {
+  color: #0b0b0c; background-color: #fff;
+  background-image: linear-gradient(180deg, rgba(255,255,255,.9) 0%, rgba(214,227,255,.55) 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(143,176,246,.45);
+}
+.pag-inicio .zona-negra .boton:hover { filter: brightness(.93); }
+/* Marca gigante de borde a borde, como en /trabajos, y "portafolio" en chico debajo. */
+.portafolio {
+  min-height: 100vh; min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 96px var(--pad) clamp(20px, 3vw, 40px);
+}
+.portafolio__marca {
+  display: block; margin: 0 0 .22em -.035em; white-space: nowrap;
+  font-family: var(--display); font-weight: 500; letter-spacing: -.05em; line-height: .8;
+  font-size: calc(var(--ancho) / var(--em) * .995);
+}
+.portafolio__sub { font-size: clamp(20px, 2vw, 30px); letter-spacing: -.02em; color: var(--tinta); }
+.zn-cola { height: 30vh; }
+.zona-negra + .sobre { padding-top: clamp(48px, 6vw, 96px); }
+
 /* ---------- portada: la pregunta ---------- */
 .pregunta {
   min-height: 100vh; min-height: 100svh;
@@ -840,7 +897,7 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
   font-size: clamp(46px, 8.4vw, 150px);
 }
 /* Fondo: un muro de capturas de los trabajos en diagonal. Sube y baja sin parar (cada
-   columna en su sentido) y sigue al mouse. Una luz blanca detras del titulo y abajo lo
+   columna en su sentido). Una luz blanca detras del titulo y abajo lo
    deja leer, y se apaga antes del borde para no dejar una linea contra Problemas. */
 .pregunta { position: relative; isolation: isolate; overflow: hidden; }
 .pregunta__h1, .pregunta__pie { position: relative; }
@@ -850,15 +907,13 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 .muro {
   position: absolute; z-index: -2; top: -55%; left: -25%; width: 150%; display: grid; gap: 22px;
   grid-template-columns: repeat(7, minmax(0, 1fr)); transform: rotateX(40deg) rotateZ(-24deg);
-  translate: calc(var(--mx, 0) * -30px) calc(var(--my, 0) * -22px);
 }
 /* el padding de abajo iguala el hueco entre las dos copias: asi -50% calza justo */
 .muro__col {
   display: flex; flex-direction: column; gap: 22px; padding-bottom: 22px;
-  translate: calc(var(--mx, 0) * -14px) calc(var(--my, 0) * -10px);
   will-change: transform; animation: cinta 46s linear infinite;
 }
-.muro__col:nth-child(even) { margin-top: 14%; animation-duration: 58s; animation-direction: reverse; translate: calc(var(--mx, 0) * -40px) calc(var(--my, 0) * -30px); }
+.muro__col:nth-child(even) { margin-top: 14%; animation-duration: 58s; animation-direction: reverse; }
 .muro__col:nth-child(3n) { animation-duration: 52s; }
 @keyframes cinta { to { transform: translateY(-50%); } }
 .muro__foto { aspect-ratio: 16 / 10; overflow: hidden; border-radius: 14px; background: #fff; box-shadow: 0 30px 50px -20px rgba(10, 31, 92, .35); }
@@ -939,15 +994,11 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
   filter: drop-shadow(0 18px 22px rgba(10, 31, 92, .35)); transition: rotate .7s var(--sale), translate .7s var(--sale);
 }
 .prob__foto picture, .prob__foto img { display: block; width: 100%; }
-.prob__foto img {
-  height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top;
-  border: 6px solid #0b0b0c; border-bottom-width: 8px; border-radius: 9px 9px 2px 2px; background: #0b0b0c;
-}
-/* la base de aluminio del MacBook, con la muesca para abrirlo */
-.prob__foto:not(.prob__foto--movil)::after {
-  content: ""; display: block; height: 7px; margin: 0 -8%; border-radius: 1px 1px 8px 8px;
-  background: linear-gradient(#a9abb1, #a9abb1) 50% 0 / 16% 3px no-repeat, linear-gradient(180deg, #eceef1 0%, #d2d4d9 45%, #a3a5ab 100%);
-}
+.prob__foto img { height: auto; object-fit: cover; object-position: top; }
+/* el MacBook de las tarjetas: mismo marco y mismo hueco que .mac */
+.prob__foto:not(.prob__foto--movil) { display: block; aspect-ratio: 554 / 361; }
+.prob__foto:not(.prob__foto--movil) picture { position: absolute; left: 11.733%; top: 11.911%; width: 76.534%; height: 76.177%; overflow: hidden; background: #0b0b0c; }
+.prob__foto:not(.prob__foto--movil) img { height: 100%; }
 .prob__foto--movil {
   top: auto; bottom: 18px; right: 10%; width: 20%; overflow: hidden; rotate: -4deg;
   border: 4px solid #0b0b0c; border-radius: 20px; background: #0b0b0c; filter: none; box-shadow: 0 24px 40px -16px rgba(10, 31, 92, .5);
@@ -1040,33 +1091,8 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
 .pag-inicio .paso.is-activo::before { opacity: 1; }
 .pag-inicio .paso > :not(.paso__abre) { position: relative; pointer-events: none; }
 .pag-inicio .paso__abre { z-index: 2; }
+@media (max-width: 720px) { .pag-inicio .pasos { height: auto; } .pag-inicio .paso.is-activo { height: 300px; } }
 .pag-inicio .paso :is(.paso__quien, .paso__d) { color: rgba(255, 255, 255, .72); }
-
-/* ---------- adelanto de trabajos ---------- */
-.destacados { padding: 0 var(--pad) clamp(96px, 12vw, 180px); }
-.dests { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); }
-.dest a { display: block; }
-/* Cada captura en un MacBook: pantalla con marco negro y camara, y la base de aluminio
-   mas ancha que la pantalla, con la muesca para abrirlo. */
-.dest__foto { position: relative; padding: 0 7.5%; }
-.dest__foto picture {
-  display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #0b0b0c;
-  border: 9px solid #0b0b0c; border-bottom-width: 12px; border-radius: 14px 14px 3px 3px; box-shadow: 0 0 0 1px #34353a;
-}
-.dest__foto::before { content: ""; position: absolute; z-index: 1; top: 3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #2a2b30; }
-.dest__foto::after {
-  content: ""; display: block; height: 12px; margin: 0 -7.5%; border-radius: 2px 2px 12px 12px;
-  background: linear-gradient(#a9abb1, #a9abb1) 50% 0 / 16% 4px no-repeat, linear-gradient(180deg, #eceef1 0%, #d2d4d9 45%, #a3a5ab 100%);
-  box-shadow: 0 22px 30px -16px rgba(10, 31, 92, .45);
-}
-.dest__foto img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--sale); }
-.dest__nombre { margin-top: 14px; font-family: var(--display); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; font-size: clamp(20px, 1.8vw, 28px); transition: color .35s; }
-.dest__rubro { margin-top: 2px; font-size: 14px; color: var(--gris-2); }
-@media (hover: hover) {
-  .dest a:hover .dest__foto img { transform: scale(1.035); }
-  .dest a:hover .dest__nombre { color: var(--azul); }
-}
-.destacados__boton { margin-top: clamp(32px, 4vw, 56px); }
 
 /* ---------- preguntas frecuentes ---------- */
 .faq {
@@ -1147,15 +1173,9 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
   .prob__in { margin-inline: -16px; padding-inline: 16px; }
   .prob__cuerpo { padding: 20px; }
   .prob__texto .boton { width: 100%; justify-content: center; }
-  .pag-inicio .pasos { height: auto; }
-  .dest__foto picture { border-width: 6px; border-bottom-width: 9px; border-radius: 10px 10px 2px 2px; }
-  .dest__foto::after { height: 9px; }
   .prob__figs { grid-template-columns: 1fr; }
   .prob__figs--moviles, .prob__figs:has(> .ba--movil:only-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
   .prob__figs:has(> .ba--movil:only-child) { grid-template-columns: minmax(0, 220px); justify-content: center; }
-  .destacados { padding-bottom: 88px; }
-  .dests { grid-template-columns: 1fr; gap: 32px; }
-  .destacados__boton { width: 100%; justify-content: center; }
 }
 
 /* ---------- transicion entre paginas (View Transitions entre documentos) ----------

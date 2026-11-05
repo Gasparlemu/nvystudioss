@@ -210,6 +210,17 @@
     p.addEventListener('mouseenter', () => { if (matchMedia('(hover: hover)').matches) activar(p); });
   });
 
+  /* ---------- inicio: al llegar al portafolio la pantalla pasa a negro ---------- */
+  // El header cambia de color cuando la zona negra cruza la mitad de la pantalla.
+  const zonaNegra = $('[data-zona-negra]');
+  if (zonaNegra) {
+    const tema = $('meta[name="theme-color"]');
+    new IntersectionObserver(([e]) => {
+      d.body.classList.toggle('es-noche', e.isIntersecting);
+      if (tema) tema.content = e.isIntersecting ? '#0B0B0C' : '#FFFFFF';
+    }, { rootMargin: '-50% 0px -50% 0px' }).observe(zonaNegra);
+  }
+
   /* ---------- demos: la vista previa sigue al nombre bajo el cursor ---------- */
   const demos = $$('.demo');
   const dshots = $$('.dshot');
@@ -284,24 +295,6 @@
     alQuedarLibre(() => $$('img[loading="lazy"]', probs).forEach((img) => { img.loading = 'eager'; }));
   }
 
-  /* ---------- portada: el muro de capturas sigue al mouse ---------- */
-  // Solo con mouse. El muro llega a la posicion de a poco (no de golpe) y se detiene solo.
-  const muro = $('[data-muro]');
-  if (muro && animar && matchMedia('(hover: hover)').matches) {
-    const portada = muro.parentElement;
-    let mx = 0, my = 0, vx = 0, vy = 0, raf = 0;
-    const seguir = () => {
-      vx += (mx - vx) * 0.06; vy += (my - vy) * 0.06;
-      muro.style.setProperty('--mx', vx.toFixed(3)); muro.style.setProperty('--my', vy.toFixed(3));
-      raf = Math.abs(mx - vx) + Math.abs(my - vy) > 0.002 ? requestAnimationFrame(seguir) : 0;
-    };
-    addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse' || scrollY > portada.offsetHeight) return;
-      mx = (e.clientX / innerWidth) * 2 - 1; my = (e.clientY / innerHeight) * 2 - 1;
-      if (!raf) raf = requestAnimationFrame(seguir);
-    }, { passive: true });
-  }
-
   /* ---------- preguntas: en escritorio la respuesta sale en la tarjeta azul ---------- */
   // Con pantalla ancha la pregunta no se despliega: su respuesta pasa a la tarjeta de la
   // derecha. En pantallas mas chicas cada pregunta se abre en su lugar, como siempre.
@@ -361,7 +354,10 @@
     if (lenis) lenis.resize();
   };
 
-  alQuedarLibre(() => $$('img[loading="lazy"]', seccion).forEach((img) => { img.loading = 'eager'; }));
+  const cargarCapturas = () => $$('img[loading="lazy"]', seccion).forEach((img) => { img.loading = 'eager'; });
+  // En el inicio la lista queda lejos: se descargan recien cuando la persona se acerca.
+  if (zonaNegra) new IntersectionObserver(([e], io) => { if (e.isIntersecting) { io.disconnect(); cargarCapturas(); } }, { rootMargin: '100% 0px' }).observe(seccion);
+  else alQuedarLibre(cargarCapturas);
 
   for (const b of $$('[data-filtro]')) {
     b.addEventListener('click', () => {
