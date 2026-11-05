@@ -853,7 +853,7 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
     transition: none; opacity: 0;
     animation: noche-sube linear both, noche-baja linear forwards;
     animation-timeline: --zn-in, --zn-out;
-    animation-range: entry 0% entry 55%, contain 0% contain 100%;
+    animation-range: entry 0% entry 100%, cover 15% cover 60%;
   }
   @keyframes noche-sube { to { opacity: 1; } }
   @keyframes noche-baja { from { opacity: 1; } to { opacity: 0; } }
@@ -871,19 +871,16 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 }
 .pag-inicio .zona-negra .boton:hover { filter: brightness(.93); }
 /* Marca gigante de borde a borde, como en /trabajos, y "portafolio" en chico debajo. */
-.portafolio {
-  min-height: 100vh; min-height: 100svh;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 96px var(--pad) clamp(20px, 3vw, 40px);
-}
+.portafolio { padding: 0 var(--pad); }
+.portafolio + .trabajos { padding-top: clamp(48px, 6vw, 96px); }
 .portafolio__marca {
-  display: block; margin: 0 0 .22em -.035em; white-space: nowrap;
+  display: block; margin: 0 0 .12em -.035em; white-space: nowrap;
   font-family: var(--display); font-weight: 500; letter-spacing: -.05em; line-height: .8;
   font-size: calc(var(--ancho) / var(--em) * .995);
 }
 .portafolio__sub { font-size: clamp(20px, 2vw, 30px); letter-spacing: -.02em; color: var(--tinta); }
-.zn-cola { height: 30vh; }
-.zona-negra + .sobre { padding-top: clamp(48px, 6vw, 96px); }
+.zn-cola { height: clamp(40px, 4vw, 64px); }
+.zona-negra + .sobre { padding-top: clamp(32px, 4vw, 64px); }
 
 /* ---------- portada: la pregunta ---------- */
 .pregunta {

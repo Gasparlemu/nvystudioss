@@ -162,13 +162,18 @@
       io.unobserve(e.target);
     }
   }, { rootMargin: '0px 0px -6% 0px', threshold: 0.08 });
+  // Los titulos con data-tarde esperan a estar mas adentro de la pantalla (la marca gigante
+  // del portafolio): asi las letras se ven subir en vez de animarse pegadas al borde.
+  const ioTarde = new IntersectionObserver((entradas) => {
+    for (const e of entradas) { if (!e.isIntersecting) continue; e.target.classList.add('is-visible'); ioTarde.unobserve(e.target); }
+  }, { rootMargin: '0px 0px -30% 0px', threshold: 0.2 });
 
   let arrancado = false;
   const arrancar = () => {
     if (arrancado) return;
     arrancado = true;
     html.classList.add('is-listo');
-    if (animar) listasFuentes.then(() => $$('[data-reveal]').forEach((el) => io.observe(el)));
+    if (animar) listasFuentes.then(() => $$('[data-reveal]').forEach((el) => (el.hasAttribute('data-tarde') ? ioTarde : io).observe(el)));
   };
   const transicion = () => new Promise((res) => {
     if (!('onpagereveal' in window)) return res(null);

@@ -568,7 +568,7 @@ ${seccionProceso()}
 
   <div class="zona-negra" data-zona-negra>
   <section class="portafolio" id="portafolio" aria-labelledby="portafolio-titulo">
-    <h2 class="portafolio__marca" id="portafolio-titulo" aria-label="Nvy Studios, portafolio" data-reveal="letras" style="--em:${(anchoEm('Nvy Studios') + JUNTA_ST).toFixed(4)};--em-max:${(anchoEm('Studios') + JUNTA_ST).toFixed(4)}">${letras('Nvy Studios', { degradado: true, ajustes: { 4: JUNTA_ST } })}</h2>
+    <h2 class="portafolio__marca" id="portafolio-titulo" aria-label="Nvy Studios, portafolio" data-reveal="letras" data-tarde style="--em:${(anchoEm('Nvy Studios') + JUNTA_ST).toFixed(4)};--em-max:${(anchoEm('Studios') + JUNTA_ST).toFixed(4)}">${letras('Nvy Studios', { degradado: true, ajustes: { 4: JUNTA_ST } })}</h2>
     <p class="portafolio__sub">portafolio</p>
   </section>
 
