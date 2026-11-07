@@ -293,7 +293,7 @@ ${verificacion ? `<!-- Verificacion de propiedad en Google Search Console.
 <script>(function(h){h.className='js'+('onpagereveal' in window?'':' sin-vt');try{var mm=function(q){return matchMedia(q).matches};if(mm('(max-width:720px), (hover:none)'))h.className+=' estatico'}catch(e){}addEventListener('pagereveal',function(e){window.__nvyVT=e.viewTransition||null});setTimeout(function(){if(!window.NVY)h.className='no-js'},4000)})(document.documentElement)</script>
 <script defer src="/assets/vendor/lenis.min.js"></script>
 <script defer src="/assets/js/nvy.js?v=${JS_V}"></script>
-<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}}]},"eagerness":"moderate"}]}</script>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/*.html"}},{"not":{"href_matches":"/cartas*"}}]},"eagerness":"moderate"}]}</script>
 ${ld ? `<script type="application/ld+json">${jsonLd(ld)}</script>\n` : ''}</head>
 <body id="top"${claseBody ? ` class="${claseBody}"` : ''}>
 <a class="saltar" href="#contenido">saltar al contenido</a>
@@ -509,14 +509,14 @@ function paginaInicio() {
     // La captura de la tarjeta: en un MacBook si es de escritorio, en un telefono si es de celular.
     const vf = pr.video ? { movil: true } : vistaDe(pr.foto.slug, pr.foto.vista);
     const demo = !pr.video && porSlug(pr.foto.slug).estado === 'demo' ? '<span class="prob__demo">demo</span>' : '';
-    const fotoTarjeta = pr.video
-      ? `<picture><img src="${motion.video.portada}?v=${version(motion.video.portada.slice(1))}" width="360" height="640" alt="" loading="lazy" decoding="async"></picture>`
-      : picture(vf, { sizes: vf.movil ? '(min-width: 1100px) 9vw, 22vw' : '(min-width: 1100px) 22vw, 46vw', alt: '' });
+    const visual = pr.video
+      ? `<span class="prob__tira" aria-hidden="true">${motion.video.cuadros.map((c) => `<img src="${c}?v=${version(c.slice(1))}" width="270" height="480" alt="" loading="lazy" decoding="async">`).join('')}<span class="prob__play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.2v13.6a.6.6 0 0 0 .92.5l10.6-6.8a.6.6 0 0 0 0-1L8.92 4.7A.6.6 0 0 0 8 5.2z"/></svg></span><span class="prob__dura">${esc(motion.video.duracion)}</span></span>`
+      : `<span class="prob__foto${vf.movil ? ' prob__foto--movil' : ''}" aria-hidden="true">${picture(vf, { sizes: vf.movil ? '(min-width: 1100px) 9vw, 22vw' : '(min-width: 1100px) 22vw, 46vw', alt: '' })}${demo}</span>`;
     return `      <article class="prob" data-tipo="${pr.tipo}" style="--o:${i * 2}">
         <p class="prob__tipo">${TIPOS_PROBLEMA[pr.tipo]}</p>
         <h3 class="prob__t"><button class="prob__abre" type="button" id="${id}-t" aria-expanded="false" aria-controls="${id}">“${esc(pr.problema)}”</button></h3>
         <span class="prob__mas" aria-hidden="true">${icono('mas')}</span>
-        <span class="prob__foto${vf.movil ? ' prob__foto--movil' : ''}" aria-hidden="true">${fotoTarjeta}${demo}</span>
+        ${visual}
       </article>
       <div class="prob__panel" id="${id}" role="region" aria-labelledby="${id}-t" data-tipo="${pr.tipo}" style="--o:${i * 2 + 1}">
         <div class="prob__in"><div class="prob__cuerpo">

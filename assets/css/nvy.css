@@ -897,6 +897,30 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 }
 .mg__marco { position: relative; width: min(400px, calc(84vh * 9 / 16)); aspect-ratio: 9 / 16; overflow: hidden; border-radius: 22px; background: var(--bg-2); }
 .mg__marco video { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Tarjeta de video en Problemas: cuatro cuadros seguidos, como una tira, con su boton de play. */
+.prob__tira {
+  position: absolute; z-index: -1; top: 50%; right: clamp(64px, 6.5vw, 104px); translate: 0 -50%;
+  display: flex; gap: clamp(6px, .7vw, 10px); width: 44%; pointer-events: none;
+  transition: translate .7s var(--sale);
+}
+.prob:hover .prob__tira, .prob.is-abierta .prob__tira { translate: 0 calc(-50% - 6px); }
+.prob__tira img { flex: 1 1 0; min-width: 0; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 12px; box-shadow: 0 16px 28px -14px rgba(4, 12, 40, .75); }
+.prob__play {
+  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+  display: grid; place-items: center; width: clamp(48px, 4.6vw, 68px); aspect-ratio: 1; border-radius: 50%;
+  color: var(--azul); background: #fff; box-shadow: 0 14px 30px -8px rgba(4, 12, 40, .7);
+}
+.prob__play svg { width: 44%; height: 44%; fill: currentColor; translate: 6% 0; }
+.prob__dura {
+  position: absolute; right: 8px; bottom: 8px; padding: 2px 8px; border-radius: 99px;
+  font-size: 12px; font-weight: 500; line-height: 1.5; font-variant-numeric: tabular-nums; color: #fff; background: rgba(6, 12, 30, .78);
+}
+@media (max-width: 720px) {
+  .prob__tira { position: relative; top: auto; right: auto; translate: none; width: 100%; }
+  .prob:hover .prob__tira, .prob.is-abierta .prob__tira { translate: none; }
+  .prob__tira img { border-radius: 9px; }
+  article.prob[data-tipo="motion"] .prob__t { max-width: 100%; }
+}
 .ba--video { width: 100%; max-width: 300px; justify-self: center; }
 .ba--video .ba__img { position: relative; aspect-ratio: 9 / 16; }
 .ba--video video { display: block; width: 100%; height: 100%; object-fit: cover; }

@@ -46,6 +46,8 @@
       "resumen": "Un tutorial real, paso a paso, para hacerse socio de la fundación desde su Instagram: seguir la cuenta, abrir el enlace, llenar el formulario y pagar. Lo hicimos pro bono.",
       "fecha": "2026-11-05",
       "duracionIso": "PT39S",
+      "duracion": "0:38",
+      "cuadros": ["/assets/video/cuadro-1.webp", "/assets/video/cuadro-2.webp", "/assets/video/cuadro-3.webp", "/assets/video/cuadro-4.webp"],
       "ficha": [["cliente", "Fundación Oncosur"], ["formato", "vertical, para reels"], ["duración", "38 segundos"], ["incluye", "voz, música y sonidos"]]
     },
     "servicios": [
