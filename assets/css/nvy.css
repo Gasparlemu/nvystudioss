@@ -869,13 +869,32 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 
 /* ---------- filas de servicios (inicio y motion graphics) ---------- */
 .filas { padding: clamp(64px, 8vw, 120px) var(--pad); }
-.filas--inicio { padding-top: clamp(20px, 2.4vw, 36px); padding-bottom: clamp(24px, 3vw, 48px); }
-.filas--inicio .filas__lbl { font-size: clamp(20px, 2vw, 30px); letter-spacing: -.02em; color: var(--tinta); }
-.filas--inicio .fila__nombre { font-size: clamp(30px, 3.8vw, 58px); letter-spacing: -.04em; }
-.filas--inicio .fila__txt { font-size: clamp(15px, 1.3vw, 19px); }
-/* Al pasar o presionar, el nombre toma el color de su servicio (verde cartas, naranjo motion). */
-.fila__nombre .tramo { padding-bottom: .12em; -webkit-background-clip: text; background-clip: text; background-image: linear-gradient(176deg, var(--m4) 0%, var(--m3) 45%, var(--m2) 100%); transition: color .35s; }
-.fila__link:is(:hover, :active, :focus-visible) .fila__nombre .tramo { color: transparent; }
+/* "También hacemos" (inicio): cada servicio con su nombre grande, como "Nvy Studios"
+   pero mas chico, siempre en su color (verde cartas, naranjo motion). */
+.otros { padding: clamp(40px, 6vw, 96px) var(--pad) clamp(24px, 3vw, 48px); }
+.otros__lbl { margin-bottom: clamp(18px, 2.4vw, 36px); font-size: clamp(20px, 2vw, 30px); letter-spacing: -.02em; color: var(--tinta); }
+.otros__lista { list-style: none; margin: 0; padding: 0; }
+.otro { border-top: 1px solid var(--linea); }
+.otro:last-child { border-bottom: 1px solid var(--linea); }
+.otro__link { display: block; padding: clamp(20px, 2.6vw, 40px) 0 clamp(18px, 2.2vw, 32px); }
+.otro__nombre {
+  display: block; margin-left: -.03em; white-space: nowrap;
+  font-family: var(--display); font-weight: 500; letter-spacing: -.05em; line-height: .86;
+  font-size: calc(var(--ancho) / var(--em) * .72);
+  padding-bottom: .16em;
+  transition: filter .45s var(--sale);
+}
+.otro__pie { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-top: clamp(12px, 1.4vw, 22px); }
+.otro__txt { max-width: 42ch; font-size: clamp(15px, 1.3vw, 19px); color: var(--gris); }
+.otro__ir { display: inline-flex; align-items: center; gap: 8px; flex: none; font-size: clamp(15px, 1.2vw, 18px); color: var(--tono); }
+.otro__ir .ico { transition: transform .45s var(--sale); }
+.otro__link:is(:hover, :focus-visible) .otro__nombre { filter: brightness(1.15); }
+.otro__link:is(:hover, :focus-visible) .otro__ir .ico { transform: translateX(4px); }
+@media (max-width: 720px) {
+  .otro__nombre { white-space: normal; font-size: calc(var(--ancho) / var(--em-max) * .99); line-height: .9; }
+  .otro__nombre .palabra { display: block; width: fit-content; }
+  .otro__pie { flex-direction: column; gap: 10px; }
+}
 .filas__lbl { margin-bottom: clamp(16px, 2vw, 24px); font-size: 14px; color: var(--gris); }
 .filas .titulo-seccion { margin-bottom: clamp(32px, 4vw, 56px); }
 .filas__lista { list-style: none; margin: 0; padding: 0; }

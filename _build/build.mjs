@@ -583,10 +583,13 @@ ${seccionProceso()}
   </section>
 
 ${seccionTrabajos()}
-  <section class="filas filas--inicio" aria-label="Otros servicios">
-    <p class="filas__lbl">también hacemos</p>
-    <ul class="filas__lista">
-${inicio.otros.map(([href, n, t, colores]) => `      <li class="fila"><a class="fila__link" href="${href}"><span class="fila__nombre marca" style="${estiloMarca({ colores })}">${tramos(n)}</span><span class="fila__txt">${esc(t)}</span>${icono('derecha')}</a></li>`).join('\n')}
+  <section class="otros" aria-labelledby="otros-lbl" style="${estiloOtros()}">
+    <p class="otros__lbl" id="otros-lbl">también hacemos</p>
+    <ul class="otros__lista">
+${inicio.otros.map(([href, n, t, c]) => `      <li class="otro"><a class="otro__link" href="${href}" style="--grad-azul:var(--brillo), linear-gradient(176deg, ${c[0]} 12%, ${c[1]} 46%, ${c[2]} 74%, ${c[3]} 100%);--tono:${c[2]}">
+        <span class="otro__nombre" aria-label="${esc(n)}" data-reveal="letras">${letras(n, { degradado: true })}</span>
+        <span class="otro__pie"><span class="otro__txt">${esc(t)}</span><span class="otro__ir">ver más ${icono('derecha')}</span></span>
+      </a></li>`).join('\n')}
     </ul>
   </section>
   <div class="zn-cola" aria-hidden="true"></div>
@@ -639,6 +642,14 @@ ${seccionContacto(inicio.whatsappTexto)}
 // La "S" y la "t" de Studios se tocan justo en el borde. Con el espaciado de la portada
 // la t se montaba 0.0035 em sobre la S (medido sobre el dibujo real de la fuente a 1000 px).
 const JUNTA_ST = 0.0035;
+// "Tambien hacemos": todos los nombres al mismo tamaño, el del mas largo (en celular,
+// el de su palabra mas larga, porque ahi cada palabra va en su linea).
+const estiloOtros = () => {
+  const nombres = inicio.otros.map(([, n]) => n);
+  const em = Math.max(...nombres.map((n) => anchoEm(n)));
+  const emMax = Math.max(...nombres.flatMap((n) => n.split(' ').map((w) => anchoEm(w))));
+  return `--em:${em.toFixed(4)};--em-max:${emMax.toFixed(4)}`;
+};
 
 function paginaMotion() {
   const v = motion.video;
