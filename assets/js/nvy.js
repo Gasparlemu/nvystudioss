@@ -267,7 +267,7 @@
     telon.className = 'telon-cartas';
     d.body.append(telon);
     try { sessionStorage.setItem('nvy-telon', '1'); } catch (x) { /* sin telon a la llegada */ }
-    setTimeout(() => { location.href = url.href; }, 600);
+    setTimeout(() => { location.href = url.href; }, 250);
   });
   // Al volver con "atras", la pagina sale de la cache con el telon puesto: se saca.
   addEventListener('pageshow', (e) => { if (e.persisted) $$('.telon-cartas').forEach((t) => t.remove()); });
