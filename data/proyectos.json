@@ -3,13 +3,8 @@
     "nombre": "Nvy Studios",
     "url": "https://www.nvystudios.cl",
     "titulo": "Webs a medida y cartas digitales en Valdivia | NVY Studios",
-    "descripcion": "Webs a medida, rediseño de webs viejas y cartas digitales con QR para restaurantes. Hechas en Valdivia para negocios de todo Chile. Cotiza por WhatsApp.",
+    "descripcion": "Webs a medida, rediseño de webs viejas, cartas digitales con QR y motion graphics. Hechas en Valdivia para negocios de todo Chile. Cotiza por WhatsApp.",
     "ogDescripcion": "¿Tu negocio se ve en internet como se ve en persona? Webs a medida y cartas digitales con QR, desde Valdivia.",
-    "trabajos": {
-      "titulo": "Trabajos | NVY Studios, diseño web a medida en Valdivia",
-      "descripcion": "Webs diseñadas y programadas desde cero por NVY Studios para negocios del sur de Chile: I-MAX Valdivia, Fundación Oncosur, Zona Estética y más.",
-      "ogDescripcion": "Sitios web diseñados y programados desde cero. Sin plantillas, atención directa con el diseñador, entrega en 5 a 14 días."
-    },
     "bajada": "Diseño y desarrollo web a medida · Valdivia, Chile",
     "correo": "contacto@nvystudios.cl",
     "telefono": "+56940976219",
@@ -37,9 +32,34 @@
     ]
   },
 
+  "motion": {
+    "titulo": "Motion graphics en Valdivia | NVY Studios",
+    "descripcion": "Videos animados a medida para explicar y vender: tutoriales paso a paso, reels y videos de marca. Hechos en Valdivia para negocios de todo Chile.",
+    "bajada": "Videos animados para explicar y vender · Valdivia, Chile",
+    "whatsappTexto": "Hola Gaspar, vi los motion graphics y quiero cotizar un video.",
+    "video": {
+      "archivo": "/assets/video/oncosur-donar.mp4",
+      "portada": "/assets/video/oncosur-donar.jpg",
+      "titulo": "Cómo donar a Fundación Oncosur",
+      "resumen": "Un tutorial real, paso a paso, para hacerse socio de la fundación desde su Instagram: seguir la cuenta, abrir el enlace, llenar el formulario y pagar. Lo hicimos pro bono.",
+      "fecha": "2026-11-05",
+      "duracionIso": "PT39S",
+      "ficha": [["cliente", "Fundación Oncosur"], ["formato", "vertical, para reels"], ["duración", "38 segundos"], ["incluye", "voz, música y sonidos"]]
+    },
+    "servicios": [
+      ["Tutoriales paso a paso", "Muestra cómo comprar, reservar o donar, con tu web o tu app real en pantalla."],
+      ["Reels para redes", "Videos verticales con texto animado, voz y música, listos para Instagram y TikTok."],
+      ["Videos de marca", "Cuenta qué hace tu negocio en pocos segundos, con tu logo y tus colores."]
+    ]
+  },
+
   "inicio": {
     "pregunta": "¿Tu negocio se ve en internet como se ve en persona?",
-    "bajada": "Webs a medida y cartas digitales · Valdivia, Chile",
+    "bajada": "Webs a medida, cartas digitales y motion graphics · Valdivia, Chile",
+    "otros": [
+      ["/cartas", "Cartas digitales", "Menús a medida para restaurantes, con QR en cada mesa."],
+      ["/motion-graphics", "Motion graphics", "Videos animados para explicar y vender."]
+    ],
     "whatsappTexto": "Hola Gaspar, vi tu web y quiero conversar sobre un proyecto.",
     "muro": ["ainilebu-films-0", "zona-estetica-0", "oncosur-0", "inka-trewa-0", "i-max-2", "metales-nobles-0", "andrade-visions-0", "gestion-sur-0", "ainilebu-films-3", "zona-estetica-1", "oncosur-3", "inka-trewa-1", "i-max-3", "metales-nobles-5", "andrade-visions-3", "ainilebu-films-4", "zona-estetica-2", "inka-trewa-5", "i-max-5", "metales-nobles-6", "ainilebu-films-5", "i-max-6", "ainilebu-films-6"],
     "problemas": [
@@ -137,6 +157,14 @@
         "solucion": "Cambias precios y marcas agotados en segundos desde tu celular. Lo demás lo hacemos nosotros.",
         "caso": "Todavía no tenemos un caso real de carta. En estas demos se ven los platos agotados marcados; la edición desde el celular viene con la tuya.",
         "demos": [{ "slug": "alerce", "vista": "m1" }, { "slug": "alerce", "vista": "m4" }, { "slug": "trattoria-fiume", "vista": "m4" }, { "slug": "cafe-lluvia", "vista": "m4" }]
+      },
+      {
+        "tipo": "motion",
+        "problema": "Explico cómo comprar y la gente igual se pierde.",
+        "video": true,
+        "porque": "Un texto largo casi nadie lo lee. Si los pasos no se entienden a la primera, te preguntan a ti o se van.",
+        "solucion": "Hacemos un video corto que muestra cada paso en pantalla, con voz, música y texto animado.",
+        "caso": "Para Fundación Oncosur hicimos un tutorial de 38 segundos que enseña a hacerse socio desde su Instagram."
       }
     ],
     "preguntas": [

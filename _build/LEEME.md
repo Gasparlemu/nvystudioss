@@ -2,8 +2,9 @@
 
 Todo el contenido vive en `data/proyectos.json`. Las páginas (`index.html`, `trabajos/*`, legales, `404.html`, `sitemap.xml`) se generan con `_build/build.mjs`: **no se editan a mano**.
 
-- `/` es el inicio (fondo blanco): pregunta, problemas, proceso, 3 trabajos destacados, preguntas frecuentes y contacto. Su contenido está en `"inicio"` del JSON.
-- `/trabajos` es el portafolio (negro). Su title y description están en `sitio.trabajos`.
+- `/` es el inicio: pregunta, problemas, proceso, portafolio en negro con la lista de trabajos, otros servicios, sobre mí, testimonios, preguntas y contacto. Su contenido está en `"inicio"` del JSON.
+- `/motion-graphics` es la página de videos. Su contenido está en `"motion"` del JSON; el video y su portada, en `assets/video/`.
+- `/trabajos` ya no existe: redirige a `/#portafolio`. Sí siguen las páginas `/trabajos/<proyecto>`.
 
 ## Tarjetas de problemas (`inicio.problemas`)
 
@@ -12,6 +13,7 @@ Todo el contenido vive en `data/proyectos.json`. Las páginas (`index.html`, `tr
 - `antes`: `{ "captura": "<carpeta en assets/img/trabajos>", "nota": "..." }` o `{ "texto": "No tenía web." }`.
 - `despues`: lista de slugs publicados (usa su captura e1 y su link "ver proyecto").
 - `moviles`: lista de slugs publicados (usa su captura de celular m1).
+- `video: true`: tarjeta con el video de `motion.video` en vez de captura (`tipo: motion`). El archivo va tal cual se entregó, sin recomprimir.
 - `demos`: `[{ "slug": "niebla-cafeteria", "vista": "e2" }]`. Tiene que ser un proyecto con `estado: demo` y la vista tiene que existir (`e1`, `m2`, etc.). Se marcan como demo en la página.
 - El build falla si un caso no está publicado o falta una captura.
 
@@ -47,6 +49,8 @@ Vercel corre el build en cada deploy (`vercel.json`). Por eso basta con hacer pu
 - Para mostrar solo los lanzados: `["lanzado"]`. Los filtros aparecen solos cuando hay más de un estado.
 
 ## Otros
+
+- `/cartas` no vive en este repo: `vercel.json` la reenvía al proyecto `cartas-nvy` (`D:\Proyectos\cartas-nvy`), que se publica aparte.
 
 - Instagram: completar `sitio.instagram` en el JSON. Aparece automáticamente en el menú, en "sobre mí" y en los datos estructurados.
 - Imagen para compartir el link: `node _build/og.mjs`.

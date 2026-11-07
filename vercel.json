@@ -5,7 +5,12 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/index.html", "destination": "/", "permanent": true },
-    { "source": "/trabajos/index.html", "destination": "/trabajos", "permanent": true }
+    { "source": "/trabajos", "destination": "/#portafolio", "permanent": true },
+    { "source": "/trabajos/index.html", "destination": "/#portafolio", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/cartas", "destination": "https://cartas-nvy.vercel.app/cartas" },
+    { "source": "/cartas/:ruta*", "destination": "https://cartas-nvy.vercel.app/cartas/:ruta*" }
   ],
   "headers": [
     {
@@ -15,6 +20,10 @@
     {
       "source": "/assets/(css|js)/(.*)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/assets/video/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
     },
     {
       "source": "/assets/img/(.*)",

@@ -179,7 +179,7 @@ html.menu-abierto .cab__menu { color: #fff; }
 .menu.is-abierto .menu__velo { opacity: 1; }
 .menu__panel {
   position: absolute; top: 0; right: 0; bottom: 0;
-  width: min(460px, 88vw);
+  width: min(520px, 88vw);
   display: grid; grid-template-rows: 1fr auto;
   padding: 96px clamp(28px, 3vw, 48px) calc(clamp(28px, 3vw, 40px) + env(safe-area-inset-bottom));
   color: #fff;
@@ -196,7 +196,7 @@ html.menu-abierto .cab__menu { color: #fff; }
 .menu__link {
   display: flex; align-items: flex-start; gap: 16px;
   font-family: var(--display); font-weight: 500; letter-spacing: -.045em;
-  font-size: clamp(44px, 4.6vw, 68px); line-height: 1.02;
+  font-size: clamp(44px, 3.9vw, 58px); line-height: 1.04; white-space: nowrap;
   transition: opacity .4s, transform .6s var(--sale);
 }
 .menu__num {
@@ -839,25 +839,10 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
   --grad-azul: var(--brillo), linear-gradient(176deg, #123182 12%, #2f5ad0 46%, #9dbaf7 74%, #e6eeff 100%);
   --cab-fondo: rgba(11, 11, 12, .72);
 }
-/* El paso a negro es una capa fija detras de todo. Donde el navegador lo permite, su opacidad
-   va atada al scroll (animation-timeline) y corre en el compositor, sin JavaScript ni
-   repintar textos: sube mientras se acerca la marca gigante y baja despues de Trabajos. En
-   los demas, aparece con una transicion corta al activarse .es-noche (nvy.js). */
-.pag-inicio::before { content: ""; position: fixed; inset: 0; z-index: -1; background: #0b0b0c; opacity: 0; pointer-events: none; will-change: opacity; transition: opacity .6s var(--cambia); }
-.pag-inicio.es-noche::before { opacity: 1; }
-@supports (animation-timeline: view()) {
-  .pag-inicio { timeline-scope: --zn-in, --zn-out; }
-  .portafolio { view-timeline: --zn-in block; }
-  .zn-cola { view-timeline: --zn-out block; }
-  .pag-inicio::before, .pag-inicio.es-noche::before {
-    transition: none; opacity: 0;
-    animation: noche-sube linear both, noche-baja linear forwards;
-    animation-timeline: --zn-in, --zn-out;
-    animation-range: entry 0% entry 100%, cover 15% cover 60%;
-  }
-  @keyframes noche-sube { to { opacity: 1; } }
-  @keyframes noche-baja { from { opacity: 1; } to { opacity: 0; } }
-}
+/* El paso a negro es una capa fija detras de todo. nvy.js la crea y ata su opacidad al scroll:
+   sube mientras se acerca la marca gigante y baja despues de Trabajos. No usa animation-timeline
+   porque Safari dice soportarlo, pero con la linea de tiempo compartida la capa se queda en 0. */
+.noche { position: fixed; inset: 0; z-index: -1; background: #0b0b0c; opacity: 0; pointer-events: none; will-change: opacity; }
 .zona-negra { color: var(--tinta); background: var(--bg); }
 .js .zona-negra { background: none; }
 /* Solo el header cambia de color; el resto de la pagina no se vuelve a calcular. */
@@ -880,6 +865,52 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 }
 .portafolio__sub { font-size: clamp(20px, 2vw, 30px); letter-spacing: -.02em; color: var(--tinta); }
 .zn-cola { height: clamp(40px, 4vw, 64px); }
+
+/* ---------- filas de servicios (inicio y motion graphics) ---------- */
+.filas { padding: clamp(64px, 8vw, 120px) var(--pad); }
+.filas--inicio { padding-bottom: clamp(24px, 3vw, 48px); }
+.filas__lbl { margin-bottom: clamp(16px, 2vw, 24px); font-size: 14px; color: var(--gris); }
+.filas .titulo-seccion { margin-bottom: clamp(32px, 4vw, 56px); }
+.filas__lista { list-style: none; margin: 0; padding: 0; }
+.fila { border-top: 1px solid var(--linea); }
+.fila, .fila__link { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 32px; align-items: baseline; padding: clamp(14px, 1.6vw, 22px) 0; }
+.fila:has(> .fila__link) { display: block; padding: 0; }
+.fila__link { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; transition: opacity .3s; }
+.fila__link:hover { opacity: .65; }
+.fila__link .ico { transition: transform .45s var(--sale); }
+.fila__link:hover .ico { transform: translateX(3px); }
+.fila__nombre { font-family: var(--display); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; font-size: clamp(22px, 2.4vw, 36px); }
+.fila__txt { font-size: 15px; color: var(--gris); }
+@media (max-width: 720px) {
+  .fila { grid-template-columns: minmax(0, 1fr); }
+  .fila__link { grid-template-columns: minmax(0, 1fr) auto; }
+  .fila__link .fila__txt { grid-row: 2; grid-column: 1; }
+  .fila__link .ico { grid-row: 1; grid-column: 2; }
+}
+
+/* ---------- motion graphics ---------- */
+.pag-motion .portada { min-height: 56vh; min-height: 56svh; }
+.mg {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(32px, 7vw, 112px); align-items: center;
+  padding: clamp(40px, 6vw, 96px) var(--pad);
+}
+.mg__marco { position: relative; width: min(400px, calc(84vh * 9 / 16)); aspect-ratio: 9 / 16; overflow: hidden; border-radius: 22px; background: var(--bg-2); }
+.mg__marco video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ba--video { width: 100%; max-width: 300px; justify-self: center; }
+.ba--video .ba__img { position: relative; aspect-ratio: 9 / 16; }
+.ba--video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.mg__sonido { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; white-space: nowrap; }
+.mg__lbl { font-size: 14px; color: var(--gris); }
+.mg__titulo { margin-top: 12px; max-width: 16ch; font-family: var(--display); font-weight: 500; letter-spacing: -.04em; line-height: 1.02; font-size: clamp(34px, 4.4vw, 68px); }
+.mg__txt { margin-top: clamp(16px, 2vw, 24px); max-width: 52ch; font-size: clamp(16px, 1.3vw, 19px); color: var(--gris); }
+.mg__ficha { margin-top: clamp(28px, 3vw, 44px); max-width: 560px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) {
+  .mg { grid-template-columns: minmax(0, 1fr); }
+  .mg__marco { width: min(100%, 380px, calc(84vh * 9 / 16)); margin-inline: auto; }
+}
+@media (max-width: 700px) {
+  .menu__link { font-size: min(11.2vw, 44px); }
+}
 .zona-negra + .sobre { padding-top: clamp(32px, 4vw, 64px); }
 
 /* ---------- portada: la pregunta ---------- */
@@ -953,8 +984,8 @@ html.menu-abierto .pag-inicio .cab__logo img { filter: none; }
 }
 @media (hover: hover) { .prob:not(.is-abierta):hover { transform: translateY(-4px); } }
 article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8)) { grid-column: span 2; }
-article.prob:nth-of-type(10) { grid-column: span 3; }
-article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)) { color: #fff; background: var(--grad-panel); box-shadow: 0 24px 44px -24px rgba(10, 31, 92, .7); }
+article.prob:is(:nth-of-type(10), :nth-of-type(11)) { grid-column: span 3; }
+article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9), :nth-of-type(11)) { color: #fff; background: var(--grad-panel); box-shadow: 0 24px 44px -24px rgba(10, 31, 92, .7); }
 article.prob:is(:nth-of-type(3), :nth-of-type(5), :nth-of-type(8)) { background: #fff; box-shadow: 0 0 0 1px rgba(10, 31, 92, .06), var(--sombra-1); }
 article.prob.is-abierta { color: #fff; background: linear-gradient(155deg, #3a63d6, #1d44ad 55%, #0a1f5c); box-shadow: 0 30px 60px -22px rgba(42, 85, 204, .75); }
 .prob__tipo {
@@ -962,13 +993,13 @@ article.prob.is-abierta { color: #fff; background: linear-gradient(155deg, #3a63
   background: rgba(255, 255, 255, .75); color: var(--azul-medio); box-shadow: 0 0 0 1px rgba(42, 85, 204, .12);
   transition: color .45s, background-color .45s;
 }
-:is(article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)), article.prob.is-abierta) .prob__tipo { background: rgba(255, 255, 255, .14); color: #fff; box-shadow: none; }
+:is(article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9), :nth-of-type(11)), article.prob.is-abierta) .prob__tipo { background: rgba(255, 255, 255, .14); color: #fff; box-shadow: none; }
 .prob__t {
   max-width: 58%;
   font-family: var(--display); font-weight: 500; letter-spacing: -.035em; line-height: 1.08;
   font-size: clamp(24px, 2.2vw, 34px);
 }
-article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(10)) .prob__t { font-size: clamp(28px, 2.8vw, 44px); max-width: 22ch; }
+article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(10), :nth-of-type(11)) .prob__t { font-size: clamp(28px, 2.8vw, 44px); max-width: 22ch; }
 .prob__abre { text-align: left; letter-spacing: inherit; line-height: inherit; }
 .prob__abre::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .prob__abre:focus-visible { outline: none; }
@@ -980,7 +1011,7 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
   transition: transform .6s var(--sale);
   pointer-events: none; /* el clic pasa al boton que cubre la tarjeta */
 }
-:is(article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9)), article.prob.is-abierta) .prob__mas { background: #fff; color: var(--azul); }
+:is(article.prob:is(:nth-of-type(1), :nth-of-type(6), :nth-of-type(9), :nth-of-type(11)), article.prob.is-abierta) .prob__mas { background: #fff; color: var(--azul); }
 .prob.is-abierta .prob__mas { transform: rotate(45deg); }
 
 /* La captura del caso asoma inclinada: la de escritorio en un MacBook (como en Trabajos)
@@ -1012,7 +1043,7 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
   article.prob:is(:nth-of-type(4), :nth-of-type(8)) .prob__foto:not(.prob__foto--movil) { bottom: -4%; }
   article.prob:nth-of-type(10) .prob__foto:not(.prob__foto--movil) { width: 27%; right: 6%; top: auto; bottom: -16%; }
   article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8)) .prob__foto--movil { width: 11%; right: 12%; }
-  article.prob:nth-of-type(10) .prob__foto--movil { width: 8%; right: 14%; }
+  article.prob:is(:nth-of-type(10), :nth-of-type(11)) .prob__foto--movil { width: 8%; right: 14%; }
 }
 
 .prob__panel { grid-column: 1 / -1; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--sale); }
@@ -1150,7 +1181,7 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
 @media (max-width: 1100px) {
   .probs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   article.prob:nth-of-type(n) { grid-column: auto; }
-  article.prob:is(:nth-of-type(1), :nth-of-type(10)) { grid-column: span 2; }
+  article.prob:is(:nth-of-type(1), :nth-of-type(10), :nth-of-type(11)) { grid-column: span 2; }
   .prob__texto, .prob__figs { grid-column: 1 / -1; }
   .prob__figs { margin-top: 32px; }
   .prob__texto { max-width: 40em; }

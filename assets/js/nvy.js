@@ -224,6 +224,55 @@
       d.body.classList.toggle('es-noche', e.isIntersecting);
       if (tema) tema.content = e.isIntersecting ? '#0B0B0C' : '#FFFFFF';
     }, { rootMargin: '-50% 0px -50% 0px' }).observe(zonaNegra);
+
+    // El fondo negro sigue al scroll. Solo cambia la opacidad de su capa, sin repintar la página.
+    const entrada = $('.portafolio');
+    const cola = $('.zn-cola');
+    const capa = d.createElement('div');
+    capa.className = 'noche';
+    capa.setAttribute('aria-hidden', 'true');
+    d.body.prepend(capa);
+    const entre01 = (n) => Math.min(1, Math.max(0, n));
+    let pendienteNoche = false;
+    const pintarNoche = () => {
+      pendienteNoche = false;
+      const alto = innerHeight;
+      const e = entrada.getBoundingClientRect();
+      const c = cola.getBoundingClientRect();
+      const sube = entre01((alto - e.top) / e.height);                    // mientras la marca entra por abajo
+      const avance = (alto - c.top) / (alto + c.height);
+      const baja = entre01((avance - 0.15) / 0.45);                       // cuando el final de la zona sube
+      capa.style.opacity = (sube * (1 - baja)).toFixed(3);
+    };
+    const pedirNoche = () => { if (!pendienteNoche) { pendienteNoche = true; requestAnimationFrame(pintarNoche); } };
+    addEventListener('scroll', pedirNoche, { passive: true });
+    addEventListener('resize', pedirNoche);
+    addEventListener('pageshow', pedirNoche);
+    new ResizeObserver(pedirNoche).observe(d.body);
+    pintarNoche();
+  }
+
+  /* ---------- videos: en su pagina corre sin sonido a la vista; el boton lo parte con sonido ---------- */
+  // Nada se descarga hasta que el video se va a ver, y se pausa apenas sale de la pantalla.
+  const ahorroDatos = navigator.connection?.saveData;
+  for (const marco of $$('[data-video]')) {
+    const video = $('video', marco);
+    const sonido = $('[data-video-sonido]', marco);
+    const solo = marco.dataset.video === 'auto' && !reducido && !ahorroDatos;
+    let elegido = false;
+    new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) video.pause();
+      else if (solo && !elegido) video.play().catch(() => {});
+    }, { threshold: 0.4 }).observe(marco);
+    sonido.addEventListener('click', () => {
+      elegido = true;
+      video.muted = false;
+      video.loop = false;
+      video.controls = true;
+      video.currentTime = 0;
+      video.play().catch(() => {});
+      sonido.hidden = true;
+    });
   }
 
   /* ---------- demos: la vista previa sigue al nombre bajo el cursor ---------- */

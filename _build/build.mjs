@@ -1,5 +1,5 @@
-// Genera el sitio desde data/proyectos.json: inicio (problemas), portafolio en
-// /trabajos, una pagina por proyecto, paginas legales, 404 y sitemap. Sin dependencias, solo Node.
+// Genera el sitio desde data/proyectos.json: inicio (problemas y portafolio),
+// motion graphics, una pagina por proyecto, paginas legales, 404 y sitemap. Sin dependencias, solo Node.
 //
 //   node _build/build.mjs
 //
@@ -18,7 +18,7 @@ const escribir = (ruta, contenido) => {
   writeFileSync(join(RAIZ, ruta), contenido);
 };
 
-const { sitio, inicio, proyectos: todos, testimonios, demos = [] } = JSON.parse(leer('data/proyectos.json'));
+const { sitio, inicio, motion, proyectos: todos, testimonios } = JSON.parse(leer('data/proyectos.json'));
 const BASE = sitio.url.replace(/\/$/, '');
 const HOY = new Date().toISOString().slice(0, 10);
 const ANIO = new Date().getFullYear();
@@ -64,13 +64,13 @@ const testimoniosVisibles = testimonios.filter((t) => !t.proyecto || publicados.
 
 // Tarjetas del inicio: los casos tienen que ser proyectos publicados, las demos tienen
 // que estar marcadas como demo y toda captura que se nombre tiene que existir.
-const TIPOS_PROBLEMA = { webs: 'web', cartas: 'carta digital' };
+const TIPOS_PROBLEMA = { webs: 'web', cartas: 'carta digital', motion: 'motion graphics' };
 const porSlug = (slug) => todos.find((p) => p.slug === slug);
 const vistaDe = (slug, cual = 'e1') => vistas(slug)[cual[0]]?.[Number(cual.slice(1)) - 1];
 for (const [i, pr] of inicio.problemas.entries()) {
   const ref = `inicio.problemas[${i}]`;
   for (const k of ['tipo', 'problema', 'porque', 'solucion']) if (!pr[k]) throw new Error(`${ref}: falta el campo "${k}"`);
-  if (!TIPOS_PROBLEMA[pr.tipo]) throw new Error(`${ref}: el tipo "${pr.tipo}" no existe (usa webs o cartas)`);
+  if (!TIPOS_PROBLEMA[pr.tipo]) throw new Error(`${ref}: el tipo "${pr.tipo}" no existe (usa webs, cartas o motion)`);
   for (const s of [...(pr.despues || []), ...(pr.moviles || [])]) {
     if (!publicados.has(s)) throw new Error(`${ref}: "${s}" no es un proyecto publicado`);
   }
@@ -82,7 +82,7 @@ for (const [i, pr] of inicio.problemas.entries()) {
     if (!vistaDe(m.slug, m.vista)) throw new Error(`${ref}: falta la captura ${m.vista} de "${m.slug}" (corre _build/capturas.mjs)`);
   }
   if (pr.antes?.captura && !vistaDe(pr.antes.captura)) throw new Error(`${ref}: falta la captura de "${pr.antes.captura}"`);
-  if (!pr.foto || !vistaDe(pr.foto.slug, pr.foto.vista)) throw new Error(`${ref}: falta "foto" (la captura de la tarjeta) o no existe`);
+  if (!pr.video && (!pr.foto || !vistaDe(pr.foto.slug, pr.foto.vista))) throw new Error(`${ref}: falta "foto" (la captura de la tarjeta) o no existe`);
 }for (const f of inicio.muro) if (!existsSync(join(RAIZ, 'assets', 'img', 'portada', `${f}.webp`))) throw new Error(`inicio.muro: falta assets/img/portada/${f}.webp`);
 
 // ---------- utilidades ----------
@@ -222,8 +222,8 @@ function cabecera() {
 
 // "contacto" baja a la seccion de la misma pagina si la tiene (inicio y trabajos);
 // desde un proyecto o una legal, lleva a la del inicio.
-function menu({ contacto = '/#contacto', waTexto, trabajos = '/trabajos' } = {}) {
-  const links = [['/', 'inicio'], [trabajos, 'trabajos'], [contacto, 'contacto']];
+function menu({ contacto = '/#contacto', waTexto, trabajos = '/#portafolio' } = {}) {
+  const links = [['/', 'inicio'], [trabajos, 'trabajos'], ['/cartas', 'cartas digitales'], ['/motion-graphics', 'motion graphics'], [contacto, 'contacto']];
   const redes = [['instagram', sitio.instagram], ['linkedin', sitio.linkedin]].filter(([, u]) => u);
   return `<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menú" data-menu inert>
   <button class="menu__velo" type="button" tabindex="-1" aria-label="Cerrar menú" data-menu-cerrar></button>
@@ -465,6 +465,11 @@ function seccionContacto(texto) {
 // seria un desfile de casi 50 letras).
 const palabras = (texto) => texto.split(' ').map((w, i) => `<span class="palabra" aria-hidden="true"><span class="letra" style="--n:${i * 2}">${esc(w)}</span></span>`).join(' ');
 
+const videoHtml = (preload) => {
+  const v = motion.video;
+  return `<video src="${v.archivo}?v=${version(v.archivo.slice(1))}" poster="${v.portada}?v=${version(v.portada.slice(1))}" width="1080" height="1920" muted loop playsinline preload="${preload}" aria-label="${esc(v.titulo)}"></video>`;
+};
+
 function paginaInicio() {
   const fotoCaso = (v, alt, sizes) => `<div class="ba__img">${picture(v, { sizes, alt })}</div>`;
   const figura = (lbl, media, pie, clase = '') => `<figure class="ba${clase}">${lbl ? `<span class="ba__lbl">${lbl}</span>` : ''}${media}${pie ? `<figcaption>${pie}</figcaption>` : ''}</figure>`;
@@ -498,15 +503,20 @@ function paginaInicio() {
       figs.push(figura(repetida ? '' : 'demo', fotoCaso(v, `Demo de NVY Studios: ${p.nombre}, ${p.rubro}`, v.movil ? '(min-width: 1100px) 12vw, 44vw' : '(min-width: 1100px) 30vw, 92vw'),
         repetida ? '' : `<span>${esc(p.nombre)} · demo</span><a href="${esc(p.url)}" ${externo}>ver demo ${icono('diagonal')}</a>`, v.movil ? ' ba--movil' : ''));
     });
-    const mensaje = `Hola Gaspar, vi tu web. Tengo este problema: "${pr.problema}" ¿Me puedes cotizar ${pr.tipo === 'cartas' ? 'una carta digital' : 'una web'}?`;
+    // El video no se descarga hasta que apretan el boton: la portada es solo una imagen.
+    if (pr.video) figs.push(figura('caso real', `<div class="ba__img" data-video>${videoHtml('none')}<button class="boton mg__sonido" type="button" data-video-sonido>ver video</button></div>`, `<span>${esc(motion.video.ficha[0][1])}</span><a href="/motion-graphics">ver más ${icono('derecha')}</a>`, ' ba--video'));
+    const mensaje = `Hola Gaspar, vi tu web. Tengo este problema: "${pr.problema}" ¿Me puedes cotizar ${{ cartas: 'una carta digital', motion: 'un video' }[pr.tipo] || 'una web'}?`;
     // La captura de la tarjeta: en un MacBook si es de escritorio, en un telefono si es de celular.
-    const vf = vistaDe(pr.foto.slug, pr.foto.vista);
-    const demo = porSlug(pr.foto.slug).estado === 'demo' ? '<span class="prob__demo">demo</span>' : '';
+    const vf = pr.video ? { movil: true } : vistaDe(pr.foto.slug, pr.foto.vista);
+    const demo = !pr.video && porSlug(pr.foto.slug).estado === 'demo' ? '<span class="prob__demo">demo</span>' : '';
+    const fotoTarjeta = pr.video
+      ? `<picture><img src="${motion.video.portada}?v=${version(motion.video.portada.slice(1))}" width="360" height="640" alt="" loading="lazy" decoding="async"></picture>`
+      : picture(vf, { sizes: vf.movil ? '(min-width: 1100px) 9vw, 22vw' : '(min-width: 1100px) 22vw, 46vw', alt: '' });
     return `      <article class="prob" data-tipo="${pr.tipo}" style="--o:${i * 2}">
         <p class="prob__tipo">${TIPOS_PROBLEMA[pr.tipo]}</p>
         <h3 class="prob__t"><button class="prob__abre" type="button" id="${id}-t" aria-expanded="false" aria-controls="${id}">“${esc(pr.problema)}”</button></h3>
         <span class="prob__mas" aria-hidden="true">${icono('mas')}</span>
-        <span class="prob__foto${vf.movil ? ' prob__foto--movil' : ''}" aria-hidden="true">${picture(vf, { sizes: vf.movil ? '(min-width: 1100px) 9vw, 22vw' : '(min-width: 1100px) 22vw, 46vw', alt: '' })}${demo}</span>
+        <span class="prob__foto${vf.movil ? ' prob__foto--movil' : ''}" aria-hidden="true">${fotoTarjeta}${demo}</span>
       </article>
       <div class="prob__panel" id="${id}" role="region" aria-labelledby="${id}-t" data-tipo="${pr.tipo}" style="--o:${i * 2 + 1}">
         <div class="prob__in"><div class="prob__cuerpo">
@@ -523,7 +533,7 @@ function paginaInicio() {
       </div>`;
   }).join('\n');
 
-  const filtros = [['todos', 'todos'], ['webs', 'webs'], ['cartas', 'cartas']]
+  const filtros = [['todos', 'todos'], ['webs', 'webs'], ['cartas', 'cartas'], ['motion', 'motion graphics']]
     .map(([valor, txt]) => `<button class="ctrl" type="button" data-filtro-prob="${valor}" aria-pressed="${valor === 'todos'}">${txt}</button>`).join('');
 
   const preguntas = inicio.preguntas.map(([q, r]) => `      <details class="faq__item">
@@ -573,6 +583,12 @@ ${seccionProceso()}
   </section>
 
 ${seccionTrabajos()}
+  <section class="filas filas--inicio" aria-label="Otros servicios">
+    <p class="filas__lbl">también hacemos</p>
+    <ul class="filas__lista">
+${inicio.otros.map(([href, n, t]) => `      <li class="fila"><a class="fila__link" href="${href}"><span class="fila__nombre">${esc(n)}</span><span class="fila__txt">${esc(t)}</span>${icono('derecha')}</a></li>`).join('\n')}
+    </ul>
+  </section>
   <div class="zn-cola" aria-hidden="true"></div>
   </div>
 
@@ -624,76 +640,62 @@ ${seccionContacto(inicio.whatsappTexto)}
 // la t se montaba 0.0035 em sobre la S (medido sobre el dibujo real de la fuente a 1000 px).
 const JUNTA_ST = 0.0035;
 
-function paginaTrabajos() {
-  // Demos (pendiente: se muestra con sitio.mostrarDemos = true en el JSON): lista de nombres a la izquierda y vista previa fija a la derecha. Si la demo tiene
-  // "url" el nombre es un link; las capturas son maquetas de colores hasta tener las reales.
-  const demosHtml = !(sitio.mostrarDemos && demos.length) ? '' : `
-  <section class="demos" id="demos" aria-labelledby="demos-titulo">
-    <h2 class="titulo-seccion" id="demos-titulo" aria-label="Demos" data-reveal="letras">${letras('Demos')}</h2>
-    <p class="demos__sub">Ideas de cómo se vería tu web.</p>
-    <div class="demos__wrap">
-      <ul class="demos__lista">
-${demos.map((m, i) => {
-    const dentro = `<span class="demo__nombre">${esc(m.nombre)}</span><span class="demo__rubro">${esc(m.rubro)}</span>`;
-    return `        <li class="demo${i === 0 ? ' is-activo' : ''}">${m.url ? `<a href="${esc(m.url)}" ${externo}>${dentro}</a>` : `<div tabindex="0">${dentro}</div>`}</li>`;
-  }).join('\n')}
-      </ul>
-      <div class="demos__pv" aria-hidden="true">
-${demos.map((m, i) => `        <div class="dshot dshot--${m.tono % 4}${i === 0 ? ' is-activo' : ''}"><div class="dshot__nv"><i></i><i></i><i></i><b></b></div><h3>${esc(m.nombre)}</h3><em></em><u></u></div>`).join('\n')}
-      </div>
-    </div>
-  </section>
-`;
-
+function paginaMotion() {
+  const v = motion.video;
+  const url = `${BASE}/motion-graphics`;
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
-    <h1 class="portada__h1" id="portada-titulo" aria-label="Nvy Studios. ${esc(sitio.bajada)}">
-      <span class="portada__marca" style="--em:${(anchoEm('Nvy Studios') + JUNTA_ST).toFixed(4)};--em-max:${(anchoEm('Studios') + JUNTA_ST).toFixed(4)}">${letras('Nvy Studios', { degradado: true, ajustes: { 4: JUNTA_ST } })}</span>
-      <span class="portada__bajada">${sitio.bajada.split(' · ').map((t) => `<span>${esc(t)}</span>`).join('')}</span>
+    <h1 class="portada__h1" id="portada-titulo" aria-label="Motion graphics. ${esc(motion.bajada)}">
+      <span class="portada__marca" style="--em:${anchoEm('Motion graphics').toFixed(4)};--em-max:${anchoEm('graphics').toFixed(4)}">${letras('Motion graphics', { degradado: true })}</span>
+      <span class="portada__bajada">${motion.bajada.split(' · ').map((t) => `<span>${esc(t)}</span>`).join('')}</span>
     </h1>
   </section>
 
-${seccionTrabajos()}
-${demosHtml}
+  <section class="mg" aria-labelledby="mg-titulo">
+    <div class="mg__marco" data-video="auto">
+      ${videoHtml('none')}
+      <button class="boton mg__sonido" type="button" data-video-sonido>ver con sonido</button>
+    </div>
+    <div class="mg__info">
+      <p class="mg__lbl">primer trabajo</p>
+      <h2 class="mg__titulo" id="mg-titulo">${esc(v.titulo)}</h2>
+      <p class="mg__txt">${esc(v.resumen)}</p>
+      <dl class="ficha mg__ficha">
+${v.ficha.map(([dt, dd]) => `        <div class="ficha__item"><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}
+      </dl>
+    </div>
+  </section>
 
-${seccionSobre()}
+  <section class="filas" aria-labelledby="mg-hacemos">
+    <h2 class="titulo-seccion" id="mg-hacemos" aria-label="Qué hacemos" data-reveal="letras">${letras('Qué hacemos')}</h2>
+    <ul class="filas__lista">
+${motion.servicios.map(([n, t]) => `      <li class="fila"><span class="fila__nombre">${esc(n)}</span><span class="fila__txt">${esc(t)}</span></li>`).join('\n')}
+    </ul>
+  </section>
 
-${seccionTestimonios()}
-
-${seccionContacto()}
+${seccionContacto(motion.whatsappTexto)}
 </main>`;
-
-  const url = `${BASE}/trabajos`;
   const ld = {
     '@context': 'https://schema.org',
     '@graph': [
-      {
-        '@type': 'CollectionPage', '@id': `${url}#pagina`, url, name: sitio.trabajos.titulo, description: sitio.trabajos.descripcion,
-        inLanguage: 'es-CL', isPartOf: { '@id': `${BASE}/#website` }, about: { '@id': `${BASE}/#business` }, mainEntity: { '@id': `${url}#lista` },
-      },
-      {
-        '@type': 'ItemList', '@id': `${url}#lista`, name: 'Trabajos de NVY Studios', numberOfItems: proyectos.length,
-        itemListElement: proyectos.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.nombre, url: `${BASE}/trabajos/${p.slug}` })),
-      },
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
-          { '@type': 'ListItem', position: 2, name: 'Trabajos', item: url },
-        ],
-      },
+      { '@type': 'Service', '@id': `${url}#servicio`, name: 'Motion graphics', url, description: motion.descripcion, provider: { '@id': `${BASE}/#business` }, areaServed: 'CL' },
+      { '@type': 'VideoObject', name: v.titulo, description: v.resumen, thumbnailUrl: `${BASE}${v.portada}`, contentUrl: `${BASE}${v.archivo}`, uploadDate: v.fecha, duration: v.duracionIso, creator: { '@id': `${BASE}/#business` }, inLanguage: 'es-CL' },
+      { '@type': 'BreadcrumbList', itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
+        { '@type': 'ListItem', position: 2, name: 'Motion graphics', item: url },
+      ] },
     ],
   };
-
   return layout({
-    titulo: sitio.trabajos.titulo,
-    descripcion: sitio.trabajos.descripcion,
-    ruta: '/trabajos',
-    og: { descripcion: sitio.trabajos.ogDescripcion, alt: 'Trabajos de NVY Studios, diseño y desarrollo web en Valdivia, Chile' },
+    titulo: motion.titulo,
+    descripcion: motion.descripcion,
+    ruta: '/motion-graphics',
+    og: { alt: 'Motion graphics de NVY Studios, Valdivia, Chile' },
     ld,
     cuerpo,
-    claseBody: 'pag-trabajos',
+    claseBody: 'pag-motion',
     contacto: '#contacto',
+    waTexto: motion.whatsappTexto,
   });
 }
 
@@ -723,7 +725,7 @@ function paginaProyecto(p, i) {
 
   const cuerpo = `<main id="contenido" class="proyecto">
   <header class="proyecto__cab">
-    <a class="volver" href="/trabajos">${icono('izquierda')} trabajos</a>
+    <a class="volver" href="/#portafolio">${icono('izquierda')} trabajos</a>
     <h1 class="proyecto__titulo${p.colores ? ' marca' : ''}" aria-label="${esc(p.nombre)}" data-reveal="letras" style="--em:${anchoEm(p.nombre).toFixed(3)};--em-max:${Math.max(...p.nombre.split(' ').map((w) => anchoEm(w))).toFixed(3)}${p.colores ? `;${estiloMarca(p)}` : ''}">${letras(p.nombre, { degradado: true, corte: p.corte })}</h1>
     <dl class="ficha">
 ${ficha.map(([dt, dd]) => `      <div class="ficha__item"><dt>${dt}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}
@@ -775,7 +777,7 @@ ${piezas.join('\n')}
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${BASE}/` },
-          { '@type': 'ListItem', position: 2, name: 'Trabajos', item: `${BASE}/trabajos` },
+          { '@type': 'ListItem', position: 2, name: 'Trabajos', item: `${BASE}/#portafolio` },
           { '@type': 'ListItem', position: 3, name: p.nombre, item: url },
         ],
       },
@@ -851,7 +853,7 @@ function pagina404() {
   <p class="no-existe__lbl">error 404</p>
   <h1 class="no-existe__titulo" data-reveal="mascara"><span>Esta página no existe.</span></h1>
   <p class="no-existe__txt">Puede que el link esté mal escrito o que la página se haya movido.</p>
-  <a class="boton" href="/trabajos">ver trabajos ${icono('derecha')}</a>
+  <a class="boton" href="/#portafolio">ver trabajos ${icono('derecha')}</a>
 </main>`;
   return layout({ titulo: 'Página no encontrada — NVY Studios', descripcion: 'Esta página no existe.', ruta: '/404', indexar: false, cuerpo, claseBody: 'pag-404' });
 }
@@ -860,7 +862,8 @@ function pagina404() {
 function sitemap() {
   const urls = [
     [`${BASE}/`, HOY, '1.0'],
-    [`${BASE}/trabajos`, HOY, '0.9'],
+    [`${BASE}/cartas`, HOY, '0.9'],
+    [`${BASE}/motion-graphics`, HOY, '0.9'],
     ...proyectos.map((p) => [`${BASE}/trabajos/${p.slug}`, HOY, '0.8']),
     ...LEGALES.map((l) => [`${BASE}/${l.archivo}.html`, l.lastmod, '0.3']),
   ];
@@ -877,7 +880,7 @@ ${urls.map(([loc, lastmod, prioridad]) => `  <url>
 
 // ---------- escritura ----------
 escribir('index.html', paginaInicio());
-escribir('trabajos/index.html', paginaTrabajos());
+escribir('motion-graphics/index.html', paginaMotion());
 proyectos.forEach((p, i) => escribir(`trabajos/${p.slug}/index.html`, paginaProyecto(p, i)));
 for (const l of LEGALES) escribir(`${l.archivo}.html`, paginaLegal(l));
 escribir('404.html', pagina404());
@@ -894,5 +897,5 @@ for (const d of readdirSync(dirTrabajos)) {
 }
 
 const sinCapturas = proyectos.filter((p) => !vistas(p.slug).e.length).map((p) => p.slug);
-console.log(`Listo: inicio, trabajos, ${proyectos.length} proyectos, ${LEGALES.length} legales, 404 y sitemap.`);
+console.log(`Listo: inicio, motion graphics, ${proyectos.length} proyectos, ${LEGALES.length} legales, 404 y sitemap.`);
 if (sinCapturas.length) console.log(`  Sin capturas todavia: ${sinCapturas.join(', ')} (corre _build/capturas.mjs)`);
