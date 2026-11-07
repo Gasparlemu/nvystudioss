@@ -41,6 +41,8 @@
       "archivo": "/assets/video/oncosur-donar.mp4",
       "portada": "/assets/video/oncosur-donar.jpg",
       "titulo": "Cómo donar a Fundación Oncosur",
+      "marca": "Fundación Oncosur",
+      "marcaDe": "oncosur",
       "resumen": "Un tutorial real, paso a paso, para hacerse socio de la fundación desde su Instagram: seguir la cuenta, abrir el enlace, llenar el formulario y pagar. Lo hicimos pro bono.",
       "fecha": "2026-11-05",
       "duracionIso": "PT39S",

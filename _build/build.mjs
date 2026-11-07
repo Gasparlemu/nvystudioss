@@ -643,6 +643,10 @@ const JUNTA_ST = 0.0035;
 function paginaMotion() {
   const v = motion.video;
   const url = `${BASE}/motion-graphics`;
+  // El nombre del cliente va con sus colores, como en la pagina de su proyecto.
+  const marca = porSlug(v.marcaDe);
+  const antes = v.titulo.replace(v.marca, '').trim();
+  const corte = v.marca.replace(/ /g, '').length - (marca.nombre.length - marca.corte);
   const cuerpo = `<main id="contenido">
   <section class="portada" aria-labelledby="portada-titulo">
     <h1 class="portada__h1" id="portada-titulo" aria-label="Motion graphics. ${esc(motion.bajada)}">
@@ -658,7 +662,7 @@ function paginaMotion() {
     </div>
     <div class="mg__info">
       <p class="mg__lbl">primer trabajo</p>
-      <h2 class="mg__titulo" id="mg-titulo">${esc(v.titulo)}</h2>
+      <h2 class="mg__titulo" id="mg-titulo" aria-label="${esc(v.titulo)}" data-reveal="letras">${letras(antes)} <span class="marca" style="${estiloMarca(marca)}">${letras(v.marca, { degradado: true, desde: antes.length, corte })}</span></h2>
       <p class="mg__txt">${esc(v.resumen)}</p>
       <dl class="ficha mg__ficha">
 ${v.ficha.map(([dt, dd]) => `        <div class="ficha__item"><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('\n')}

@@ -21,8 +21,10 @@
     requestAnimationFrame(raf);
   }
   const irA = (destino) => {
-    if (lenis) lenis.scrollTo(destino, { duration: 1.4 });
-    else window.scrollTo({ top: typeof destino === 'number' ? destino : destino.getBoundingClientRect().top + scrollY, behavior: reducido ? 'auto' : 'smooth' });
+    // Respeta el scroll-margin-top de la seccion, igual que el salto nativo al cargar con #ancla.
+    const top = typeof destino === 'number' ? destino : destino.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(destino).scrollMarginTop) || 0);
+    if (lenis) lenis.scrollTo(top, { duration: 1.4 });
+    else window.scrollTo({ top, behavior: reducido ? 'auto' : 'smooth' });
   };
 
   /* ---------- header: siempre visible ---------- */
