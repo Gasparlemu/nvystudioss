@@ -14,8 +14,11 @@
   const animar = !estatico && !reducido;
 
   /* ---------- scroll suave ---------- */
+  // En Safari el scroll queda nativo: el trackpad del Mac ya lo suaviza, y Lenis lo movia
+  // desde JavaScript, asi que cualquier cuadro pesado se notaba como tiron.
+  const safari = /^((?!chrome|chromium|crios|fxios|edg|android).)*safari/i.test(navigator.userAgent);
   let lenis = null;
-  if (!reducido && window.Lenis) {
+  if (!reducido && !safari && window.Lenis) {
     lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
     const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
@@ -35,11 +38,14 @@
   let pendiente = false;
   const alScroll = () => {
     pendiente = false;
+    // Primero se lee todo y despues se escribe: asi el navegador no recalcula estilos a mitad de cuadro.
     const y = Math.max(0, scrollY);
-    cab.classList.toggle('en-portada', portada ? y < portada.offsetHeight * 0.55 : false);
-    cab.classList.toggle('is-solida', y > 24);
+    const enPortada = portada ? y < portada.offsetHeight * 0.55 : false;
     // Sobre una seccion clara (data-tema="claro") el logo y el menu pasan a negro.
-    cab.classList.toggle('es-claro', claras.some((s) => { const r = s.getBoundingClientRect(); return r.top <= 36 && r.bottom > 36; }));
+    const esClaro = claras.some((s) => { const r = s.getBoundingClientRect(); return r.top <= 36 && r.bottom > 36; });
+    cab.classList.toggle('en-portada', enPortada);
+    cab.classList.toggle('is-solida', y > 24);
+    cab.classList.toggle('es-claro', esClaro);
   };
   addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }, { passive: true });
   alScroll();
@@ -123,13 +129,16 @@
   if (textoScroll && !reducido) {
     const total = textoScroll.children.length;
     let pendienteTexto = false;
+    let avanceAntes = '';
     const encender = () => {
       pendienteTexto = false;
       const r = textoScroll.getBoundingClientRect();
       const inicio = innerHeight * 0.85;
       const fin = innerHeight * 0.4;
       const p = Math.min(1, Math.max(0, (inicio - r.top) / (inicio - fin + r.height)));
-      textoScroll.style.setProperty('--avance', (p * (total + 1)).toFixed(2));
+      // Fuera de su tramo el valor no cambia: no se toca el estilo de cada palabra.
+      const avance = (p * (total + 1)).toFixed(2);
+      if (avance !== avanceAntes) { avanceAntes = avance; textoScroll.style.setProperty('--avance', avance); }
     };
     textoScroll.classList.add('is-activo');
     addEventListener('scroll', () => { if (!pendienteTexto) { pendienteTexto = true; requestAnimationFrame(encender); } }, { passive: true });
@@ -137,21 +146,10 @@
     encender();
   }
 
-  /* ---------- cinta de rubros: acelera con el scroll y vuelve a su ritmo ---------- */
-  const pista = $('.cinta__pista');
-  const animCinta = pista && pista.getAnimations ? pista.getAnimations()[0] : null;
-  if (animCinta && lenis && animar) {
-    let ritmo = 1;
-    let objetivo = 1;
-    lenis.on('scroll', (l) => { objetivo = Math.max(objetivo, 1 + Math.min(6, Math.abs(l.velocity) * 0.45)); });
-    const latir = () => {
-      objetivo += (1 - objetivo) * 0.04;
-      const nuevo = ritmo + (objetivo - ritmo) * 0.12;
-      if (Math.abs(nuevo - ritmo) > 0.005) { ritmo = nuevo; animCinta.playbackRate = ritmo; }
-      requestAnimationFrame(latir);
-    };
-    requestAnimationFrame(latir);
-  }
+  /* ---------- muro de capturas de la portada: quieto cuando no se ve ---------- */
+  // Son 7 columnas en 3D moviendose sin parar: fuera de pantalla solo gastarian bateria y cuadros.
+  const muro = $('[data-muro]');
+  if (muro) new IntersectionObserver(([e]) => muro.classList.toggle('is-quieto', !e.isIntersecting)).observe(muro.parentElement);
 
   // Las animaciones de entrada esperan a las fuentes, para que las letras no cambien de forma.
   const listasFuentes = d.fonts ? d.fonts.ready : Promise.resolve();
@@ -236,6 +234,7 @@
     d.body.prepend(capa);
     const entre01 = (n) => Math.min(1, Math.max(0, n));
     let pendienteNoche = false;
+    let opacidadAntes = '';
     const pintarNoche = () => {
       pendienteNoche = false;
       const alto = innerHeight;
@@ -244,7 +243,8 @@
       const sube = entre01((alto - e.top) / e.height);                    // mientras la marca entra por abajo
       const avance = (alto - c.top) / (alto + c.height);
       const baja = entre01((avance - 0.15) / 0.45);                       // cuando el final de la zona sube
-      capa.style.opacity = (sube * (1 - baja)).toFixed(3);
+      const opacidad = (sube * (1 - baja)).toFixed(3);
+      if (opacidad !== opacidadAntes) { opacidadAntes = opacidad; capa.style.opacity = opacidad; }
     };
     const pedirNoche = () => { if (!pendienteNoche) { pendienteNoche = true; requestAnimationFrame(pintarNoche); } };
     addEventListener('scroll', pedirNoche, { passive: true });
