@@ -1251,6 +1251,9 @@ article.prob:is(:nth-of-type(1), :nth-of-type(4), :nth-of-type(8), :nth-of-type(
 /* Navegadores sin transicion entre paginas: fundido de entrada simple. */
 .sin-vt:not(.estatico) body { animation: fundido .6s ease both; }
 @keyframes fundido { from { opacity: 0; } }
+/* Telon verde hacia las cartas digitales (nvy.js): sube desde abajo, como el de los proyectos. */
+.telon-cartas { position: fixed; inset: 0; z-index: 200; pointer-events: none; background: linear-gradient(176deg, #4fd79a, #1fa86f 55%, #0f6b47); animation: telon-sube .6s var(--cambia) both; }
+@keyframes telon-sube { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
 
 /* ---------- movimiento reducido ---------- */
 @media (prefers-reduced-motion: reduce) {

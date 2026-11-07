@@ -254,6 +254,24 @@
     pintarNoche();
   }
 
+  /* ---------- telon verde hacia las cartas digitales ----------
+     Las cartas son otra app: la transicion nativa entre paginas fallaba a veces, asi que el telon va a mano.
+     Aqui sube al hacer clic; la landing de cartas lo recoge al cargar (marca "nvy-telon"). */
+  d.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href]');
+    if (!a || reducido || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank') return;
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin || !/^\/cartas(\/|$)/.test(url.pathname)) return;
+    e.preventDefault();
+    const telon = d.createElement('div');
+    telon.className = 'telon-cartas';
+    d.body.append(telon);
+    try { sessionStorage.setItem('nvy-telon', '1'); } catch (x) { /* sin telon a la llegada */ }
+    setTimeout(() => { location.href = url.href; }, 600);
+  });
+  // Al volver con "atras", la pagina sale de la cache con el telon puesto: se saca.
+  addEventListener('pageshow', (e) => { if (e.persisted) $$('.telon-cartas').forEach((t) => t.remove()); });
+
   /* ---------- videos: en su pagina corre sin sonido a la vista; el boton lo parte con sonido ---------- */
   // Nada se descarga hasta que el video se va a ver, y se pausa apenas sale de la pantalla.
   const ahorroDatos = navigator.connection?.saveData;
