@@ -36,6 +36,7 @@
     "titulo": "Motion graphics en Valdivia | NVY Studios",
     "descripcion": "Videos animados a medida para explicar y vender: tutoriales paso a paso, reels y videos de marca. Hechos en Valdivia para negocios de todo Chile.",
     "bajada": "Videos animados para explicar y vender · Valdivia, Chile",
+    "colores": ["#b8480d", "#f0691a", "#ff8f3f", "#ffe0c7"],
     "whatsappTexto": "Hola Gaspar, vi los motion graphics y quiero cotizar un video.",
     "video": {
       "archivo": "/assets/video/oncosur-donar.mp4",
@@ -61,8 +62,8 @@
     "pregunta": "¿Tu negocio se ve en internet como se ve en persona?",
     "bajada": "Webs a medida, cartas digitales y motion graphics · Valdivia, Chile",
     "otros": [
-      ["/cartas", "Cartas digitales", "Menús a medida para restaurantes, con QR en cada mesa."],
-      ["/motion-graphics", "Motion graphics", "Videos animados para explicar y vender."]
+      ["/cartas", "Cartas digitales", "Menús a medida para restaurantes, con QR en cada mesa.", ["#0f6b47", "#1fa86f", "#4fd79a", "#d5f7e6"]],
+      ["/motion-graphics", "Motion graphics", "Videos animados para explicar y vender.", ["#b8480d", "#f0691a", "#ff8f3f", "#ffe0c7"]]
     ],
     "whatsappTexto": "Hola Gaspar, vi tu web y quiero conversar sobre un proyecto.",
     "muro": ["ainilebu-films-0", "zona-estetica-0", "oncosur-0", "inka-trewa-0", "i-max-2", "metales-nobles-0", "andrade-visions-0", "gestion-sur-0", "ainilebu-films-3", "zona-estetica-1", "oncosur-3", "inka-trewa-1", "i-max-3", "metales-nobles-5", "andrade-visions-3", "ainilebu-films-4", "zona-estetica-2", "inka-trewa-5", "i-max-5", "metales-nobles-6", "ainilebu-films-5", "i-max-6", "ainilebu-films-6"],

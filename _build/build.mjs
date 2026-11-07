@@ -586,7 +586,7 @@ ${seccionTrabajos()}
   <section class="filas filas--inicio" aria-label="Otros servicios">
     <p class="filas__lbl">también hacemos</p>
     <ul class="filas__lista">
-${inicio.otros.map(([href, n, t]) => `      <li class="fila"><a class="fila__link" href="${href}"><span class="fila__nombre">${esc(n)}</span><span class="fila__txt">${esc(t)}</span>${icono('derecha')}</a></li>`).join('\n')}
+${inicio.otros.map(([href, n, t, colores]) => `      <li class="fila"><a class="fila__link" href="${href}"><span class="fila__nombre marca" style="${estiloMarca({ colores })}">${tramos(n)}</span><span class="fila__txt">${esc(t)}</span>${icono('derecha')}</a></li>`).join('\n')}
     </ul>
   </section>
   <div class="zn-cola" aria-hidden="true"></div>
@@ -698,6 +698,7 @@ ${seccionContacto(motion.whatsappTexto)}
     ld,
     cuerpo,
     claseBody: 'pag-motion',
+    cortina: tramoTelon(motion.colores),
     contacto: '#contacto',
     waTexto: motion.whatsappTexto,
   });
